@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/danmalgi-project/danmalgi-proto-build/pb";
+
+import "google/protobuf/empty.proto";
+import "user.proto";
+
+// RelationshipService provides services for managing friend requests and relationships.
+service RelationshipService {
+    // GetOutgoingRelationshipList retrieves the list of friend requests sent by the user.
+    rpc GetOutgoingRelationshipList(google.protobuf.Empty) returns(GetOutgoingRelationshipListResponse);
+    // GetIncomingRelationshipList retrieves the list of friend requests received by the user.
+    rpc GetIncomingRelationshipList(google.protobuf.Empty) returns(GetIncomingRelationshipListResponse);
+    // AddRelationship sends a new friend request.
+    rpc AddRelationship(AddRelationshipRequest) returns(AddRelationshipResponse);
+    // UpdateIncomingRelationshipStatus updates the status of a received friend request (e.g., accept, reject).
+    rpc UpdateIncomingRelationshipStatus(UpdateIncomingRelationshipStatusRequest) returns(UpdateIncomingRelationshipStatusResponse);   
+    // UpdateOutgoingRelationshipStatus updates the status of a sent friend request (e.g., cancel).
+    rpc UpdateOutgoingRelationshipStatus(UpdateOutgoingRelationshipStatusRequest) returns(UpdateOutgoingRelationshipStatusResponse);
+}
+
+// Request, Resposne Messages
+// GetOutgoingRelationshipList
+message GetOutgoingRelationshipListResponse {
+    repeated Relationship relationships = 1; 
+}
+
+// GetIncomingRelationshipList
+message GetIncomingRelationshipListResponse {
+    repeated Relationship relationships = 1; 
+}
+
+// AddRelationship
+message AddRelationshipRequest {
+    string name = 1; // 친구 이름
+    string tag  = 2; // 친구 태그
+}
+
+message AddRelationshipResponse {
+    repeated Relationship relationships = 1;
+}
+
+// UpdateIncomingRelationshipStatus
+message UpdateIncomingRelationshipStatusRequest {
+    int64              relationship_id     = 1;
+    RelationshipStatus relationship_status = 2; // 변경할 상태 값
+}
+
+message UpdateIncomingRelationshipStatusResponse {
+    repeated Relationship relationships = 1;
+}
+
+// UpdateOutgoingRelationshipStatus
+message UpdateOutgoingRelationshipStatusRequest {
+    int64              relationship_id     = 1;
+    RelationshipStatus relationship_status = 2; // 변경할 상태 값
+}
+
+message UpdateOutgoingRelationshipStatusResponse {
+    repeated Relationship relationships = 1;
+}
+
+
+message Relationship {
+    int64              relationship_id     = 1;
+    User               user                = 2;
+    RelationshipStatus relationship_status = 3;
+}
+
+// Enum
+enum RelationshipStatus {
+    // incoming에서만 사용
+    RELATION_ACCEPT  = 0; // 수락
+    RELATION_REJECT  = 1; // 거절
+    RELATION_PENDING = 2; // 대기
+    // outgoing에서만 사용
+    RELATION_CANCEL  =  3; // 요청 취소
+}

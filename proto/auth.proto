@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/danmalgi-project/danmalgi-proto-build/pb";
+
+import "user.proto";
+import "google/protobuf/empty.proto";
+import "option.proto";
+
+// AuthService provides services for user authentication and registration.
+service AuthService {
+    // Authorization handles user login via OAuth.
+    // It returns whether the user is new, user information, and an access token.
+    rpc Authorization(AuthorizationRequest) returns(AuthorizationResponse) {
+        option (non_require_auth) = true;
+    };
+    // Register completes the registration for a new user.
+    rpc Register(RegisterRequest) returns(RegisterResponse);
+    // Upserts (creates or updates) a user's FCM token.
+    rpc UpsertFcmToken(UpsertFcmTokenRequest) returns(google.protobuf.Empty);
+}
+
+// Authorization
+message AuthorizationRequest {
+    string    id_token   = 1;
+    string    device_id  = 2;
+    OauthType oauth_type = 3;
+}
+
+message AuthorizationResponse {
+    User   user         = 1;
+    string access_token = 2;
+}
+
+// Register 
+message RegisterRequest {
+    string nickname = 1;
+    string tag      = 2;
+}
+
+message RegisterResponse {
+    User user = 1;
+}
+
+// UpsertFcmToken
+message UpsertFcmTokenRequest {
+    string fcm_token = 1;
+}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/danmalgi-project/danmalgi-proto-build/pb";
+
+import "google/protobuf/empty.proto";
+
+// UserService provides services for managing user accounts.
+service UserService {
+    // GetUserByToken retrieves user information based on the authentication token.
+    rpc GetUserByToken(google.protobuf.Empty) returns(GetUserByTokenResponse);
+    // VerifyNameAndTag checks if a combination of user name and tag is available.
+    rpc VerifyNameAndTag(VerifyNameAndTagRequest) returns(google.protobuf.Empty);
+    // rpc ChangeUserTag() returns();
+}
+
+// GetUserByToken
+message GetUserByTokenResponse {
+    User user = 1;
+}
+
+// VerifyNameAndTag
+message VerifyNameAndTagRequest {
+    string name = 1;
+    string tag = 2;
+}
+
+message User {
+    int64      id            = 1;
+    string     email         = 2; 
+    string     name          = 3;
+    string     tag           = 4;
+    OauthType  oauth_type    = 5;
+    UserStatus status        = 6;
+}
+
+enum UserStatus {
+    USER_PENDING    = 0; // 가입 미완료
+    USER_ACTIVCE    = 1; // 가입 완료
+    USER_BLOCKED    = 2; // 차단
+    USER_WITHDRAWAL = 3; // 탈퇴
+}
+
+enum OauthType {
+    NAVER  = 0;
+    GOOGLE = 1;
+    KAKAO  = 2;
+}

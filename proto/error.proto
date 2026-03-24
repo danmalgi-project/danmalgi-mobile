@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/danmalgi-project/danmalgi-proto-build/pb";
+
+package pb;
+
+message ErrorDetail {
+    ErrorCode error_code = 1;
+    // string message = 2;
+    // bool is_retry = 3;
+}
+
+enum ErrorCode {
+    INVALID_TOKEN = 0;
+    INVALID_INPUT = 1;
+    DUPLICATED_DATA = 2;
+    OAUTH_ERROR = 3;
+    TOKEN_CREATION_FAILED = 4;
+    PERSISTENCE_ERROR = 5;
+    RECORD_NOT_FOUND = 6;
+    SIGNALING_ERROR = 7;
+}

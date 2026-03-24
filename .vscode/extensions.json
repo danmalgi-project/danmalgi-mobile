@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "dart-code.flutter",
+    "alexisvt.flutter-snippets",
+    "robert-brunhage.flutter-riverpod-snippets",
+    "kangping.protobuf"
+  ]
+}

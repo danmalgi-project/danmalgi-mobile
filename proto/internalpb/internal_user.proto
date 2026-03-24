@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package internalpb;
+
+option go_package = "github.com/danmalgi-project/danmalgi-proto-build/internalpb";
+
+import "option.proto";
+
+service InternalUserService {
+    rpc CacheUsers(CacheUsersRequest) returns(CacheUsersResponse) {
+        option (pb.non_require_auth) = true;
+    };
+}
+
+message CacheUsersRequest {
+    repeated int64 user_ids = 1;
+}
+
+message CacheUsersResponse {
+    repeated User users = 1;
+}
+
+message User {
+    int64  id    = 1;
+    string email = 2;
+    string name  = 3;
+    string tag   = 4;
+}

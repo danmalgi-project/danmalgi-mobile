@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/danmalgi-project/danmalgi-proto-build/pb";
+
+// import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+// RoomService provides services for managing chat rooms.
+service RoomService {
+    // CreateRoom creates a new chat room.
+    rpc CreateRoom(CreateRoomRequest) returns(CreateRoomResponse);
+    // GetRoomList retrieves a list of all chat rooms.
+    rpc GetRoomList(GetRoomListRequest) returns(GetRoomListResponse);
+    // GetRoom retrieves detailed information about a specific chat room.
+    rpc GetRoom(GetRoomRequest) returns(GetRoomResponse);
+    // rpc DeleteRoom() returns(); 생성한 유저만 삭제할 수 있게끔 추가
+    // rpc UpdateRoom() returns(); 생성한 유저만 수정 수 있게끔 추가
+}
+
+message Room {
+    int64  id         = 1;
+    string name       = 2;
+    string socket_url = 3;
+    google.protobuf.Timestamp created_at = 4;
+    // Role   role = 2;
+}
+
+message RoomItem {
+    int64  id   = 1;
+    string name = 2;
+}
+
+message CreateRoomRequest {
+    string name = 1;
+}
+
+message CreateRoomResponse {
+    Room room = 1;
+}
+
+message GetRoomListRequest {
+    int32 offset = 1;
+    int32 limit  = 2;
+    google.protobuf.Timestamp refresh_time = 3;
+}
+
+message GetRoomListResponse {
+    repeated RoomItem roomList = 1;
+}
+
+message GetRoomRequest {
+    int64 id = 1;
+}
+
+message GetRoomResponse {
+    Room room = 1;
+}
+
+enum Role {
+    admin = 0;
+    user  = 1;
+}
