@@ -32,7 +32,6 @@ firebase_options.dart
 .pub-cache/
 .pub/
 build/
-pubspec.lock
 
 # 코드 생성 파일 (build_runner로 재생성 가능)
 *.freezed.dart
