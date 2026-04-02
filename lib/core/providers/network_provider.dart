@@ -29,7 +29,7 @@ final chatClientProvider = Provider<GrpcChannelService>((ref) {
   return GrpcChannelService(host: host, port: port);
 });
 
-final voiceClientProvider = Provider<GrpcChannelService>((ref) {
+final signalingClientProvider = Provider<GrpcChannelService>((ref) {
   final String host = dotenv.get("DANMALGI_VOICE_HOST");
   final int port = int.parse(dotenv.get("DANMALGI_VOICE_PORT"));
 
@@ -131,19 +131,20 @@ final relationshipServiceClientProvider = Provider<RelationshipServiceClient>((
 });
 
 /// feature: Voice
-final voiceServiceClientProvider = Provider.family<SignalingServiceClient, int>(
-  (ref, channelId) {
-    final channel = ref.watch(voiceClientProvider).channel;
-    final authInterceptor = ref.watch(authInterceptorProvider);
+final signalingServiceClientProvider =
+    Provider.family<SignalingServiceClient, int>((ref, channelId) {
+      final channel = ref.watch(signalingClientProvider).channel;
+      final authInterceptor = ref.watch(authInterceptorProvider);
 
-    final CallOptions options = CallOptions(
-      metadata: {"channel_id": channelId.toString()},
-    );
+      final CallOptions options = CallOptions(
+        metadata: {"channel_id": channelId.toString()},
+      );
 
-    return SignalingServiceClient(
-      channel,
-      options: options,
-      interceptors: [authInterceptor],
-    );
-  },
-);
+      ref.onDispose(() => channel.shutdown());
+
+      return SignalingServiceClient(
+        channel,
+        options: options,
+        interceptors: [authInterceptor],
+      );
+    });
