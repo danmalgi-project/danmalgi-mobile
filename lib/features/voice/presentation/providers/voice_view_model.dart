@@ -1,40 +1,55 @@
 import 'dart:async';
 
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:danmalgi_mobile/features/voice/data/providers/voice_provider.dart';
-import 'package:danmalgi_mobile/features/voice/data/repositories/voice_repository.dart';
+import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/voice_manager_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
+import 'package:flutter/material.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final voiceViewModelProvider =
-    AsyncNotifierProvider.autoDispose<VoiceViewModel, VoiceState>(
-      VoiceViewModel.new,
-    );
+part 'voice_view_model.g.dart';
 
-class VoiceViewModel extends AsyncNotifier<VoiceState> {
-  late final VoiceRepository repository;
+@riverpod
+class VoiceViewModel extends _$VoiceViewModel {
+  StreamSubscription<VoiceState>? subscription;
 
   @override
-  FutureOr<VoiceState> build() async {
-    ref.watch(currentUserProvider); // Bind lifecycle to auth state
+  FutureOr<VoiceState> build({required int channelId}) async {
+    final currentUser = ref.watch(currentUserProvider);
+    final repo = ref.watch(voiceManagerProvider(channelId: channelId));
 
-    repository = ref.watch(voiceRepositoryProvider(5));
+    // 로그아웃 시 채널 자동 퇴장
+    if (currentUser == null) {
+      return const VoiceState();
+    }
 
-    ref.onDispose(() {
-      print('🗑️ VoiceViewModel dispose (channel: 5)');
-      // repository.dispose();
+    // stream 구독
+    final subscription = repo.stateStream.listen((voiceState) {
+      state = AsyncData(
+        voiceState.copyWith(
+          currentUser: currentUser,
+          users: voiceState.users.where((u) => u.id != currentUser.id).toList(),
+        ),
+      );
     });
 
-    return VoiceState();
+    ref.onDispose(() {
+      subscription.cancel();
+    });
+
+    await repo.join();
+    return const VoiceState();
   }
 
-  Future<void> connect() async {
-    repository.setupPeerConnection();
-  }
+  Future<void> toggleMicMute() async {
+    final currentState = state.requireValue;
+    final isMuted = !currentState.isMuted;
 
-  Future<void> disconnect() async {
-    final repository = ref.watch(voiceRepositoryProvider(5));
-    repository.dispose();
+    // 1. 실제 마이크 on/off
+    final repo = ref.read(voiceManagerProvider(channelId: channelId));
+    await repo.toggleMicMute(isMuted);
+
+    // 2. 상태 반영
+    state = AsyncData(currentState.copyWith(isMuted: isMuted));
   }
 }
