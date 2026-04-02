@@ -35,14 +35,14 @@
 			</array>
 		</dict>
 	</array>
-    <key>NSCameraUsageDescription</key>
-    <string>$(PRODUCT_NAME) Camera Usage!</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>$(PRODUCT_NAME) Microphone Usage!</string>
 	<key>GIDClientID</key>
 	<string>966524291075-1rnedu1sd47iq7i0icmmk2f4g2egpup2.apps.googleusercontent.com</string>
 	<key>GIDServerClientID</key>
 	<string>966524291075-4bigaeq712t0mvqphh41qvivitfhdijl.apps.googleusercontent.com</string>
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) Camera Usage!</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>$(PRODUCT_NAME) Microphone Usage!</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
