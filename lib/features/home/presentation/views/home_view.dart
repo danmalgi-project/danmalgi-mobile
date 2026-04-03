@@ -81,16 +81,16 @@ class HomePage extends ConsumerWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(notificationInitProvider, (previous, next) {
-      next.when(
-        data: (_) => print('✅ Notifications initialized'),
-        error: (err, stack) => print('❌ Init failed: $err'),
-        loading: () => print('⏳ Initializing notifications...'),
-      );
-    });
+    // ref.listen(notificationInitProvider, (previous, next) {
+    //   next.when(
+    //     data: (_) => print('✅ Notifications initialized'),
+    //     error: (err, stack) => print('❌ Init failed: $err'),
+    //     loading: () => print('⏳ Initializing notifications...'),
+    //   );
+    // });
 
-    final tokenAsync = ref.watch(fcmTokenProvider);
-    final permissionAsync = ref.watch(notificationPermissionProvider);
+    // final tokenAsync = ref.watch(fcmTokenProvider);
+    // final permissionAsync = ref.watch(notificationPermissionProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -102,11 +102,11 @@ class HomePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildPermissionCard(permissionAsync),
-            const SizedBox(height: 16),
-            _buildTokenCard(context, tokenAsync, ref),
-            const SizedBox(height: 16),
-            _buildMessageListener(ref),
+            // _buildPermissionCard(permissionAsync),
+            // const SizedBox(height: 16),
+            // _buildTokenCard(context, tokenAsync, ref),
+            // const SizedBox(height: 16),
+            // _buildMessageListener(ref),
           ],
         ),
       ),

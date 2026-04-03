@@ -7,6 +7,10 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
+  final Future<void> Function(String token)? onTokenUpdated;
+
+  NotificationService({this.onTokenUpdated});
+
   String? _fcmToken;
   String? get fcmToken => _fcmToken;
   // Initialize everything in one place
@@ -77,16 +81,20 @@ class NotificationService {
   }
 
   Future<void> _setupFCMToken() async {
-    // Get the token
-    _fcmToken = await _messaging.getToken();
-    print('FCM Token: $_fcmToken');
+    final token = await _messaging.getToken();
+    if (token != null) {
+      await onTokenUpdated?.call(token); // ← 콜백으로 전달
+    }
 
-    // Listen for token refreshes
     _messaging.onTokenRefresh.listen((newToken) {
-      _fcmToken = newToken;
-      print('Token refreshed: $newToken');
-      // TODO: Send updated token to your backend
+      onTokenUpdated?.call(newToken);
     });
+  }
+
+  Future<void> retryTokenUpload() async {
+    if (_fcmToken != null) {
+      await onTokenUpdated?.call(_fcmToken!);
+    }
   }
 
   void _setupMessageHandlers() {
