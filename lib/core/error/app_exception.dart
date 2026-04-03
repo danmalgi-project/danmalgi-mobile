@@ -19,6 +19,10 @@ sealed class AppException with _$AppException implements Exception {
     @Default('인증이 만료되었습니다. 다시 로그인해주세요.') String message,
   }) = _Unauthenticated;
 
+  // Not Found (GetUserByToken 등)
+  const factory AppException.notFound({@Default('잘못된 요청입니다.') String message}) =
+      _NotFound;
+
   // 서버 에러 또는 알 수 없는 에러
   const factory AppException.unknown(String message) = _Unknown;
 }

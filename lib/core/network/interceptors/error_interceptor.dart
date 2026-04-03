@@ -42,7 +42,10 @@ class ErrorInterceptor implements ClientInterceptor {
           logout();
           throw const AppException.unauthenticated();
         }
-
+        if (error.code == StatusCode.notFound) {
+          logout();
+          throw const AppException.notFound();
+        }
         if (error.code == StatusCode.deadlineExceeded) {
           throw const AppException.timeout();
         }

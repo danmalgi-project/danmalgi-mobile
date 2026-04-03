@@ -18,6 +18,7 @@ final appAuthStatusProvider = Provider<AppAuthState>((ref) {
     if (error is AppException) {
       return error.when(
         unauthenticated: (_) => const AppAuthState.unauthenticated(),
+        notFound: (_) => AppAuthState.error(error: error, canRetry: false),
         network: (_) => AppAuthState.error(error: error, canRetry: true),
         timeout: (_) => AppAuthState.error(error: error, canRetry: true),
         unknown: (_) => AppAuthState.error(error: error, canRetry: false),
@@ -27,6 +28,7 @@ final appAuthStatusProvider = Provider<AppAuthState>((ref) {
   }
 
   print('auth = ${authAsync.value}');
+  print('user = ${userAsync.value}');
   final auth = authAsync.value;
   if (auth == null) {
     return const AppAuthState.unauthenticated();
@@ -40,6 +42,7 @@ final appAuthStatusProvider = Provider<AppAuthState>((ref) {
     if (error is AppException) {
       return error.when(
         unauthenticated: (_) => const AppAuthState.unauthenticated(),
+        notFound: (_) => AppAuthState.error(error: error, canRetry: false),
         network: (_) => AppAuthState.error(error: error, canRetry: true),
         timeout: (_) => AppAuthState.error(error: error, canRetry: true),
         unknown: (_) => AppAuthState.error(error: error, canRetry: false),

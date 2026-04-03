@@ -14,10 +14,7 @@ class UserRepository {
   UserRepository(this.client, this.authClient, this.localStorage);
 
   Future<User> getUserByToken() async {
-    final response = await client.getUserByToken(
-      Empty(),
-      // options: CallOptions(metadata: {'Authorization': 'bearer $token'}),
-    );
+    final response = await client.getUserByToken(Empty());
     return User.fromProto(response.user);
   }
 
