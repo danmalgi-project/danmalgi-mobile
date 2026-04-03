@@ -55,6 +55,7 @@ dependencies:
   device_info_plus: ^12.3.0
   import_sorter: ^4.6.0
   riverpod_annotation: ^4.0.0
+  uuid: ^4.5.3
   
 
 dev_dependencies:
