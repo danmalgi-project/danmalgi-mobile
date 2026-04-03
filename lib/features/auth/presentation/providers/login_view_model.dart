@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
+import 'package:danmalgi_mobile/core/providers/local_user_settings_service_provider.dart';
 import 'package:danmalgi_mobile/core/providers/social_auth_provider.dart';
 import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
@@ -53,9 +54,14 @@ class LoginViewModel extends AsyncNotifier<void> {
         throw AppException.unauthenticated(message: "소셜 로그인 인증 에러");
       }
 
+      final deviceId = await ref.read(deviceIdProvider.future);
       final authState = await ref
           .read(authRepositoryProvider)
-          .authorization(idToken: idToken, oAuthType: oAuthType);
+          .authorization(
+            idToken: idToken,
+            deviceId: deviceId,
+            oAuthType: oAuthType,
+          );
 
       // 2. 성공 시, 전역 상태(AuthNotifier)를 업데이트합니다.
       // 이 순간 GoRouter가 감지하고 홈 화면으로 이동시킵니다.
