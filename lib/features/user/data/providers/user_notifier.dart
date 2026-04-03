@@ -12,19 +12,61 @@ import 'package:danmalgi_mobile/features/user/domain/user_state.dart';
 class UserNotifier extends AsyncNotifier<UserState?> {
   @override
   FutureOr<UserState?> build() async {
-    final User? user = ref.watch(localStorageServiceProvider).cachedUserOrNull;
+    final auth = await ref.watch(authNotifierProvider.future);
+    print('[UserNotifier] auth: $auth');
 
-    if (user != null) return UserState(user: user);
+    if (auth == null) {
+      print('[UserNotifier] auth null → null 반환');
+      return null;
+    }
+
+    final User? cachedUser = ref
+        .watch(localStorageServiceProvider)
+        .cachedUserOrNull;
+
+    if (cachedUser != null) {
+      Future.microtask(() => _syncWithServer());
+      return UserState(user: cachedUser);
+    }
     print('[UserNotifier] needsRecover');
 
-    final auth = await ref.watch(authNotifierProvider.future);
-    if (auth == null) return null;
-
     print('[UserNotifier] calling getUserByToken...');
-    final remoteUser = await ref.read(userRepositoryProvider).getUserByToken();
-    print(remoteUser);
+    try {
+      final remoteUser = await ref
+          .read(userRepositoryProvider)
+          .getUserByToken();
+      return UserState(user: remoteUser);
+    } catch (e) {
+      print('[UserNotifier] getUserByToken 실패: $e');
+      await ref.read(authNotifierProvider.notifier).logout();
+      return null;
+    }
+  }
 
-    return UserState(user: remoteUser);
+  Future<void> _syncWithServer() async {
+    try {
+      final remoteUser = await ref
+          .read(userRepositoryProvider)
+          .getUserByToken();
+
+      // TODO: User를 nullable로 받지 않고 아마 에러 핸들링으로 추후 작업해서 catch 부분에서 logout 처리해야할 듯
+      // if (remoteUser == null) {
+      //   await ref.read(authNotifierProvider.notifier).logout();
+      //   return;
+      // }
+
+      final cachedUser = ref.read(localStorageServiceProvider).cachedUserOrNull;
+
+      // 서버와 다르면 캐시 업데이트
+      if (cachedUser != remoteUser) {
+        await ref.read(localStorageServiceProvider).setUser(remoteUser);
+        // state 갱신
+        state = AsyncData(UserState(user: remoteUser));
+      }
+    } catch (e) {
+      print('[UserNotifier] 백그라운드 동기화 실패: $e');
+      // 백그라운드 실패는 무시 (캐시 데이터 유지)
+    }
   }
 
   Future<void> register({required String nickname, required String tag}) async {
