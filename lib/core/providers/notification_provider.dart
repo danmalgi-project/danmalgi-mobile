@@ -1,10 +1,20 @@
+import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
+import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:danmalgi_mobile/core/services/notification_service.dart';
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
-  return NotificationService();
+  return NotificationService(
+    onTokenUpdated: (token) async {
+      // 로그인 상태일 때만 전송
+      final user = ref.read(currentUserProvider);
+      if (user == null) return;
+
+      await ref.read(userRepositoryProvider).upsertFCMToken(fcmToken: token);
+    },
+  );
 });
 
 // Initialization provider - call this once at app startup
