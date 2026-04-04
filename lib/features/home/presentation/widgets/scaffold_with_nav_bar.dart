@@ -13,18 +13,6 @@ class ScaffoldWithNavBar extends ConsumerWidget {
 
   const ScaffoldWithNavBar({required this.navigationShell});
 
-  static const List<Widget> _pages = <Widget>[
-    // DirectMessageListViewScreen(),
-    // FriendScreen(),
-    // LogoutScreen(),
-  ];
-
-  static const List<Icon> _icons = <Icon>[
-    Icon(Icons.home_filled, size: 26),
-    Icon(Icons.people_alt, size: 30),
-    Icon(Icons.person, size: 31),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -57,10 +45,10 @@ class ScaffoldWithNavBar extends ConsumerWidget {
             icon: Icon(Icons.home_filled, size: 26),
             label: "Home",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, size: 30),
-            label: "Notification",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.notifications, size: 30),
+          //   label: "Notification",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people_alt, size: 30),
             label: "Friend",
