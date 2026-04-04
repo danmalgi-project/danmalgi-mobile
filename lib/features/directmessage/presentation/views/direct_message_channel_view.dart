@@ -71,7 +71,7 @@ class DirectMessageChannelView extends ConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               (state.isCalling)
-                  ? Expanded(flex: 1, child: VoiceView())
+                  ? Expanded(flex: 1, child: VoiceScreen(channelId: channelId))
                   : SizedBox(),
               Divider(),
               Expanded(flex: 3, child: ChatView(channelId: channelId)),
