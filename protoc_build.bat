@@ -1,1 +1,0 @@
-protoc --proto_path=proto --dart_out=grpc:lib/core/generated .\proto\*.proto
