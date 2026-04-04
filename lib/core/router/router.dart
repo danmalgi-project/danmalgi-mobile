@@ -160,9 +160,7 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
           return currentPath == RoutePaths.login ? null : RoutePaths.login;
         },
         error: (error, canRetry) {
-          // ⚠️ 여기서 unauth로 보내지 말 것.
-          // 일단은 splash로 보내고 splash에서 error UI + retry 버튼 제공 추천.
-          return currentPath == RoutePaths.splash ? null : RoutePaths.splash;
+          return currentPath == RoutePaths.login ? null : RoutePaths.login;
         },
       );
     },

@@ -57,9 +57,8 @@ class LocalStorageService {
   OAuthType? get oAuthType =>
       OAuthType.values.byName(_prefs.getString(_keyOAuthType) ?? "GOOGLE");
 
-  UserStatus? get status => UserStatus.values.byName(
-    _prefs.getString(_keyUserStatus) ?? "USER_PENDING",
-  );
+  UserStatus? get status =>
+      UserStatus.values.byName(_prefs.getString(_keyUserStatus) ?? "PENDING");
 
   DateTime? get lastLoginTime {
     final timestamp = _prefs.getInt(_keyLastLoginTime) ?? 0;
