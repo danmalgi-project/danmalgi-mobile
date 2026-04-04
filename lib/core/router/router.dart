@@ -84,19 +84,19 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
               ),
             ],
           ),
-          StatefulShellBranch(
-            // 채널 전환 과정에서 refresh를 진행하기 때문에 미리 생성되어 있어야함
-            preload: true,
-            routes: [
-              GoRoute(
-                path: RoutePaths.home,
-                name: RouteNames.home,
-                builder: (context, state) {
-                  return HomePage();
-                },
-              ),
-            ],
-          ),
+          // StatefulShellBranch(
+          //   // 채널 전환 과정에서 refresh를 진행하기 때문에 미리 생성되어 있어야함
+          //   preload: true,
+          //   routes: [
+          //     GoRoute(
+          //       path: RoutePaths.home,
+          //       name: RouteNames.home,
+          //       builder: (context, state) {
+          //         return HomePage();
+          //       },
+          //     ),
+          //   ],
+          // ),
           StatefulShellBranch(
             // 채널 전환 과정에서 refresh를 진행하기 때문에 미리 생성되어 있어야함
             preload: true,
