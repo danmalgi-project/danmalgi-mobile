@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:danmalgi_mobile/core/generated/signaling.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/signaling/v1/signaling.pbgrpc.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';

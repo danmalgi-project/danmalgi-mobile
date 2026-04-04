@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/generated/auth.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/core/services/secure_storage_service.dart';
 import 'package:danmalgi_mobile/features/auth/domain/auth_state.dart';

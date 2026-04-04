@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:danmalgi_mobile/core/generated/user.pb.dart' as pb;
+import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart' as pb;
 import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 

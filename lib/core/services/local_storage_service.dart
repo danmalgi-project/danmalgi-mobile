@@ -73,7 +73,7 @@ class LocalStorageService {
     await setTag(user.tag);
     // TODO: OAuthType 에러 핸들링 필요
     await setOAuthType(user.oauthType ?? OAuthType.GOOGLE);
-    await setStatus(user.status ?? UserStatus.USER_PENDING);
+    await setStatus(user.status ?? UserStatus.PENDING);
     await setLastLoginTime(DateTime.now());
   }
 

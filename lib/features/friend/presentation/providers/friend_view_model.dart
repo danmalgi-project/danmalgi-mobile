@@ -4,8 +4,8 @@ import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:danmalgi_mobile/core/generated/friend.pb.dart';
-import 'package:danmalgi_mobile/core/generated/user.pb.dart';
+import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
+import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart';
 import 'package:danmalgi_mobile/features/friend/data/providers/friend_providers.dart';
 import 'package:danmalgi_mobile/features/friend/domain/friend_state.dart';
 
@@ -33,7 +33,7 @@ class FriendViewModel extends AsyncNotifier<FriendState> {
           name: '[TEST$i]',
           tag: '${7776 + i}',
         ),
-        status: FriendStatus.friend_accept,
+        status: FriendStatus.ACCEPT,
       ),
     );
 
@@ -49,7 +49,7 @@ class FriendViewModel extends AsyncNotifier<FriendState> {
       Friend(
         id: Int64(1001),
         user: User(id: Int64(-1), email: '', name: 'test1', tag: 'test'),
-        status: FriendStatus.friend_accept,
+        status: FriendStatus.ACCEPT,
       ),
     ]);
 

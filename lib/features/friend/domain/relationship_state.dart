@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/generated/relationship.pb.dart';
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
 
 class RelationshipState {
   final List<Relationship> incomingRelationshipList;

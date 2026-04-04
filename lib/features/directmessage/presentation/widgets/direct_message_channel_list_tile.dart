@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:danmalgi_mobile/core/generated/direct_message.pb.dart';
+import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 
 class DirectMessageChannelListTile extends ConsumerWidget {
   final DirectMessageChannel channel;

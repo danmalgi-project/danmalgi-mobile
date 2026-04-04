@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:danmalgi_mobile/core/generated/relationship.pb.dart';
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
 
 class OutgoingRelationshipListTile extends ConsumerWidget {
   final Relationship relationship;

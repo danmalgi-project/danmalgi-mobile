@@ -1,7 +1,7 @@
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
-import 'package:danmalgi_mobile/core/generated/direct_message.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pbgrpc.dart';
 
 class DirectMessageChannelRepository {
   final DirectMessageServiceClient client;

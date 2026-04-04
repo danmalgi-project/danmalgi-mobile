@@ -6,7 +6,7 @@ import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:danmalgi_mobile/core/generated/direct_message.pb.dart';
+import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/repositories/direct_message_repository.dart';
 import 'package:danmalgi_mobile/features/directmessage/domain/direct_message_channel_list_state.dart';

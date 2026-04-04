@@ -1,14 +1,14 @@
-import 'package:danmalgi_mobile/core/generated/signaling.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/signaling/v1/signaling.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/error_interceptor.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:danmalgi_mobile/core/generated/auth.pbgrpc.dart';
-import 'package:danmalgi_mobile/core/generated/chat.pbgrpc.dart';
-import 'package:danmalgi_mobile/core/generated/direct_message.pbgrpc.dart';
-import 'package:danmalgi_mobile/core/generated/friend.pbgrpc.dart';
-import 'package:danmalgi_mobile/core/generated/relationship.pbgrpc.dart';
-import 'package:danmalgi_mobile/core/generated/user.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/chat/v1/chat.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/user/v1/user.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/grpc_channel_service.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/auth_interceptor.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';

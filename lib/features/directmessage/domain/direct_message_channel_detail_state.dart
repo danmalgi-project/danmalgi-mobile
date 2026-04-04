@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/generated/direct_message.pb.dart';
+import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 
 class DirectMessageChannelDetailState {
   DirectMessageChannel channel;

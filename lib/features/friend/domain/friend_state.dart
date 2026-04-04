@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/generated/friend.pb.dart';
+import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 
 class FriendState {
   final List<Friend> friendList;

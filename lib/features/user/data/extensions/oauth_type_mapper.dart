@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/generated/user.pbenum.dart' as pb;
+import 'package:danmalgi_mobile/core/generated/user/v1/user.pbenum.dart' as pb;
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 
 extension OAuthTypeMapper on pb.OauthType {

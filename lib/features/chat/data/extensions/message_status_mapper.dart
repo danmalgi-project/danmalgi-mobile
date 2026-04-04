@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/generated/chat.pbenum.dart' as pb;
+import 'package:danmalgi_mobile/core/generated/chat/v1/chat.pbenum.dart' as pb;
 import 'package:danmalgi_mobile/features/chat/domain/message_status.dart';
 
 extension MessageStatusMapper on pb.MessageStatus {
