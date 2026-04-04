@@ -1,7 +1,7 @@
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
-import 'package:danmalgi_mobile/core/generated/relationship.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
 
 class RelationshipRepository {
   final RelationshipServiceClient client;

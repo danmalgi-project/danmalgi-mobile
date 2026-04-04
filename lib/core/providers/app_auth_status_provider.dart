@@ -61,13 +61,13 @@ final appAuthStatusProvider = Provider<AppAuthState>((ref) {
 
   final user = userState.user;
   switch (user.status) {
-    case UserStatus.USER_PENDING:
+    case UserStatus.PENDING:
       return AppAuthState.needsRegistration();
-    case UserStatus.USER_ACTIVCE:
+    case UserStatus.ACTIVE:
       return AppAuthState.authenticated(user: user);
-    case UserStatus.USER_BLOCKED:
+    case UserStatus.BLOCKED:
       return AppAuthState.blocked();
-    case UserStatus.USER_WITHDRAWAL:
+    case UserStatus.WITHDRAWAL:
       return AppAuthState.withdrawn();
     default:
       return AppAuthState.error(

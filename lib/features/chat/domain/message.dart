@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:danmalgi_mobile/core/generated/chat.pb.dart' as pb;
+import 'package:danmalgi_mobile/core/generated/chat/v1/chat.pb.dart' as pb;
 import 'package:danmalgi_mobile/features/chat/data/extensions/message_status_mapper.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message_status.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';

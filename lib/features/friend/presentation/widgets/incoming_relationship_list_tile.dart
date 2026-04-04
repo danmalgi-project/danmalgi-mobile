@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:danmalgi_mobile/core/generated/relationship.pb.dart';
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
 
 class IncomingRelationshipListTile extends ConsumerWidget {

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:danmalgi_mobile/core/generated/friend.pb.dart';
+import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 
