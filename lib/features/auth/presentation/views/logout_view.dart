@@ -1,4 +1,5 @@
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
+import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,9 @@ class LogoutView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
+    final fcmToken = ref.watch(fcmTokenProvider).value;
+    final permissionAsync = ref.watch(notificationPermissionProvider);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -28,7 +32,9 @@ class LogoutView extends ConsumerWidget {
                   Text(user.lastLoginTime.toString()),
                 ],
               ),
-
+            if (fcmToken != null) Text(fcmToken),
+            if (permissionAsync.value != null)
+              Text(permissionAsync.requireValue.name),
             ElevatedButton(
               onPressed: () async =>
                   await ref.read(authNotifierProvider.notifier).logout(),
