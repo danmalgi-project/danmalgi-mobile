@@ -92,13 +92,14 @@ final $typed_data.Uint8List uploadProfileRequestDescriptor = $convert.base64Deco
 const UploadProfileResponse$json = {
   '1': 'UploadProfileResponse',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '10': 'url'},
+    {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.user.v1.User', '10': 'user'},
   ],
 };
 
 /// Descriptor for `UploadProfileResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uploadProfileResponseDescriptor = $convert
-    .base64Decode('ChVVcGxvYWRQcm9maWxlUmVzcG9uc2USEAoDdXJsGAEgASgJUgN1cmw=');
+final $typed_data.Uint8List uploadProfileResponseDescriptor = $convert.base64Decode(
+    'ChVVcGxvYWRQcm9maWxlUmVzcG9uc2USIQoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlclIEdX'
+    'Nlcg==');
 
 @$core.Deprecated('Use userDescriptor instead')
 const User$json = {
@@ -124,6 +125,7 @@ const User$json = {
       '6': '.user.v1.UserStatus',
       '10': 'status'
     },
+    {'1': 'profile_image_url', '3': 7, '4': 1, '5': 9, '10': 'profileImageUrl'},
   ],
 };
 
@@ -132,4 +134,4 @@ final $typed_data.Uint8List userDescriptor = $convert.base64Decode(
     'CgRVc2VyEg4KAmlkGAEgASgDUgJpZBIUCgVlbWFpbBgCIAEoCVIFZW1haWwSEgoEbmFtZRgDIA'
     'EoCVIEbmFtZRIQCgN0YWcYBCABKAlSA3RhZxIxCgpvYXV0aF90eXBlGAUgASgOMhIudXNlci52'
     'MS5PYXV0aFR5cGVSCW9hdXRoVHlwZRIrCgZzdGF0dXMYBiABKA4yEy51c2VyLnYxLlVzZXJTdG'
-    'F0dXNSBnN0YXR1cw==');
+    'F0dXNSBnN0YXR1cxIqChFwcm9maWxlX2ltYWdlX3VybBgHIAEoCVIPcHJvZmlsZUltYWdlVXJs');

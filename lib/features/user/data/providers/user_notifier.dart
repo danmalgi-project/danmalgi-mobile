@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,6 +80,30 @@ class UserNotifier extends AsyncNotifier<UserState?> {
       state = AsyncData(UserState(user: user));
     } catch (e, st) {
       state = AsyncError(e, st);
+    }
+  }
+
+  Future<void> uploadProfileImage({
+    required Uint8List bytes,
+    String? mimeType = "jpg",
+  }) async {
+    final currentState = state.value;
+    // state = const AsyncLoading();
+
+    try {
+      final User user = await ref
+          .read(userRepositoryProvider)
+          .uploadProfileImage(bytes: bytes, mimeType: mimeType);
+
+      if (currentState == null) {
+        state = AsyncData(currentState);
+        return;
+      }
+
+      state = AsyncData(currentState.copyWith(user: user));
+    } catch (e) {
+      print(e);
+      state = AsyncData(currentState);
     }
   }
 

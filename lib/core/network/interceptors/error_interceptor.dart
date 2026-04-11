@@ -38,19 +38,21 @@ class ErrorInterceptor implements ClientInterceptor {
       invoker(method, request, mergedOptions),
     ).catchError((Object error) {
       if (error is GrpcError) {
+        print(error);
+
         if (error.code == StatusCode.unauthenticated) {
           logout();
           throw const AppException.unauthenticated();
         }
         if (error.code == StatusCode.notFound) {
-          logout();
+          // 자체 유저를 못 찾을 경우 로그아웃 시키도록 만들려 했는데, 그 외에 잘못된 요청을 보낼 경우에도 notFound가 발생하면 강제로 로그아웃 되는 문제가 발생
+          // logout();
           throw const AppException.notFound();
         }
         if (error.code == StatusCode.deadlineExceeded) {
           throw const AppException.timeout();
         }
       }
-
       throw const AppException.network();
     });
   }

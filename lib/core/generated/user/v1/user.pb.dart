@@ -217,10 +217,10 @@ class UploadProfileRequest extends $pb.GeneratedMessage {
 
 class UploadProfileResponse extends $pb.GeneratedMessage {
   factory UploadProfileResponse({
-    $core.String? url,
+    User? user,
   }) {
     final result = create();
-    if (url != null) result.url = url;
+    if (user != null) result.user = user;
     return result;
   }
 
@@ -237,7 +237,7 @@ class UploadProfileResponse extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UploadProfileResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'user.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..aOM<User>(1, _omitFieldNames ? '' : 'user', subBuilder: User.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -261,13 +261,15 @@ class UploadProfileResponse extends $pb.GeneratedMessage {
   static UploadProfileResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get url => $_getSZ(0);
+  User get user => $_getN(0);
   @$pb.TagNumber(1)
-  set url($core.String value) => $_setString(0, value);
+  set user(User value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasUrl() => $_has(0);
+  $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUrl() => $_clearField(1);
+  void clearUser() => $_clearField(1);
+  @$pb.TagNumber(1)
+  User ensureUser() => $_ensure(0);
 }
 
 class User extends $pb.GeneratedMessage {
@@ -278,6 +280,7 @@ class User extends $pb.GeneratedMessage {
     $core.String? tag,
     OauthType? oauthType,
     UserStatus? status,
+    $core.String? profileImageUrl,
   }) {
     final result = create();
     if (id != null) result.id = id;
@@ -286,6 +289,7 @@ class User extends $pb.GeneratedMessage {
     if (tag != null) result.tag = tag;
     if (oauthType != null) result.oauthType = oauthType;
     if (status != null) result.status = status;
+    if (profileImageUrl != null) result.profileImageUrl = profileImageUrl;
     return result;
   }
 
@@ -310,6 +314,7 @@ class User extends $pb.GeneratedMessage {
         enumValues: OauthType.values)
     ..aE<UserStatus>(6, _omitFieldNames ? '' : 'status',
         enumValues: UserStatus.values)
+    ..aOS(7, _omitFieldNames ? '' : 'profileImageUrl')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -383,6 +388,15 @@ class User extends $pb.GeneratedMessage {
   $core.bool hasStatus() => $_has(5);
   @$pb.TagNumber(6)
   void clearStatus() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get profileImageUrl => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set profileImageUrl($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasProfileImageUrl() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearProfileImageUrl() => $_clearField(7);
 }
 
 const $core.bool _omitFieldNames =

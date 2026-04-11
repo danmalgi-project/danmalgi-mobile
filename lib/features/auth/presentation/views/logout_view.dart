@@ -1,10 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
+import 'package:danmalgi_mobile/features/user/data/providers/user_notifier.dart';
+import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
+import 'package:image_picker/image_picker.dart';
 
 class LogoutView extends ConsumerWidget {
   const LogoutView({super.key});
@@ -23,6 +28,7 @@ class LogoutView extends ConsumerWidget {
             if (user != null)
               Column(
                 children: [
+                  CachedCircleAvatar(url: user.imageUrl),
                   Text(user.id.toString()),
                   Text(user.email),
                   Text(user.name),
@@ -36,6 +42,32 @@ class LogoutView extends ConsumerWidget {
             if (permissionAsync.value != null)
               Text(permissionAsync.requireValue.name),
             ElevatedButton(
+              onPressed: () async {
+                final picker = ImagePicker();
+                final image = await picker.pickImage(
+                  source: ImageSource.gallery,
+                );
+                if (image == null) return;
+                final bytes = await image.readAsBytes();
+
+                await ref
+                    .read(userNotifierProvider.notifier)
+                    .uploadProfileImage(bytes: bytes, mimeType: image.mimeType);
+              },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                minimumSize: Size(300, 50),
+                foregroundColor: Colors.white,
+                backgroundColor: Color(0xFF03C75A),
+              ),
+              child: Text(
+                "프로필 이미지 업로드",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+              ),
+            ),
+            ElevatedButton(
               onPressed: () async =>
                   await ref.read(authNotifierProvider.notifier).logout(),
               style: ElevatedButton.styleFrom(
@@ -47,7 +79,7 @@ class LogoutView extends ConsumerWidget {
                 backgroundColor: Color(0xFF03C75A),
               ),
               child: Text(
-                "네이버 로그아웃",
+                "로그아웃",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
               ),
             ),

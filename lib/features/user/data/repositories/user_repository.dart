@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
 import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
@@ -31,6 +32,19 @@ class UserRepository {
     } catch (e) {
       return true;
     }
+  }
+
+  Future<User> uploadProfileImage({
+    required Uint8List bytes,
+    String? mimeType = "jpg",
+  }) async {
+    final request = pb.UploadProfileRequest(image: bytes, extension_2: "jpg");
+
+    final response = await client.uploadProfile(request);
+
+    final user = User.fromProto(response.user);
+
+    return user;
   }
 
   Future<User> register({required String nickname, required String tag}) async {
