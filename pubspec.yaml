@@ -46,6 +46,7 @@ dependencies:
   flutter_webrtc: ^1.4.1
   flutter_dotenv: ^6.0.0
   flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.2.4
   google_sign_in_all_platforms: ^2.0.2
   logger: ^2.6.2
   freezed_annotation: ^3.1.0
@@ -91,10 +92,10 @@ flutter:
   assets:
     - .env
 
-    - assets/images/OAuth/shape1.svg
-    - assets/images/OAuth/shape2.svg
-    - assets/images/OAuth/shape3.svg
-    - assets/images/OAuth/shape4.svg
+    - assets/images/Login/shape1.png
+    - assets/images/Login/shape2.png
+    - assets/images/Login/Google.svg
+    - assets/images/Login/Apple.svg
 
   fonts:
     - family: Pretendard
