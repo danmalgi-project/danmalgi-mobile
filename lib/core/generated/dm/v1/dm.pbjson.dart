@@ -87,6 +87,7 @@ const DirectMessageChannel$json = {
       '10': 'users'
     },
     {'1': 'channel_name', '3': 3, '4': 1, '5': 9, '10': 'channelName'},
+    {'1': 'is_group', '3': 4, '4': 1, '5': 8, '10': 'isGroup'},
   ],
 };
 
@@ -94,4 +95,4 @@ const DirectMessageChannel$json = {
 final $typed_data.Uint8List directMessageChannelDescriptor = $convert.base64Decode(
     'ChREaXJlY3RNZXNzYWdlQ2hhbm5lbBITCgVkbV9pZBgBIAEoA1IEZG1JZBIjCgV1c2VycxgCIA'
     'MoCzINLnVzZXIudjEuVXNlclIFdXNlcnMSIQoMY2hhbm5lbF9uYW1lGAMgASgJUgtjaGFubmVs'
-    'TmFtZQ==');
+    'TmFtZRIZCghpc19ncm91cBgEIAEoCFIHaXNHcm91cA==');

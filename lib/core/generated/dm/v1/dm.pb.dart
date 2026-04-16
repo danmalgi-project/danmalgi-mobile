@@ -201,11 +201,13 @@ class DirectMessageChannel extends $pb.GeneratedMessage {
     $fixnum.Int64? dmId,
     $core.Iterable<$2.User>? users,
     $core.String? channelName,
+    $core.bool? isGroup,
   }) {
     final result = create();
     if (dmId != null) result.dmId = dmId;
     if (users != null) result.users.addAll(users);
     if (channelName != null) result.channelName = channelName;
+    if (isGroup != null) result.isGroup = isGroup;
     return result;
   }
 
@@ -226,6 +228,7 @@ class DirectMessageChannel extends $pb.GeneratedMessage {
     ..pPM<$2.User>(2, _omitFieldNames ? '' : 'users',
         subBuilder: $2.User.create)
     ..aOS(3, _omitFieldNames ? '' : 'channelName')
+    ..aOB(4, _omitFieldNames ? '' : 'isGroup')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -267,6 +270,15 @@ class DirectMessageChannel extends $pb.GeneratedMessage {
   $core.bool hasChannelName() => $_has(2);
   @$pb.TagNumber(3)
   void clearChannelName() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get isGroup => $_getBF(3);
+  @$pb.TagNumber(4)
+  set isGroup($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasIsGroup() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearIsGroup() => $_clearField(4);
 }
 
 const $core.bool _omitFieldNames =
