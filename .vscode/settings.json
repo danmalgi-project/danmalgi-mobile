@@ -71,5 +71,6 @@
     "xtree": "cpp",
     "xutility": "cpp"
   },
-  "cmake.ignoreCMakeListsMissing": true
+  "cmake.ignoreCMakeListsMissing": true,
+  "sweetpad.build.xcodeWorkspacePath": "ios/Runner.xcworkspace"
 }
