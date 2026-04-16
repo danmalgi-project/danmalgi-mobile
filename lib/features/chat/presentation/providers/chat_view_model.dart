@@ -58,14 +58,14 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
 
     final List<Message> initialData = await ref
         .read(chatRepositoryProvider)
-        .getPreviousMessages(channelId: channelId, messageId: -1, limit: 10);
+        .getPreviousMessages(channelId: channelId, limit: 10);
 
     return ChatState(messages: initialData);
   }
 
   Future<void> getPreviousMessages({
     required int channelId,
-    int messageId = -1,
+    int? messageId,
     int limit = 10,
   }) async {
     try {

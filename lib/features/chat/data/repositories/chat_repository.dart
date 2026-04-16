@@ -14,12 +14,13 @@ class ChatRepository {
 
   Future<List<Message>> getPreviousMessages({
     required int channelId,
-    int messageId = -1,
+    int? messageId,
     int limit = 10,
   }) async {
-    final request = pb.GetPreviousMessagesRequest(
+    final Int64? _messageId = (messageId == null) ? null : Int64(messageId);
+    final pb.GetPreviousMessagesRequest request = pb.GetPreviousMessagesRequest(
       channelId: Int64(channelId),
-      messageId: Int64(messageId),
+      messageId: _messageId,
       limit: limit,
     );
 
