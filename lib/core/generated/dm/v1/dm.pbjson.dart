@@ -73,6 +73,43 @@ final $typed_data.Uint8List createDirectMessageChannelResponseDescriptor =
         'NoYW5uZWwYASABKAsyGy5kbS52MS5EaXJlY3RNZXNzYWdlQ2hhbm5lbFIUZGlyZWN0TWVzc2Fn'
         'ZUNoYW5uZWw=');
 
+@$core.Deprecated('Use uploadChannelImageRequestDescriptor instead')
+const UploadChannelImageRequest$json = {
+  '1': 'UploadChannelImageRequest',
+  '2': [
+    {'1': 'dm_id', '3': 1, '4': 1, '5': 3, '10': 'dmId'},
+    {'1': 'image', '3': 2, '4': 1, '5': 12, '10': 'image'},
+    {'1': 'extension', '3': 3, '4': 1, '5': 9, '10': 'extension'},
+  ],
+};
+
+/// Descriptor for `UploadChannelImageRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadChannelImageRequestDescriptor =
+    $convert.base64Decode(
+        'ChlVcGxvYWRDaGFubmVsSW1hZ2VSZXF1ZXN0EhMKBWRtX2lkGAEgASgDUgRkbUlkEhQKBWltYW'
+        'dlGAIgASgMUgVpbWFnZRIcCglleHRlbnNpb24YAyABKAlSCWV4dGVuc2lvbg==');
+
+@$core.Deprecated('Use uploadChannelImageResponseDescriptor instead')
+const UploadChannelImageResponse$json = {
+  '1': 'UploadChannelImageResponse',
+  '2': [
+    {
+      '1': 'direct_message_channel',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.dm.v1.DirectMessageChannel',
+      '10': 'directMessageChannel'
+    },
+  ],
+};
+
+/// Descriptor for `UploadChannelImageResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List uploadChannelImageResponseDescriptor =
+    $convert.base64Decode(
+        'ChpVcGxvYWRDaGFubmVsSW1hZ2VSZXNwb25zZRJRChZkaXJlY3RfbWVzc2FnZV9jaGFubmVsGA'
+        'EgASgLMhsuZG0udjEuRGlyZWN0TWVzc2FnZUNoYW5uZWxSFGRpcmVjdE1lc3NhZ2VDaGFubmVs');
+
 @$core.Deprecated('Use directMessageChannelDescriptor instead')
 const DirectMessageChannel$json = {
   '1': 'DirectMessageChannel',
@@ -88,6 +125,7 @@ const DirectMessageChannel$json = {
     },
     {'1': 'channel_name', '3': 3, '4': 1, '5': 9, '10': 'channelName'},
     {'1': 'is_group', '3': 4, '4': 1, '5': 8, '10': 'isGroup'},
+    {'1': 'channel_image_url', '3': 5, '4': 1, '5': 9, '10': 'channelImageUrl'},
   ],
 };
 
@@ -95,4 +133,5 @@ const DirectMessageChannel$json = {
 final $typed_data.Uint8List directMessageChannelDescriptor = $convert.base64Decode(
     'ChREaXJlY3RNZXNzYWdlQ2hhbm5lbBITCgVkbV9pZBgBIAEoA1IEZG1JZBIjCgV1c2VycxgCIA'
     'MoCzINLnVzZXIudjEuVXNlclIFdXNlcnMSIQoMY2hhbm5lbF9uYW1lGAMgASgJUgtjaGFubmVs'
-    'TmFtZRIZCghpc19ncm91cBgEIAEoCFIHaXNHcm91cA==');
+    'TmFtZRIZCghpc19ncm91cBgEIAEoCFIHaXNHcm91cBIqChFjaGFubmVsX2ltYWdlX3VybBgFIA'
+    'EoCVIPY2hhbm5lbEltYWdlVXJs');

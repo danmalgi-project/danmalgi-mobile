@@ -55,6 +55,14 @@ class DirectMessageServiceClient extends $grpc.Client {
         options: options);
   }
 
+  /// UploadChannelImage uploads an image for a group channel.
+  $grpc.ResponseFuture<$1.UploadChannelImageResponse> uploadChannelImage(
+    $1.UploadChannelImageRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$uploadChannelImage, request, options: options);
+  }
+
   // method descriptors
 
   static final _$getDirectMessageChannelList =
@@ -68,6 +76,11 @@ class DirectMessageServiceClient extends $grpc.Client {
       '/dm.v1.DirectMessageService/CreateDirectMessageChannel',
       ($1.CreateDirectMessageChannelRequest value) => value.writeToBuffer(),
       $1.CreateDirectMessageChannelResponse.fromBuffer);
+  static final _$uploadChannelImage = $grpc.ClientMethod<
+          $1.UploadChannelImageRequest, $1.UploadChannelImageResponse>(
+      '/dm.v1.DirectMessageService/UploadChannelImage',
+      ($1.UploadChannelImageRequest value) => value.writeToBuffer(),
+      $1.UploadChannelImageResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('dm.v1.DirectMessageService')
@@ -94,6 +107,15 @@ abstract class DirectMessageServiceBase extends $grpc.Service {
             $1.CreateDirectMessageChannelRequest.fromBuffer(value),
         ($1.CreateDirectMessageChannelResponse value) =>
             value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.UploadChannelImageRequest,
+            $1.UploadChannelImageResponse>(
+        'UploadChannelImage',
+        uploadChannelImage_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.UploadChannelImageRequest.fromBuffer(value),
+        ($1.UploadChannelImageResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.GetDirectMessageChannelListResponse>
@@ -114,4 +136,13 @@ abstract class DirectMessageServiceBase extends $grpc.Service {
   $async.Future<$1.CreateDirectMessageChannelResponse>
       createDirectMessageChannel(
           $grpc.ServiceCall call, $1.CreateDirectMessageChannelRequest request);
+
+  $async.Future<$1.UploadChannelImageResponse> uploadChannelImage_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.UploadChannelImageRequest> $request) async {
+    return uploadChannelImage($call, await $request);
+  }
+
+  $async.Future<$1.UploadChannelImageResponse> uploadChannelImage(
+      $grpc.ServiceCall call, $1.UploadChannelImageRequest request);
 }

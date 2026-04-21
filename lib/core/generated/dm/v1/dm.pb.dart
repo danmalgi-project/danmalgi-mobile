@@ -195,6 +195,148 @@ class CreateDirectMessageChannelResponse extends $pb.GeneratedMessage {
   DirectMessageChannel ensureDirectMessageChannel() => $_ensure(0);
 }
 
+/// UploadChannelImage
+class UploadChannelImageRequest extends $pb.GeneratedMessage {
+  factory UploadChannelImageRequest({
+    $fixnum.Int64? dmId,
+    $core.List<$core.int>? image,
+    $core.String? extension_3,
+  }) {
+    final result = create();
+    if (dmId != null) result.dmId = dmId;
+    if (image != null) result.image = image;
+    if (extension_3 != null) result.extension_3 = extension_3;
+    return result;
+  }
+
+  UploadChannelImageRequest._();
+
+  factory UploadChannelImageRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadChannelImageRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadChannelImageRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'dm.v1'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'dmId')
+    ..a<$core.List<$core.int>>(
+        2, _omitFieldNames ? '' : 'image', $pb.PbFieldType.OY)
+    ..aOS(3, _omitFieldNames ? '' : 'extension')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadChannelImageRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadChannelImageRequest copyWith(
+          void Function(UploadChannelImageRequest) updates) =>
+      super.copyWith((message) => updates(message as UploadChannelImageRequest))
+          as UploadChannelImageRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadChannelImageRequest create() => UploadChannelImageRequest._();
+  @$core.override
+  UploadChannelImageRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadChannelImageRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadChannelImageRequest>(create);
+  static UploadChannelImageRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get dmId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set dmId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDmId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDmId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get image => $_getN(1);
+  @$pb.TagNumber(2)
+  set image($core.List<$core.int> value) => $_setBytes(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasImage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearImage() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get extension_3 => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set extension_3($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasExtension_3() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExtension_3() => $_clearField(3);
+}
+
+class UploadChannelImageResponse extends $pb.GeneratedMessage {
+  factory UploadChannelImageResponse({
+    DirectMessageChannel? directMessageChannel,
+  }) {
+    final result = create();
+    if (directMessageChannel != null)
+      result.directMessageChannel = directMessageChannel;
+    return result;
+  }
+
+  UploadChannelImageResponse._();
+
+  factory UploadChannelImageResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UploadChannelImageResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UploadChannelImageResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'dm.v1'),
+      createEmptyInstance: create)
+    ..aOM<DirectMessageChannel>(
+        1, _omitFieldNames ? '' : 'directMessageChannel',
+        subBuilder: DirectMessageChannel.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadChannelImageResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UploadChannelImageResponse copyWith(
+          void Function(UploadChannelImageResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as UploadChannelImageResponse))
+          as UploadChannelImageResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UploadChannelImageResponse create() => UploadChannelImageResponse._();
+  @$core.override
+  UploadChannelImageResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UploadChannelImageResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UploadChannelImageResponse>(create);
+  static UploadChannelImageResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  DirectMessageChannel get directMessageChannel => $_getN(0);
+  @$pb.TagNumber(1)
+  set directMessageChannel(DirectMessageChannel value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDirectMessageChannel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDirectMessageChannel() => $_clearField(1);
+  @$pb.TagNumber(1)
+  DirectMessageChannel ensureDirectMessageChannel() => $_ensure(0);
+}
+
 /// model
 class DirectMessageChannel extends $pb.GeneratedMessage {
   factory DirectMessageChannel({
@@ -202,12 +344,14 @@ class DirectMessageChannel extends $pb.GeneratedMessage {
     $core.Iterable<$2.User>? users,
     $core.String? channelName,
     $core.bool? isGroup,
+    $core.String? channelImageUrl,
   }) {
     final result = create();
     if (dmId != null) result.dmId = dmId;
     if (users != null) result.users.addAll(users);
     if (channelName != null) result.channelName = channelName;
     if (isGroup != null) result.isGroup = isGroup;
+    if (channelImageUrl != null) result.channelImageUrl = channelImageUrl;
     return result;
   }
 
@@ -229,6 +373,7 @@ class DirectMessageChannel extends $pb.GeneratedMessage {
         subBuilder: $2.User.create)
     ..aOS(3, _omitFieldNames ? '' : 'channelName')
     ..aOB(4, _omitFieldNames ? '' : 'isGroup')
+    ..aOS(5, _omitFieldNames ? '' : 'channelImageUrl')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -279,6 +424,15 @@ class DirectMessageChannel extends $pb.GeneratedMessage {
   $core.bool hasIsGroup() => $_has(3);
   @$pb.TagNumber(4)
   void clearIsGroup() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get channelImageUrl => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set channelImageUrl($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasChannelImageUrl() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearChannelImageUrl() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =
