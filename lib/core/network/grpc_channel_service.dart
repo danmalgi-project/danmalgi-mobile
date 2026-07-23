@@ -11,7 +11,8 @@ class GrpcChannelService {
       host,
       port: port,
       options: const ChannelOptions(
-        credentials: ChannelCredentials.insecure(),
+        // credentials: ChannelCredentials.insecure(),
+        credentials: ChannelCredentials.secure(),
         connectionTimeout: Duration(seconds: 5),
         // keepAlive: ClientKeepAliveOptions(),
       ),

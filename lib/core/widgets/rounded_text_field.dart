@@ -10,10 +10,13 @@ class RoundedTextField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final String? hintText;
   final String? errorText;
+  final Color fillColor;
   final Color borderColor;
   final Color focusedColor;
   final Color errorColor;
   final BorderRadius borderRadius;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   const RoundedTextField({
     super.key,
@@ -22,18 +25,19 @@ class RoundedTextField extends StatelessWidget {
     this.focusNode,
     this.onChanged,
     this.onSubmitted,
-    this.contentPadding = const EdgeInsets.only(
-      left: 24,
-      top: 18,
-      right: 24,
-      bottom: 18,
+    this.contentPadding = const EdgeInsets.symmetric(
+      vertical: 24.0,
+      horizontal: 27.0,
     ),
     this.hintText,
     this.errorText,
+    this.fillColor = const Color(0xFF1C1C1E),
     this.borderColor = Colors.transparent,
     this.focusedColor = Colors.black,
     this.errorColor = Colors.red,
     this.borderRadius = const BorderRadius.all(Radius.circular(16.0)),
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   @override
@@ -44,7 +48,6 @@ class RoundedTextField extends StatelessWidget {
       focusNode: focusNode,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
-      cursorColor: Colors.black,
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: hintText,
@@ -55,7 +58,7 @@ class RoundedTextField extends StatelessWidget {
           height: 1.4,
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: fillColor,
         contentPadding: contentPadding,
         focusedBorder: OutlineInputBorder(
           borderRadius: borderRadius,
@@ -82,6 +85,8 @@ class RoundedTextField extends StatelessWidget {
         // border: OutlineInputBorder(
         //   borderRadius: borderRadius,
         // ),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
     );
   }

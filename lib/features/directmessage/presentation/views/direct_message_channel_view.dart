@@ -23,8 +23,8 @@ class DirectMessageChannelView extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         // centerTitle: true,
-        backgroundColor: Color(0xFFF1F3F5),
-        surfaceTintColor: Color(0xFFF1F3F5),
+        // backgroundColor: Color(0xFFF1F3F5),
+        // surfaceTintColor: Color(0xFFF1F3F5),
         title: Text(
           currentState?.channel.channelName ?? '채팅방 불러오는 중...',
           style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.bold),

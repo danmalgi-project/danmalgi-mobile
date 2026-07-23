@@ -58,7 +58,7 @@ class ChatRepository {
 
   Future<void> sendMessage({
     required int channelId,
-    required String content,
+    String? content,
     List<int>? file,
   }) async {
     final request = pb.SendMessageRequest(

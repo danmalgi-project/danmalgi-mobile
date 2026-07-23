@@ -75,14 +75,25 @@ class LoginView extends ConsumerWidget {
                                         .login(oAuthType: OAuthType.GOOGLE);
                                   },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 18.0),
+                              backgroundColor: AppPrimitiveColors.white,
+                              foregroundColor: AppPrimitiveColors.black,
+                              disabledBackgroundColor: AppPrimitiveColors.white
+                                  .withValues(alpha: 0.6),
+                              disabledForegroundColor: AppPrimitiveColors.black
+                                  .withValues(alpha: 0.4),
+                              overlayColor: AppPrimitiveColors.black.withValues(
+                                alpha: 0.05,
+                              ),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  "assets/images/Login/Google.svg",
-                                ),
+                                SvgPicture.asset("assets/Icons/Google.svg"),
                                 SizedBox(width: 8.0),
                                 Text(
                                   "Sign up with Google",
@@ -108,14 +119,25 @@ class LoginView extends ConsumerWidget {
                                         .login(oAuthType: OAuthType.GOOGLE);
                                   },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 18.0),
+                              backgroundColor: AppPrimitiveColors.white,
+                              foregroundColor: AppPrimitiveColors.black,
+                              disabledBackgroundColor: AppPrimitiveColors.white
+                                  .withValues(alpha: 0.6),
+                              disabledForegroundColor: AppPrimitiveColors.black
+                                  .withValues(alpha: 0.4),
+                              overlayColor: AppPrimitiveColors.black.withValues(
+                                alpha: 0.05,
+                              ),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  "assets/images/Login/Apple.svg",
-                                ),
+                                SvgPicture.asset("assets/Icons/Apple.svg"),
                                 SizedBox(width: 8.0),
                                 Text(
                                   "Sign up with Apple",

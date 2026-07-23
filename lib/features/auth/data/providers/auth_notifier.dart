@@ -18,6 +18,7 @@ class AuthNotifier extends AsyncNotifier<AuthState?> {
     final String? token = await ref
         .watch(secureStorageProvider)
         .getAccessToken();
+    print(token);
     if (token == null) return null;
     return AuthState(accessToken: token);
   }

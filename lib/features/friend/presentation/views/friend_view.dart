@@ -59,13 +59,13 @@ class FriendViewState extends ConsumerState<FriendView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 4, top: 46.h),
+                      padding: EdgeInsets.only(left: 4, top: 46),
                       child: Text(
                         "친구",
                         style: TextStyle(
@@ -74,7 +74,7 @@ class FriendViewState extends ConsumerState<FriendView>
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 20),
                     IntrinsicHeight(
                       child: (user != null)
                           ? Row(
@@ -168,7 +168,7 @@ class FriendViewState extends ConsumerState<FriendView>
                   ],
                 ),
               ),
-              SizedBox(height: 36.h),
+              SizedBox(height: 36),
               relationshipViewModel(ref).when(
                 data: (state) {
                   if (state.incomingRelationshipList.isEmpty) return SizedBox();
@@ -178,22 +178,21 @@ class FriendViewState extends ConsumerState<FriendView>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
                           "친구 요청",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 16,
-                            color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 16),
                       SizedBox(
                         height: 126,
                         child: ListView.builder(
                           clipBehavior: Clip.none,
-                          padding: EdgeInsets.only(left: 14.0.w),
+                          padding: EdgeInsets.only(left: 14.0),
                           controller: _scrollController,
                           physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
@@ -221,7 +220,7 @@ class FriendViewState extends ConsumerState<FriendView>
                 loading: () => const Center(child: CircularProgressIndicator()),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,13 +230,12 @@ class FriendViewState extends ConsumerState<FriendView>
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: Colors.black,
                       ),
                     ),
                     friendViewModel(ref).when(
                       data: (state) {
                         return ListView.separated(
-                          padding: EdgeInsets.symmetric(vertical: 16.0.h),
+                          padding: EdgeInsets.symmetric(vertical: 16),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: state.friendList.length,

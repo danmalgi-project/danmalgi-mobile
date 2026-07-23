@@ -28,61 +28,95 @@ class LogoutView extends ConsumerWidget {
             if (user != null)
               Column(
                 children: [
-                  CachedCircleAvatar(url: user.imageUrl),
-                  Text(user.id.toString()),
-                  Text(user.email),
-                  Text(user.name),
-                  Text(user.tag),
-                  Text(user.oauthType.toString()),
-                  Text(user.status.toString()),
-                  Text(user.lastLoginTime.toString()),
+                  GestureDetector(
+                    child: CachedCircleAvatar(url: user.imageUrl, radius: 75.0),
+                    onTap: () async {
+                      final picker = ImagePicker();
+                      final image = await picker.pickImage(
+                        source: ImageSource.gallery,
+                      );
+                      if (image == null) return;
+                      final bytes = await image.readAsBytes();
+
+                      await ref
+                          .read(userNotifierProvider.notifier)
+                          .uploadProfileImage(
+                            bytes: bytes,
+                            mimeType: image.mimeType,
+                          );
+                    },
+                  ),
+                  SizedBox(height: 18.0),
+                  Text(
+                    user.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 24.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    "#${user.tag}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0,
+                      color: Color(0xFF999999),
+                    ),
+                  ),
+                  // Text(user.id.toString()),
+                  // Text(user.email),
+                  // Text(user.name),
+                  // Text(user.tag),
+                  // Text(user.oauthType.toString()),
+                  // Text(user.status.toString()),
+                  // Text(user.lastLoginTime.toString()),
                 ],
               ),
-            if (fcmToken != null) Text(fcmToken),
-            if (permissionAsync.value != null)
-              Text(permissionAsync.requireValue.name),
-            ElevatedButton(
-              onPressed: () async {
-                final picker = ImagePicker();
-                final image = await picker.pickImage(
-                  source: ImageSource.gallery,
-                );
-                if (image == null) return;
-                final bytes = await image.readAsBytes();
+            // if (fcmToken != null) Text(fcmToken),
+            // if (permissionAsync.value != null)
+            //   Text(permissionAsync.requireValue.name),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     final picker = ImagePicker();
+            //     final image = await picker.pickImage(
+            //       source: ImageSource.gallery,
+            //     );
+            //     if (image == null) return;
+            //     final bytes = await image.readAsBytes();
 
-                await ref
-                    .read(userNotifierProvider.notifier)
-                    .uploadProfileImage(bytes: bytes, mimeType: image.mimeType);
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                minimumSize: Size(300, 50),
-                foregroundColor: Colors.white,
-                backgroundColor: Color(0xFF03C75A),
-              ),
-              child: Text(
-                "프로필 이미지 업로드",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async =>
-                  await ref.read(authNotifierProvider.notifier).logout(),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                minimumSize: Size(300, 50),
-                foregroundColor: Colors.white,
-                backgroundColor: Color(0xFF03C75A),
-              ),
-              child: Text(
-                "로그아웃",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-              ),
-            ),
+            //     await ref
+            //         .read(userNotifierProvider.notifier)
+            //         .uploadProfileImage(bytes: bytes, mimeType: image.mimeType);
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //     minimumSize: Size(300, 50),
+            //     foregroundColor: Colors.white,
+            //     backgroundColor: Color(0xFF03C75A),
+            //   ),
+            //   child: Text(
+            //     "프로필 이미지 업로드",
+            //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+            //   ),
+            // ),
+            // ElevatedButton(
+            //   onPressed: () async =>
+            //       await ref.read(authNotifierProvider.notifier).logout(),
+            //   style: ElevatedButton.styleFrom(
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(5.0),
+            //     ),
+            //     minimumSize: Size(300, 50),
+            //     foregroundColor: Colors.white,
+            //     backgroundColor: Color(0xFF03C75A),
+            //   ),
+            //   child: Text(
+            //     "로그아웃",
+            //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+            //   ),
+            // ),
           ],
         ),
       ),

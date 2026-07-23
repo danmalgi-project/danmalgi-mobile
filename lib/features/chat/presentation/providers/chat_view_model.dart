@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:danmalgi_mobile/features/chat/data/providers/chat_provider.dart'
 import 'package:danmalgi_mobile/features/chat/domain/chat_state.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message_status.dart';
+import 'package:image_picker/image_picker.dart';
 
 final chatViewModelProvider = AsyncNotifierProvider.autoDispose
     .family<ChatViewModel, ChatState, int>(ChatViewModel.new);
@@ -126,11 +128,19 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
     }
   }
 
-  Future<void> sendMessage({required String content, List<int>? file}) async {
+  Future<void> sendMessage({String? content, XFile? file}) async {
     try {
-      await ref
-          .read(chatRepositoryProvider)
-          .sendMessage(channelId: channelId, content: content);
+      if (file != null) {
+        final bytes = await file.readAsBytes();
+
+        await ref
+            .read(chatRepositoryProvider)
+            .sendMessage(channelId: channelId, content: content, file: bytes);
+      } else {
+        await ref
+            .read(chatRepositoryProvider)
+            .sendMessage(channelId: channelId, content: content, file: null);
+      }
     } catch (e, stack) {
       print(e.toString());
       // state = AsyncError(e, stack);

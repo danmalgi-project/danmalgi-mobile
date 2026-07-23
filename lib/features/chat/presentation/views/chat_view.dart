@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/widgets/message_tile.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatView extends ConsumerStatefulWidget {
   final int channelId;
@@ -143,7 +144,7 @@ class ChatViewState extends ConsumerState<ChatView> {
             error: (err, stack) => Text('Error: $err'),
           ),
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Stack(
@@ -155,7 +156,7 @@ class ChatViewState extends ConsumerState<ChatView> {
                 onSubmitted: (_) => _sendMessage(),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(
-                    left: 24,
+                    left: 48,
                     top: 18,
                     right: 48,
                     bottom: 18,
@@ -164,6 +165,24 @@ class ChatViewState extends ConsumerState<ChatView> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100),
                   ),
+                ),
+              ),
+              Positioned(
+                left: 7,
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () async {
+                    final picker = ImagePicker();
+                    final multipleMedia = await picker.pickMultipleMedia();
+                    for (final file in multipleMedia) {
+                      await ref
+                          .read(
+                            chatViewModelProvider(widget.channelId).notifier,
+                          )
+                          .sendMessage(content: null, file: file);
+                    }
+                    // final bytes = await image.readAsBytes();
+                  },
                 ),
               ),
               Positioned(
@@ -176,7 +195,7 @@ class ChatViewState extends ConsumerState<ChatView> {
             ],
           ),
         ),
-        SizedBox(height: 44.h),
+        SizedBox(height: 44),
       ],
     );
   }

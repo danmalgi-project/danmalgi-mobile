@@ -88,14 +88,23 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  config:
+    enable-swift-package-manager: false
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
 
     - assets/images/Login/shape1.png
     - assets/images/Login/shape2.png
-    - assets/images/Login/Google.svg
-    - assets/images/Login/Apple.svg
+    
+    - assets/Icons/Google.svg
+    - assets/Icons/Apple.svg
+    - assets/Icons/Icon-home.svg
+    - assets/Icons/Icon-message.svg
+    - assets/Icons/Icon-search.svg
+    - assets/Icons/Icon-server.svg
+    - assets/Icons/Icon-user.svg
 
   fonts:
     - family: Pretendard

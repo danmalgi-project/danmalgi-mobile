@@ -1,7 +1,9 @@
+import 'package:danmalgi_mobile/core/widgets/bottom_nav_svg_icon.dart';
 import 'package:flutter/material.dart';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
@@ -17,23 +19,22 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: navigationShell,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
         type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Color(0xFF333333),
-        unselectedItemColor: Color(0xFFA29898),
-        backgroundColor: Colors.white,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedItemColor: Color(0xFFFFE500),
+        unselectedItemColor: Color(0xFF8E8E93),
+        backgroundColor: Color(0xFF121212),
         enableFeedback: false,
         elevation: 0.0,
         onTap: (value) {
           switch (value) {
-            case 0:
+            case 1:
               ref.invalidate(directMessageChannelListViewModelProvider);
               break;
-            case 1:
+            case 2:
               ref.invalidate(friendViewModelProvider);
               ref.invalidate(relationshipViewModelProvider);
               break;
@@ -42,49 +43,23 @@ class ScaffoldWithNavBar extends ConsumerWidget {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled, size: 26),
-            label: "Home",
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.notifications, size: 30),
-          //   label: "Notification",
-          // ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_alt, size: 30),
-            label: "Friend",
+            icon: const BottomNavSvgIcon('assets/Icons/Icon-home.svg'),
+            label: "홈",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 31),
-            label: "Profile",
+            icon: const BottomNavSvgIcon('assets/Icons/Icon-message.svg'),
+            label: "DM",
+          ),
+          BottomNavigationBarItem(
+            icon: const BottomNavSvgIcon('assets/Icons/Icon-server.svg'),
+            label: "친구",
+          ),
+          BottomNavigationBarItem(
+            icon: const BottomNavSvgIcon('assets/Icons/Icon-user.svg'),
+            label: "프로필",
           ),
         ],
       ),
-      // floatingActionButton: Container(
-      //   color: Colors.white,
-      //   // padding: const EdgeInsets.symmetric(vertical: 17.0),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //     children: _icons.mapIndexed((idx, icon) {
-      //       return Expanded(
-      //         child: GestureDetector(
-      //           behavior: HitTestBehavior.opaque,
-      //           onTap: () => navigationShell.goBranch(idx),
-      //           child: Container(
-      //             // padding: EdgeInsets.symmetric(vertical: 17.0),
-      //             height: 64.0,
-      //             child: Icon(
-      //               icon.icon,
-      //               size: icon.size,
-      //               color: navigationShell.currentIndex == idx
-      //                   ? Color(0xFF333333)
-      //                   : Color(0xFFA29898),
-      //             ),
-      //           ),
-      //         ),
-      //       );
-      //     }).toList(),
-      //   ),
-      // ),
     );
   }
 }

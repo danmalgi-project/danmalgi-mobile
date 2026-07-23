@@ -42,4 +42,20 @@ class DirectMessageChannelRepository {
     final response = await client.getDirectMessageChannelList(Empty());
     return response.directMessageChannels;
   }
+
+  Future<DirectMessageChannel> uploadChannelImage({
+    required int id,
+    required List<int> imageBytes,
+    required String extension,
+  }) async {
+    final request = UploadChannelImageRequest(
+      dmId: Int64(id),
+      image: imageBytes,
+      extension_3: extension,
+    );
+
+    final response = await client.uploadChannelImage(request);
+
+    return response.directMessageChannel;
+  }
 }

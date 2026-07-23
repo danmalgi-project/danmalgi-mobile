@@ -17,10 +17,10 @@ class FriendListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.0.h, horizontal: 24.0),
+        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
-          color: Colors.white,
+          color: Colors.black,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
