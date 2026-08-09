@@ -526,14 +526,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
-  flutter_screenutil:
-    dependency: "direct main"
-    description:
-      name: flutter_screenutil
-      sha256: "8239210dd68bee6b0577aa4a090890342d04a136ce1c81f98ee513fc0ce891de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.9.3"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -604,10 +596,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_webrtc
-      sha256: c7b0a67ca2c878575fc5c146d801cd874f58f5f1ef5fa6e8eb0c93d413beb948
+      sha256: "0f89dee7f4c35dab5611f351c3897a3bfe9f7057720cc7da209b52455af4316e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1"
+    version: "1.5.2"
   freezed:
     dependency: "direct dev"
     description:
@@ -896,6 +888,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.0"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      sha256: "1ca20c894b1717686a2319b8548763d812bc0aabdac580420a44c5178c57a867"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.3"
   io:
     dependency: transitive
     description:
@@ -1124,50 +1124,50 @@ packages:
     dependency: "direct main"
     description:
       name: permission_handler
-      sha256: bc917da36261b00137bbc8896bf1482169cd76f866282368948f032c8c1caae1
+      sha256: "06149cba29bc46206f8b54b56065fe74b07602d2454a281287685ae66b5ab7b5"
       url: "https://pub.dev"
     source: hosted
-    version: "12.0.1"
+    version: "13.0.0"
   permission_handler_android:
     dependency: transitive
     description:
       name: permission_handler_android
-      sha256: "1e3bc410ca1bf84662104b100eb126e066cb55791b7451307f9708d4007350e6"
+      sha256: d7676c6fcf2f0b92537ec41476a6ead45a00b0d8bbb852395a6f9f33f49d6242
       url: "https://pub.dev"
     source: hosted
-    version: "13.0.1"
+    version: "14.0.0"
   permission_handler_apple:
     dependency: transitive
     description:
       name: permission_handler_apple
-      sha256: f000131e755c54cf4d84a5d8bd6e4149e262cc31c5a8b1d698de1ac85fa41023
+      sha256: "11b7e94a9d2fbee23c27f0cae0105c6266c03fd83b9a2eda6cf09141fc82624b"
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.7"
+    version: "9.5.0"
   permission_handler_html:
     dependency: transitive
     description:
       name: permission_handler_html
-      sha256: "38f000e83355abb3392140f6bc3030660cfaef189e1f87824facb76300b4ff24"
+      sha256: "6ea98b3f17f60d3b527f2647ed2ab4dc0f6bfe25b22cb1c363f5d8f62252f6ac"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.3+5"
+    version: "0.1.4+1"
   permission_handler_platform_interface:
     dependency: transitive
     description:
       name: permission_handler_platform_interface
-      sha256: eb99b295153abce5d683cac8c02e22faab63e50679b937fa1bf67d58bb282878
+      sha256: a5c8a97ecf5616112a5b16d4b8e9ec0e5ae90ef63ac69c0d7b8ae240be760b23
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.0"
+    version: "4.4.0"
   permission_handler_windows:
     dependency: transitive
     description:
       name: permission_handler_windows
-      sha256: "1a790728016f79a41216d88672dbc5df30e686e811ad4e698bfc51f76ad91f1e"
+      sha256: caeae01858a0a7d2df67a445ac98e1ad95e55a0e77c73044f4e9b1c8c2289cbd
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.2"
   petitparser:
     dependency: transitive
     description:
@@ -1381,6 +1381,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  smooth_page_indicator:
+    dependency: "direct main"
+    description:
+      name: smooth_page_indicator
+      sha256: "4b497e9898d095de40d246db943371183fa7482492a88391cfa8415ef94d57ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   source_gen:
     dependency: transitive
     description:

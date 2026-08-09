@@ -16,6 +16,7 @@ firebase_options.dart
 **/android/key.properties
 *.jks
 *.keystore
+!android/app/debug.keystore
 
 # iOS 인증서
 *.p12

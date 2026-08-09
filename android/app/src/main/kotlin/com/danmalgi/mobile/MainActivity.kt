@@ -1,4 +1,4 @@
-package su.hyang.danmalgi_mobile
+package com.danmalgi.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
