@@ -101,22 +101,22 @@ class LogoutView extends ConsumerWidget {
             //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
             //   ),
             // ),
-            // ElevatedButton(
-            //   onPressed: () async =>
-            //       await ref.read(authNotifierProvider.notifier).logout(),
-            //   style: ElevatedButton.styleFrom(
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(5.0),
-            //     ),
-            //     minimumSize: Size(300, 50),
-            //     foregroundColor: Colors.white,
-            //     backgroundColor: Color(0xFF03C75A),
-            //   ),
-            //   child: Text(
-            //     "로그아웃",
-            //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-            //   ),
-            // ),
+            ElevatedButton(
+              onPressed: () async =>
+                  await ref.read(authNotifierProvider.notifier).logout(),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                minimumSize: Size(300, 50),
+                foregroundColor: Colors.white,
+                // backgroundColor: Color(0xFF03C75A),
+              ),
+              child: Text(
+                "로그아웃",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+              ),
+            ),
           ],
         ),
       ),

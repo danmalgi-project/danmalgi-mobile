@@ -8,6 +8,7 @@ import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in_all_platforms/google_sign_in_all_platforms.dart';
 
@@ -30,12 +31,27 @@ class LoginViewModel extends AsyncNotifier<void> {
           // TODO: 로그아웃 순서를 제대로 파악해야함. 인터넷이 없거나 로그아웃을 실패했을 경우 기존 계정을 남길지 아니면 아예 로그아웃시켜서 정상화 후에 다시 로그인 시킬지 선택 (전자는 구현하기 어렵고 후자를 선택할 가능성이 높음)
           await _clearSession();
 
-          final GoogleSignInCredentials? credentials = await ref
-              .read(googleSignInProvider)
-              .signIn();
+          try {
+            final GoogleSignInCredentials? credentials = await ref
+                .read(googleSignInProvider)
+                .signIn();
 
-          if (credentials != null) {
-            idToken = credentials.idToken;
+            if (credentials != null) {
+              idToken = credentials.idToken;
+              print(
+                '[GoogleSignIn] success, idToken length: ${idToken?.length}',
+              );
+            } else {
+              print(
+                '[GoogleSignIn] signIn() returned null credentials — user likely cancelled, or lightweightSignIn/signInOnline both failed silently',
+              );
+            }
+          } on PlatformException catch (e, st) {
+            print(
+              '[GoogleSignIn] PlatformException code=${e.code} message=${e.message} details=${e.details}',
+            );
+          } catch (e, st) {
+            print('[GoogleSignIn] unexpected error: $e\n$st');
           }
 
           print(idToken);

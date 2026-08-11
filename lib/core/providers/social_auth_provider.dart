@@ -8,7 +8,7 @@ final googleSignInProvider = Provider<GoogleSignIn>((ref) {
   return GoogleSignIn(
     params: GoogleSignInParams(
       clientId: dotenv.get("GID_SERVER_CLIENT_ID"),
-      clientSecret: (!Platform.isAndroid || !Platform.isIOS)
+      clientSecret: (!Platform.isAndroid && !Platform.isIOS)
           ? dotenv.get("GID_SERVER_CLIENT_SECRET")
           : null,
       redirectPort: 8000,
