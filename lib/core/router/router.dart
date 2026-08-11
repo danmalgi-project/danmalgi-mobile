@@ -25,6 +25,8 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
   final listenable = ValueNotifier<AppAuthState>(AppAuthState.loading());
   ref.onDispose(listenable.dispose);
 
+  AppAuthState lastStableState = const AppAuthState.loading();
+
   final logger = ref.watch(appLoggerServiceProvider);
   ref.listen(appAuthStatusProvider, (previous, next) async {
     logger.d('🔄 Auth state change: $previous → $next');
@@ -124,12 +126,22 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
       final currentPath = state.uri.path;
       final appAuthState = listenable.value;
 
+      final bool isTransient = appAuthState.maybeWhen(
+        loading: () => true,
+        bootstrapping: () => true,
+        orElse: () => false,
+      );
+      if (!isTransient) {
+        lastStableState = appAuthState;
+      }
+      final effectiveState = isTransient ? lastStableState : appAuthState;
+
       final bool isAuthPage =
           currentPath == RoutePaths.login ||
           currentPath == RoutePaths.register ||
           currentPath == RoutePaths.splash;
 
-      return appAuthState.when(
+      return effectiveState.when(
         loading: () {
           // 초기 판정 중에는 splash에 머무르게
           return currentPath == RoutePaths.splash ? null : RoutePaths.splash;
