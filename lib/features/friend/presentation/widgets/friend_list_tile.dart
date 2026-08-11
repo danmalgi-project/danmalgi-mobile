@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
@@ -32,6 +31,7 @@ class FriendListTile extends ConsumerWidget {
                 showAboutDialog(
                   context: context,
                   children: [
+                    Text('ID: ${friend.user.id}'),
                     Text('NAME: ${friend.user.name}'),
                     Text('TAG: ${friend.user.tag}'),
                     Text('EMAIL: ${friend.user.email}'),
@@ -67,7 +67,17 @@ class FriendListTile extends ConsumerWidget {
             ),
             Spacer(),
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                final directMessageChannel = await ref
+                    .read(directMessageChannelListViewModelProvider.notifier)
+                    .createDirectMessageChannel(friendIds: [friend.user.id]);
+
+                if (directMessageChannel == null) return;
+
+                if (context.mounted) {
+                  context.push(RoutePaths.voice(directMessageChannel.dmId));
+                }
+              },
               child: Container(
                 padding: EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
@@ -83,15 +93,13 @@ class FriendListTile extends ConsumerWidget {
               onTap: () async {
                 final directMessageChannel = await ref
                     .read(directMessageChannelListViewModelProvider.notifier)
-                    .createDirectMessageChannel(friendIds: [friend.id]);
+                    .createDirectMessageChannel(friendIds: [friend.user.id]);
 
                 if (directMessageChannel == null) return;
 
-                context.push(
-                  RoutePaths.directMessageChannelDetail(
-                    directMessageChannel.dmId,
-                  ),
-                );
+                if (context.mounted) {
+                  context.push(RoutePaths.chat(directMessageChannel.dmId));
+                }
               },
               child: Container(
                 padding: EdgeInsets.all(8.0),
