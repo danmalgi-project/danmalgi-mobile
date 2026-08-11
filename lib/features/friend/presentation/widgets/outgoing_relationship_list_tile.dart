@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
 
@@ -14,7 +13,7 @@ class OutgoingRelationshipListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.0.h, horizontal: 24.0),
+        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
           color: Colors.white,

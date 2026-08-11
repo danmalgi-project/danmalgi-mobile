@@ -2,7 +2,6 @@ import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart'
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
 import 'package:danmalgi_mobile/features/user/domain/register_state.dart';
@@ -110,7 +109,7 @@ class _RegisterViewState extends ConsumerState<RegisterView>
                               ),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(16.r),
+                                borderRadius: BorderRadius.circular(16),
                               ),
                               child: Row(
                                 children: [

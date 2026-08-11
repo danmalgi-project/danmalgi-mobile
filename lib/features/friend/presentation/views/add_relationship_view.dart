@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
@@ -37,7 +36,7 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 32.h),
+              padding: EdgeInsets.only(top: 32),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,7 +58,7 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
                 ],
               ),
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -104,7 +103,7 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
                 ],
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 16),
             ref
                 .watch(relationshipViewModelProvider)
                 .when(
@@ -119,7 +118,7 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             "친구 요청",
                             style: TextStyle(
@@ -132,8 +131,8 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
 
                         ListView.separated(
                           padding: EdgeInsets.symmetric(
-                            vertical: 16.0.h,
-                            horizontal: 16.0.w,
+                            vertical: 16.0,
+                            horizontal: 16.0,
                           ),
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
