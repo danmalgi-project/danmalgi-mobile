@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -15,6 +17,9 @@ class NotificationService {
   String? get fcmToken => _fcmToken;
   // Initialize everything in one place
   Future<void> initialize() async {
+    // FCM has no Windows plugin implementation; Windows is debug-only for us.
+    if (Platform.isWindows) return;
+
     // Request permissions first
     await _requestPermissions();
 
