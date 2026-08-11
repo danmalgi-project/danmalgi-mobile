@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:collection/collection.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:danmalgi_mobile/features/chat/domain/message.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
+import 'package:intl/intl.dart';
 
 class MessageTile extends ConsumerWidget {
   final int channelId;
@@ -41,13 +43,6 @@ class MessageTile extends ConsumerWidget {
         final timeDiff = message.createdAt.difference(
           messages[beforeIndex].createdAt,
         );
-
-        // print('--------------------------------------------------');
-        // print(
-        //   'before: ${messages[beforeIndex].content}, ${messages[beforeIndex].user.id}',
-        // );
-        // print('current: ${message.content}, ${message.user.id}');
-        // print('diff: ${timeDiff}');
 
         if (messages[beforeIndex].user.id == message.user.id) {
           if (timeDiff > Duration(minutes: 5)) {
@@ -118,184 +113,202 @@ class MessageTile extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        // Visibility(
-        //   visible: !(message.isAuthor || showProfile),
-        //   maintainAnimation: true,
-        //   maintainSize: true,
-        //   maintainState: true,
-        //   child: CircleAvatar(),
-        // ),
-        // Opacity(
-        //   opacity: !(message.isAuthor || showProfile) ? 1 : 0,
-        //   child: SizedBox(width: 8),
-        // ),
-        (message.isAuthor)
-            ? SizedBox(width: 48)
-            : (showProfile)
-            ? CircleAvatar()
-            : SizedBox(width: 48),
-        (message.isAuthor)
-            ? SizedBox()
-            : (showProfile)
-            ? SizedBox(width: 8)
-            : SizedBox(),
+        // 프로필 사진
+        if (message.isAuthor) ...[
+          SizedBox(width: 32),
+        ] else if (showProfile) ...[
+          CachedCircleAvatar(
+            url: message.user.imageUrl,
+            backgroundColor: Colors.amber,
+            radius: 16,
+          ),
+          SizedBox(width: 8),
+        ] else
+          SizedBox(width: 40),
         Flexible(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              (message.isAuthor)
-                  ? SizedBox()
-                  : (showProfile)
-                  ? Text(message.user.name)
-                  : SizedBox(),
-              (message.isAuthor)
-                  ? SizedBox()
-                  : (showProfile)
-                  ? SizedBox(height: 8)
-                  : SizedBox(),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  color: (message.isAuthor)
-                      ? Color(0xFF333333)
-                      : Color(0xFFF1F3F5),
-                ),
-                child: GestureDetector(
-                  onLongPress: () {
-                    if (message.isAuthor) {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            topRight: Radius.circular(30.0),
-                          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.67,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                // 닉네임 및 시간
+                if (!message.isAuthor)
+                  if (showProfile) ...[
+                    Row(
+                      children: [
+                        Text(
+                          message.user.name,
+                          style: TextStyle(color: Color(0xFF8E8E93)),
                         ),
-                        builder: (BuildContext context) {
-                          TextEditingController modifyTextEditingController =
-                              TextEditingController();
-                          return Padding(
-                            padding: MediaQuery.of(context).viewInsets,
-                            child: Container(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  SizedBox(width: double.infinity, height: 20),
-                                  Text("${message.createdAt}"),
-                                  SizedBox(width: double.infinity, height: 10),
-                                  Text("선택한 메세지 : ${message.id}"),
-                                  Text("선택한 메세지 : ${message.content}"),
-                                  SizedBox(width: double.infinity, height: 10),
-                                  TextFormField(
-                                    controller: modifyTextEditingController,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Modify Text';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'Enter Modify Text',
-                                      labelText: 'Modify Text',
-                                    ),
-                                  ),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      minWidth: double.infinity,
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        await ref
-                                            .read(
-                                              chatViewModelProvider(
-                                                int.parse(message.channelId),
-                                              ).notifier,
-                                            )
-                                            .modifyMessage(
-                                              messageId: Int64.parseInt(
-                                                message.id,
-                                              ),
-                                              content:
-                                                  modifyTextEditingController
-                                                      .text,
-                                            );
-                                        modifyTextEditingController.clear();
-                                        Navigator.of(context).pop();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        "수정",
-                                        style: TextStyle(color: Colors.black87),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: double.infinity, height: 20),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      minWidth: double.infinity,
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        await ref
-                                            .read(
-                                              chatViewModelProvider(
-                                                int.parse(message.channelId),
-                                              ).notifier,
-                                            )
-                                            .deleteMessage(
-                                              messageId: Int64.parseInt(
-                                                message.id,
-                                              ),
-                                            );
-                                        Navigator.of(context).pop();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        "삭제",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        Text(' · ', style: TextStyle(color: Color(0xFF8E8E93))),
+                        Text(
+                          DateFormat('HH:mm').format(message.createdAt),
+                          style: TextStyle(color: Color(0xFF8E8E93)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                  ],
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    color: (message.isAuthor)
+                        ? Color(0xFFFFE500)
+                        : Color(0xFF1C1C1E),
+                  ),
+                  child: GestureDetector(
+                    onLongPress: () {
+                      if (message.isAuthor) {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.0),
+                              topRight: Radius.circular(30.0),
                             ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                  child: Text(
-                    message.content,
-                    overflow: TextOverflow.clip,
-                    softWrap: true,
-                    style: TextStyle(
-                      color: (message.isAuthor) ? Colors.white : Colors.black,
+                          ),
+                          builder: (BuildContext context) {
+                            TextEditingController modifyTextEditingController =
+                                TextEditingController();
+                            return Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: Container(
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 20,
+                                    ),
+                                    Text("${message.createdAt}"),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 10,
+                                    ),
+                                    Text("선택한 메세지 : ${message.id}"),
+                                    Text("선택한 메세지 : ${message.content}"),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 10,
+                                    ),
+                                    TextFormField(
+                                      controller: modifyTextEditingController,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please Enter Modify Text';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Enter Modify Text',
+                                        labelText: 'Modify Text',
+                                      ),
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        minWidth: double.infinity,
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          await ref
+                                              .read(
+                                                chatViewModelProvider(
+                                                  int.parse(message.channelId),
+                                                ).notifier,
+                                              )
+                                              .modifyMessage(
+                                                messageId: Int64.parseInt(
+                                                  message.id,
+                                                ),
+                                                content:
+                                                    modifyTextEditingController
+                                                        .text,
+                                              );
+                                          modifyTextEditingController.clear();
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "수정",
+                                          style: TextStyle(
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 20,
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        minWidth: double.infinity,
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          await ref
+                                              .read(
+                                                chatViewModelProvider(
+                                                  int.parse(message.channelId),
+                                                ).notifier,
+                                              )
+                                              .deleteMessage(
+                                                messageId: Int64.parseInt(
+                                                  message.id,
+                                                ),
+                                              );
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "삭제",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Text(
+                      message.content,
+                      overflow: TextOverflow.clip,
+                      softWrap: true,
+                      style: TextStyle(
+                        color: (message.isAuthor) ? Colors.black : Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
