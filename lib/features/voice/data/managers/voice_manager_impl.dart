@@ -95,16 +95,25 @@ class VoiceManagerImpl implements VoiceManager {
   }
 
   void _handleConnectionState(RTCPeerConnectionState state) {
-    _emit(
-      (s) => s.copyWith(
-        statusMessage: state.name,
-        isConnected:
-            state == RTCPeerConnectionState.RTCPeerConnectionStateConnected,
-      ),
-    );
-
-    if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
-      _startVAD(); // ← 연결 완료 시점에 시작
+    switch (state) {
+      case RTCPeerConnectionState.RTCPeerConnectionStateConnected:
+        _emit(
+          (s) => s.copyWith(
+            statusMessage: '연결 양호',
+            isConnected:
+                state == RTCPeerConnectionState.RTCPeerConnectionStateConnected,
+          ),
+        );
+        _startVAD();
+        break;
+      case RTCPeerConnectionState.RTCPeerConnectionStateFailed:
+        _emit((s) => s.copyWith(statusMessage: '연결 실패', isConnected: false));
+        break;
+      case RTCPeerConnectionState.RTCPeerConnectionStateDisconnected:
+        _emit((s) => s.copyWith(statusMessage: '연결 끊김', isConnected: false));
+        break;
+      default:
+        break;
     }
   }
 
@@ -190,19 +199,20 @@ class VoiceManagerImpl implements VoiceManager {
   }
 
   void _handleIceConnectionState(RTCIceConnectionState state) {
-    switch (state) {
-      case RTCIceConnectionState.RTCIceConnectionStateConnected:
-        _emit((s) => s.copyWith(statusMessage: '✅ WebRTC 연결 완료'));
-        break;
-      case RTCIceConnectionState.RTCIceConnectionStateFailed:
-        _emit((s) => s.copyWith(statusMessage: '❌ 연결 실패', isConnected: false));
-        break;
-      case RTCIceConnectionState.RTCIceConnectionStateDisconnected:
-        _emit((s) => s.copyWith(statusMessage: '⚠️ 연결 끊김', isConnected: false));
-        break;
-      default:
-        break;
-    }
+    print(state);
+    // switch (state) {
+    //   case RTCIceConnectionState.RTCIceConnectionStateConnected:
+    //     _emit((s) => s.copyWith(statusMessage: '연결 양호'));
+    //     break;
+    //   case RTCIceConnectionState.RTCIceConnectionStateFailed:
+    //     _emit((s) => s.copyWith(statusMessage: '연결 실패', isConnected: false));
+    //     break;
+    //   case RTCIceConnectionState.RTCIceConnectionStateDisconnected:
+    //     _emit((s) => s.copyWith(statusMessage: '연결 끊김', isConnected: false));
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
   Future<void> _handleSignalingResponse(SignalingResponse response) async {
@@ -261,7 +271,8 @@ class VoiceManagerImpl implements VoiceManager {
       ),
     );
 
-    _emit((s) => s.copyWith(statusMessage: '📤 Answer 전송 완료'));
+    print('📤 Answer 전송 완료');
+    // _emit((s) => s.copyWith(statusMessage: '📤 Answer 전송 완료'));
   }
 
   Future<void> _handleCandidate(Candidate candidateData) async {
@@ -272,11 +283,13 @@ class VoiceManagerImpl implements VoiceManager {
         candidateData.sdpMlineIndex,
       ),
     );
-    _emit((s) => s.copyWith(statusMessage: '📥 ICE Candidate 수신'));
+    print('📥 ICE Candidate 수신');
+    // _emit((s) => s.copyWith(statusMessage: '📥 ICE Candidate 수신'));
   }
 
   void _handleError(dynamic error) {
-    _emit((s) => s.copyWith(statusMessage: '❌ 오류: $error', isConnected: false));
+    print(error);
+    // _emit((s) => s.copyWith(statusMessage: '❌ 오류: $error', isConnected: false));
   }
 
   Future<MediaStream> _getLocalAudioStream() async {

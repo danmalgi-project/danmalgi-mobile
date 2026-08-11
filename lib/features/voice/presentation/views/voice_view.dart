@@ -1,58 +1,134 @@
 import 'dart:async';
 
+import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
+import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/voice_manager_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class VoiceScreen extends ConsumerWidget {
-  const VoiceScreen({super.key, required this.channelId});
+class VoiceView extends ConsumerWidget {
+  const VoiceView({super.key, required this.channelId});
   final int channelId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(voiceViewModelProvider(channelId: channelId));
+    final AsyncValue<DirectMessageChannel> channelAsync = ref.watch(
+      directMessageChannelProvider(channelId: channelId),
+    );
+    final AsyncValue<VoiceState> voiceAsync = ref.watch(
+      voiceViewModelProvider(channelId: channelId),
+    );
+    final VoiceViewModel voiceNotifier = ref.read(
+      voiceViewModelProvider(channelId: channelId).notifier,
+    );
 
-    return Scaffold(
-      // appBar: AppBar(title: const Text('음성 채널')),
-      body: switch (state) {
-        // gRPC 연결 + join() 진행 중
-        AsyncLoading() => const Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 12),
-              Text('채널 연결 중...'),
-            ],
-          ),
-        ),
+    return channelAsync.when(
+      data: (channelState) {
+        return Scaffold(
+          backgroundColor: Color(0xFF1C1C1E),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            leading: SizedBox.shrink(),
+            leadingWidth: 0,
+            titleSpacing: 0,
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    channelState.channelName,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
 
-        // join() 실패
-        AsyncError(:final error) => Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('연결 실패: $error'),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(
-                  voiceViewModelProvider(channelId: channelId),
-                ),
-                child: const Text('재시도'),
+                  // TODO: 녹화 기능과 통화 시간 기능이 추가되면 변경
+                  if (true) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                          ),
+                          width: 8,
+                          height: 8,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          "REC · ${'12:34'}",
+                          style: TextStyle(
+                            color: Color(0xFF8E8E93),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ] else
+                    Text("12:34"), // 통화 시간
+                  SizedBox(width: 8),
+                ],
               ),
-            ],
+            ),
+            actions: [_StatusBanner(voiceAsync: voiceAsync)],
           ),
-        ),
+          bottomNavigationBar: _VoiceControls(
+            voiceAsync: voiceAsync,
+            notifier: voiceNotifier,
+          ),
+          body: switch (voiceAsync) {
+            // gRPC 연결 + join() 진행 중
+            AsyncLoading() => const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 12),
+                  Text('채널 연결 중...'),
+                ],
+              ),
+            ),
 
-        // 정상 상태
-        AsyncData(:final value) => _VoiceBody(
-          state: value,
-          channelId: channelId,
-        ),
+            // join() 실패
+            AsyncError(:final error) => Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('연결 실패: $error'),
+                  ElevatedButton(
+                    onPressed: () => ref.invalidate(
+                      voiceViewModelProvider(channelId: channelId),
+                    ),
+                    child: const Text('재시도'),
+                  ),
+                ],
+              ),
+            ),
 
-        _ => const SizedBox(),
+            // 정상 상태
+            AsyncData(:final value) => _VoiceBody(
+              state: value,
+              channelId: channelId,
+            ),
+
+            _ => const SizedBox.shrink(),
+          },
+        );
       },
+      error: (e, s) => ErrorWidget(e),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -69,95 +145,226 @@ class _VoiceBody extends ConsumerWidget {
       ...state.users,
     ];
 
-    return Column(
-      children: [
-        // 연결 상태 배너
-        _StatusBanner(
-          isConnected: state.isConnected,
-          message: state.statusMessage,
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const spacing = 16.0;
+          const crossAxisCount = 2;
+          final itemSize =
+              (constraints.maxWidth - spacing * (crossAxisCount - 1)) /
+              crossAxisCount;
 
-        // 참여자 목록
-        Expanded(
-          child: ListView.builder(
-            itemCount: allUsers.length,
-            itemBuilder: (context, index) {
-              final user = allUsers[index];
-              final isMe = user.id == state.currentUser?.id;
-              final isSpeaking = isMe
-                  ? state.isSpeaking
-                  : state.speakingUserIds.contains(user.id);
-              return ListTile(
-                title: Text(isMe ? '${user.name} (나)' : user.name),
-                leading: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: isSpeaking
-                        ? Border.all(color: Colors.green, width: 2.5)
-                        : null,
+          final itemProfileSize = itemSize * 0.25;
+
+          return Wrap(
+            alignment: WrapAlignment.start,
+            spacing: spacing,
+            runSpacing: spacing,
+            children: [
+              for (final user in allUsers)
+                SizedBox(
+                  width: itemSize,
+                  height: itemSize,
+                  child: Material(
+                    color: const Color(0xFF161618),
+                    borderRadius: BorderRadius.circular(18.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Stack(
+                          children: [
+                            CachedCircleAvatar(
+                              url: user.imageUrl,
+                              radius: itemProfileSize,
+                              backgroundColor: Colors.transparent,
+                            ),
+                            if (state.isMuted)
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Material(
+                                  clipBehavior: Clip.antiAlias,
+                                  shape: CircleBorder(),
+                                  color: Colors.red,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(
+                                      Icons.mic_off_outlined,
+                                      size: itemSize * 0.075,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (state.trackUserMap.containsValue(user))
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Material(
+                                  clipBehavior: Clip.antiAlias,
+                                  shape: CircleBorder(),
+                                  color: Colors.red,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Icon(
+                                      Icons.mic_off_outlined,
+                                      size: itemSize * 0.075,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          user.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  child: CircleAvatar(child: Text(user.name[0])),
                 ),
-                trailing: isMe
-                    ? state.isMuted
-                          ? const Icon(Icons.mic_off, color: Colors.grey)
-                          : const Icon(Icons.mic, color: Colors.blue)
-                    : state.trackUserMap.containsValue(user)
-                    ? const Icon(Icons.mic, color: Colors.green)
-                    : const Icon(Icons.mic_off, color: Colors.grey),
-              );
-            },
-          ),
-        ),
-
-        // 하단 컨트롤
-        _VoiceControls(channelId: channelId),
-      ],
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
 class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.isConnected, required this.message});
-  final bool isConnected;
-  final String message;
+  const _StatusBanner({required this.voiceAsync});
+  final AsyncValue voiceAsync;
 
   @override
   Widget build(BuildContext context) {
-    if (message.isEmpty) return const SizedBox();
+    return switch (voiceAsync) {
+      AsyncLoading() => _banner(isConnected: false, message: '연결 중...'),
+      AsyncError() => _banner(isConnected: false, message: '연결 실패'),
+      AsyncData(:final value) => _banner(
+        isConnected: value.isConnected,
+        message: value.statusMessage,
+      ),
+      _ => const SizedBox(),
+    };
+  }
 
+  Widget _banner({required bool isConnected, required String message}) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      color: isConnected ? Colors.green.shade100 : Colors.orange.shade100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        color: Color(0xFF161618),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       child: Text(
         message,
-        style: TextStyle(
-          color: isConnected ? Colors.green.shade800 : Colors.orange.shade800,
-        ),
+        style: TextStyle(color: isConnected ? Color(0xFF30D158) : Colors.red),
       ),
     );
   }
 }
 
 class _VoiceControls extends ConsumerWidget {
-  const _VoiceControls({required this.channelId});
-  final int channelId;
+  const _VoiceControls({required this.voiceAsync, required this.notifier});
+
+  final AsyncValue<VoiceState> voiceAsync;
+  final VoiceViewModel notifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 나중에 음소거 등 추가될 때 여기서 ViewModel 메서드 호출
-    final notifier = ref.read(
-      voiceViewModelProvider(channelId: channelId).notifier,
-    );
+    final isReady = voiceAsync is AsyncData<VoiceState>;
+    final isMuted = voiceAsync.value?.isMuted ?? false;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: ElevatedButton(
-        onPressed: () => notifier.toggleMicMute(),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-        child: const Text('마이크 음소거'),
+    return Container(
+      color: Color(0xFF111112),
+      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 52,
+            height: 52,
+            child: Material(
+              color: Color(0xFF272729),
+              shape: CircleBorder(),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: isReady ? notifier.toggleMicMute : null,
+                child: Icon(
+                  isMuted ? Icons.mic_off : Icons.mic_none_rounded,
+                  color: isMuted ? Colors.red : Colors.white,
+                  size: 20.0,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          SizedBox(
+            width: 52,
+            height: 52,
+            child: Material(
+              color: Color(0xFF272729),
+              shape: CircleBorder(),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: isReady ? () {} : null,
+                child: Icon(Icons.videocam_outlined, size: 20.0),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          SizedBox(
+            width: 52,
+            height: 52,
+            child: Material(
+              color: Color(0xFF272729),
+              shape: CircleBorder(),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: isReady ? () {} : null,
+                child: Icon(Icons.monitor, size: 20.0),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          SizedBox(
+            width: 52,
+            height: 52,
+            child: Material(
+              color: Color(0xFF272729),
+              shape: CircleBorder(),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: isReady ? () {} : null,
+                child: Icon(Icons.emoji_emotions_outlined, size: 20.0),
+              ),
+            ),
+          ),
+          SizedBox(width: 12),
+          SizedBox(
+            width: 52,
+            height: 52,
+            child: Material(
+              color: Color(0xFFFF2121),
+              shape: CircleBorder(),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: isReady
+                    ? () {
+                        ref.invalidate(voiceViewModelProvider);
+                        context.pop();
+                      }
+                    : null,
+                child: Icon(Icons.phone_disabled_outlined, size: 20.0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

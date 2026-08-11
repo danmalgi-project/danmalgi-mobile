@@ -16,7 +16,7 @@ void main() {
       container = ProviderContainer(
         overrides: [
           // Mock으로 교체 — 이 한 줄이 전부
-          voiceRepositoryProvider(channelId: 1).overrideWith((_) => mockRepo),
+          voiceManagerProvider(channelId: 1).overrideWith((_) => mockRepo),
         ],
       );
     });
