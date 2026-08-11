@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -25,6 +27,9 @@ final notificationInitProvider = FutureProvider<void>((ref) async {
 
 // FCM Token provider - reactive to changes
 final fcmTokenProvider = StreamProvider<String?>((ref) {
+  // FCM has no Windows plugin implementation; Windows is debug-only for us.
+  if (Platform.isWindows) return Stream.value(null);
+
   final messaging = FirebaseMessaging.instance;
 
   return Stream.multi((controller) {
@@ -49,6 +54,8 @@ final fcmTokenProvider = StreamProvider<String?>((ref) {
 final notificationPermissionProvider = FutureProvider<AuthorizationStatus>((
   ref,
 ) async {
+  if (Platform.isWindows) return AuthorizationStatus.notDetermined;
+
   final settings = await FirebaseMessaging.instance.getNotificationSettings();
   return settings.authorizationStatus;
 });
