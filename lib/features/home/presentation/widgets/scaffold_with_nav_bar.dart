@@ -19,46 +19,49 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        selectedItemColor: Color(0xFFFFE500),
-        unselectedItemColor: Color(0xFF8E8E93),
-        backgroundColor: Color(0xFF121212),
-        enableFeedback: false,
-        elevation: 0.0,
-        onTap: (value) {
-          switch (value) {
-            case 1:
-              ref.invalidate(directMessageChannelListViewModelProvider);
-              break;
-            case 2:
-              ref.invalidate(friendViewModelProvider);
-              ref.invalidate(relationshipViewModelProvider);
-              break;
-          }
-          navigationShell.goBranch(value);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: const BottomNavSvgIcon('assets/Icons/Icon-home.svg'),
-            label: "홈",
-          ),
-          BottomNavigationBarItem(
-            icon: const BottomNavSvgIcon('assets/Icons/Icon-message.svg'),
-            label: "DM",
-          ),
-          BottomNavigationBarItem(
-            icon: const BottomNavSvgIcon('assets/Icons/Icon-server.svg'),
-            label: "친구",
-          ),
-          BottomNavigationBarItem(
-            icon: const BottomNavSvgIcon('assets/Icons/Icon-user.svg'),
-            label: "프로필",
-          ),
-        ],
+      bottomNavigationBar: Container(
+        color: const Color(0xFF121212),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: BottomNavigationBar(
+          currentIndex: navigationShell.currentIndex,
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          selectedItemColor: Color(0xFFFFE500),
+          unselectedItemColor: Color(0xFF8E8E93),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          onTap: (value) {
+            switch (value) {
+              case 1:
+                ref.invalidate(directMessageChannelListViewModelProvider);
+                break;
+              case 2:
+                ref.invalidate(friendViewModelProvider);
+                ref.invalidate(relationshipViewModelProvider);
+                break;
+            }
+            navigationShell.goBranch(value);
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: const BottomNavSvgIcon('assets/Icons/Icon-home.svg'),
+              label: "홈",
+            ),
+            BottomNavigationBarItem(
+              icon: const BottomNavSvgIcon('assets/Icons/Icon-message.svg'),
+              label: "DM",
+            ),
+            BottomNavigationBarItem(
+              icon: const BottomNavSvgIcon('assets/Icons/Icon-server.svg'),
+              label: "친구",
+            ),
+            BottomNavigationBarItem(
+              icon: const BottomNavSvgIcon('assets/Icons/Icon-user.svg'),
+              label: "프로필",
+            ),
+          ],
+        ),
       ),
     );
   }
