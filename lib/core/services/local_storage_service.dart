@@ -9,6 +9,7 @@ class LocalStorageService {
 
   LocalStorageService(this._prefs);
 
+  // Auth
   static const _keyId = 'id';
   static const _keyEmail = 'email';
   static const _keyName = 'name';
@@ -97,6 +98,26 @@ class LocalStorageService {
     );
   }
 
+  Future clearAuthData() async {
+    // TODO
+  }
+
+  // OnBoarding
+  static const String _keyOnBoardingVersion = 'onboardingVersion';
+  static const String _keyNewUserFlow = 'onboardingNewUserFlow';
+
+  Future setOnBoardingVersion(int version) async {
+    await _prefs.setInt(_keyOnBoardingVersion, version);
+  }
+
+  Future setNewUserFlow(bool isNewUserFlow) async {
+    await _prefs.setBool(_keyNewUserFlow, isNewUserFlow);
+  }
+
+  int? get onBoardingVersion => _prefs.getInt(_keyOnBoardingVersion);
+  bool? get isNewUserFlow => _prefs.getBool(_keyNewUserFlow);
+
+  // ETC
   Future clearLocalData() async {
     await _prefs.clear();
     await _prefs.reload();
