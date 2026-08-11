@@ -1,4 +1,7 @@
 import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
+import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/views/voice_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +15,6 @@ import 'package:danmalgi_mobile/core/widgets/splash_view.dart';
 import 'package:danmalgi_mobile/features/auth/presentation/views/login_view.dart';
 import 'package:danmalgi_mobile/features/auth/presentation/views/logout_view.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/views/direct_message_channel_list_view.dart';
-import 'package:danmalgi_mobile/features/directmessage/presentation/views/direct_message_channel_view.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/views/add_relationship_view.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/views/friend_view.dart';
 import 'package:danmalgi_mobile/features/home/presentation/views/home_view.dart';
@@ -51,7 +53,7 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.login,
         name: RouteNames.login,
-        builder: (context, state) => LoginView(),
+        builder: (context, state) => OnboardingView(),
       ),
       GoRoute(
         path: RoutePaths.register,
@@ -59,11 +61,19 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
         builder: (context, state) => RegisterView(),
       ),
       GoRoute(
-        path: RoutePaths.directMessageChannelDetailTemplate,
-        name: RouteNames.directMessageChannelDetail,
+        path: RoutePaths.chatTemplate,
+        name: RouteNames.chat,
         builder: (context, state) {
           final channelId = int.parse(state.pathParameters['channelId']!);
-          return DirectMessageChannelView(channelId: channelId);
+          return ChatView(channelId: channelId);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.voiceTemplate,
+        name: RouteNames.voice,
+        builder: (context, state) {
+          final channelId = int.parse(state.pathParameters['channelId']!);
+          return VoiceView(channelId: channelId);
         },
       ),
       GoRoute(
