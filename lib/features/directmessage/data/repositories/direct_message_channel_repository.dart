@@ -12,6 +12,7 @@ class DirectMessageChannelRepository {
     required List<Int64> friendIds,
   }) async {
     print('Create DirectMessageChannel');
+    print(friendIds);
     final request = CreateDirectMessageChannelRequest(friendIds: friendIds);
 
     final response = await client.createDirectMessageChannel(request);

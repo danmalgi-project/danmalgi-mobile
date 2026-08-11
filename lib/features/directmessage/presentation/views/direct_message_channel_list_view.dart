@@ -43,6 +43,7 @@ class _DirectMessageChannelListViewState
               await ref.refresh(
                 directMessageChannelListViewModelProvider.future,
               );
+              print("test");
             } catch (_) {}
           },
           child: CustomScrollView(

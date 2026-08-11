@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
+import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
-import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_provider.dart';
+import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,9 +18,10 @@ class DirectMessageChannelListTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (channel.users.isNotEmpty) {
-      print(channel.users.first.profileImageUrl);
-    }
+    final currentUser = ref.watch(currentUserProvider);
+    final otherUser = channel.users.firstWhereOrNull(
+      (u) => u.id != currentUser?.id,
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -28,7 +31,7 @@ class DirectMessageChannelListTile extends ConsumerWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () {
-            context.push('/direct-message/${channel.dmId}');
+            context.push('/chat/${channel.dmId}');
           },
           onLongPress: () async {
             print("Long! ${channel.users}");
@@ -81,8 +84,7 @@ class DirectMessageChannelListTile extends ConsumerWidget {
                                 child: Column(
                                   children: [
                                     CachedCircleAvatar(
-                                      url:
-                                          "https://danmalgi.18382455604c2272896138ff86966336.r2.cloudflarestorage.com/${channel.channelImageUrl}",
+                                      url: channel.channelImageUrl,
                                       radius: 36.0,
                                     ),
 
@@ -132,9 +134,11 @@ class DirectMessageChannelListTile extends ConsumerWidget {
                 else if (channel.users.isNotEmpty)
                   CachedCircleAvatar(
                     radius: 22,
-                    url: channel.users.first.profileImageUrl,
+                    backgroundColor: Colors.amber,
+                    url: otherUser?.profileImageUrl,
                   )
                 else
+                  // TODO: 삭제 예정 - 목업 데이터 예외처리용
                   const CircleAvatar(radius: 22),
 
                 const SizedBox(width: 12.0),
