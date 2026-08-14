@@ -197,23 +197,23 @@ class _VoiceBody extends ConsumerWidget {
                                   ),
                                 ),
                               ),
-                            if (state.trackUserMap.containsValue(user))
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Material(
-                                  clipBehavior: Clip.antiAlias,
-                                  shape: CircleBorder(),
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Icon(
-                                      Icons.mic_off_outlined,
-                                      size: itemSize * 0.075,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            // if (state.trackUserMap.containsValue(user))
+                            //   Positioned(
+                            //     bottom: 0,
+                            //     right: 0,
+                            //     child: Material(
+                            //       clipBehavior: Clip.antiAlias,
+                            //       shape: CircleBorder(),
+                            //       color: Colors.red,
+                            //       child: Padding(
+                            //         padding: const EdgeInsets.all(6.0),
+                            //         child: Icon(
+                            //           Icons.mic_off_outlined,
+                            //           size: itemSize * 0.075,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
                           ],
                         ),
                         SizedBox(height: 8),
@@ -354,12 +354,7 @@ class _VoiceControls extends ConsumerWidget {
               shape: CircleBorder(),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: isReady
-                    ? () {
-                        ref.invalidate(voiceViewModelProvider);
-                        context.pop();
-                      }
-                    : null,
+                onTap: isReady ? () => context.pop() : null,
                 child: Icon(Icons.phone_disabled_outlined, size: 20.0),
               ),
             ),

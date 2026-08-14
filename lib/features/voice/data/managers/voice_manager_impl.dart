@@ -17,6 +17,8 @@ class VoiceManagerImpl implements VoiceManager {
   final _stateController = StreamController<VoiceState>.broadcast();
   final _requestController = StreamController<SignalingRequest>();
 
+  bool _disposed = false;
+
   VoiceState _currentState = const VoiceState();
 
   StreamSubscription<SignalingResponse>? _subscription;
@@ -33,6 +35,7 @@ class VoiceManagerImpl implements VoiceManager {
 
   // 상태 업데이트 헬퍼 — 항상 이걸 통해서만 상태 변경
   void _emit(VoiceState Function(VoiceState current) updater) {
+    if (_disposed) return;
     _currentState = updater(_currentState);
     _stateController.add(_currentState);
   }
@@ -241,6 +244,7 @@ class VoiceManagerImpl implements VoiceManager {
 
       for (final userTrack in offer.joinedUserTracks.userTracks) {
         final user = User.fromProto(userTrack.user);
+        print(user);
         updatedMap[userTrack.trackId] = user;
         users.add(user);
       }
@@ -306,6 +310,8 @@ class VoiceManagerImpl implements VoiceManager {
 
   @override
   Future<void> dispose() async {
+    _disposed = true;
+
     _audioLevelTimer?.cancel();
     _audioLevelTimer = null;
 
