@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,7 +39,8 @@ class FriendListTile extends ConsumerWidget {
                   ],
                 );
               },
-              child: CircleAvatar(
+              child: CachedCircleAvatar(
+                url: friend.user.profileImageUrl,
                 radius: 16.0,
                 backgroundColor: Color.fromARGB(255, 56, 56, 56),
               ),
