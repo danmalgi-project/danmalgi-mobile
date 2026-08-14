@@ -12,7 +12,7 @@ import 'package:danmalgi_mobile/core/generated/user/v1/user.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/grpc_channel_service.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/auth_interceptor.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
-import 'package:grpc/service_api.dart';
+import 'package:grpc/grpc.dart';
 
 /// gRPC Clients
 final apiClientProvider = Provider<GrpcChannelService>((ref) {
@@ -33,7 +33,19 @@ final signalingClientProvider = Provider<GrpcChannelService>((ref) {
   final String host = dotenv.get("DANMALGI_VOICE_HOST");
   final int port = int.parse(dotenv.get("DANMALGI_VOICE_PORT"));
 
-  return GrpcChannelService(host: host, port: port);
+  final ClientKeepAliveOptions keepAlive = const ClientKeepAliveOptions(
+    pingInterval: Duration(seconds: 30),
+    timeout: Duration(seconds: 10),
+    permitWithoutCalls: true,
+  );
+
+  final service = GrpcChannelService(
+    host: host,
+    port: port,
+    keepAlive: keepAlive,
+  );
+  ref.onDispose(() => service.shutdown());
+  return service;
 });
 
 /// feature: Auth
@@ -139,8 +151,6 @@ final signalingServiceClientProvider =
       final CallOptions options = CallOptions(
         metadata: {"channel_id": channelId.toString()},
       );
-
-      ref.onDispose(() => channel.shutdown());
 
       return SignalingServiceClient(
         channel,
