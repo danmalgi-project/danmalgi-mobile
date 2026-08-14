@@ -228,7 +228,7 @@ class ChatViewState extends ConsumerState<ChatView> {
                             //   // final bytes = await image.readAsBytes();
                             // },
                             onTap: () async {
-                              context.go(
+                              context.push(
                                 RoutePaths.voice(Int64(widget.channelId)),
                               );
                               // final bytes = await image.readAsBytes();
