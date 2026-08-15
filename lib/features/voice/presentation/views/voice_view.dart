@@ -17,6 +17,15 @@ class VoiceView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(voiceViewModelProvider(channelId: channelId), (previous, next) {
+      if (next.value?.terminated == true && context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('연결이 불안정하여 통화가 종료되었습니다')));
+        context.pop();
+      }
+    });
+
     final AsyncValue<DirectMessageChannel> channelAsync = ref.watch(
       directMessageChannelProvider(channelId: channelId),
     );

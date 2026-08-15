@@ -12,6 +12,9 @@ part 'voice_view_model.g.dart';
 @riverpod
 class VoiceViewModel extends _$VoiceViewModel {
   StreamSubscription<VoiceState>? subscription;
+  Timer? _gracePeriodTimer;
+
+  static const _gracePeriod = Duration(seconds: 8);
 
   @override
   FutureOr<VoiceState> build({required int channelId}) async {
@@ -25,6 +28,7 @@ class VoiceViewModel extends _$VoiceViewModel {
 
     // stream 구독
     final subscription = repo.stateStream.listen((voiceState) {
+      _handleStatusChange(voiceState.status);
       state = AsyncData(
         voiceState.copyWith(
           currentUser: currentUser,
@@ -35,10 +39,29 @@ class VoiceViewModel extends _$VoiceViewModel {
 
     ref.onDispose(() {
       subscription.cancel();
+      _gracePeriodTimer?.cancel();
     });
 
     await repo.join();
     return const VoiceState();
+  }
+
+  void _handleStatusChange(VoiceConnectionStatus status) {
+    final isBad =
+        status == VoiceConnectionStatus.unstable ||
+        status == VoiceConnectionStatus.failed;
+
+    if (!isBad) {
+      _gracePeriodTimer?.cancel();
+      _gracePeriodTimer = null;
+      return;
+    }
+
+    _gracePeriodTimer ??= Timer(_gracePeriod, () {
+      final current = state.value;
+      if (current == null) return;
+      state = AsyncData(current.copyWith(terminated: true));
+    });
   }
 
   Future<void> toggleMicMute() async {

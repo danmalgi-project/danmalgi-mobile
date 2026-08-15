@@ -17,5 +17,6 @@ abstract class VoiceState with _$VoiceState {
     @Default(false) bool isMuted,
     @Default(false) bool isSpeaking,
     @Default({}) Set<int> speakingUserIds,
+    @Default(false) bool terminated,
   }) = _VoiceState;
 }
