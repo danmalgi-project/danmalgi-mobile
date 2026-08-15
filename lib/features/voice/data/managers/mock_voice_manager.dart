@@ -16,15 +16,15 @@ class MockVoiceManager implements VoiceManager {
   // 테스트에서 상태를 직접 주입
   void emit(VoiceState state) => _stateController.add(state);
 
-  // 자주 쓰는 시나리오는 헬퍼로
-  void emitConnected() => emit(
-    const VoiceState(isConnected: true, statusMessage: '✅ WebRTC 연결 완료'),
-  );
+  void emitConnected() =>
+      emit(const VoiceState(status: VoiceConnectionStatus.connected));
 
   void emitUsers(List<User> users) => emit(VoiceState(users: users));
 
-  void emitError(String message) =>
-      emit(VoiceState(isConnected: false, statusMessage: '❌ $message'));
+  void emitError(String message) {
+    print('❌ $message');
+    emit(const VoiceState(status: VoiceConnectionStatus.failed));
+  }
 
   @override
   Stream<VoiceState> get stateStream => _stateController.stream;

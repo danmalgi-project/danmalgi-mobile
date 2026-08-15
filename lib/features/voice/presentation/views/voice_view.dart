@@ -243,27 +243,28 @@ class _StatusBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (voiceAsync) {
-      AsyncLoading() => _banner(isConnected: false, message: '연결 중...'),
-      AsyncError() => _banner(isConnected: false, message: '연결 실패'),
-      AsyncData(:final value) => _banner(
-        isConnected: value.isConnected,
-        message: value.statusMessage,
-      ),
+      AsyncLoading() => _banner(VoiceConnectionStatus.connecting),
+      AsyncError() => _banner(VoiceConnectionStatus.failed),
+      AsyncData(:final value) => _banner(value.status),
       _ => const SizedBox(),
     };
   }
 
-  Widget _banner({required bool isConnected, required String message}) {
+  Widget _banner(VoiceConnectionStatus status) {
+    final (label, color) = switch (status) {
+      VoiceConnectionStatus.connecting => ('연결 중', Colors.grey),
+      VoiceConnectionStatus.connected => ('연결 양호', Color(0xFF30D158)),
+      VoiceConnectionStatus.unstable => ('연결 불안정', Colors.orange),
+      VoiceConnectionStatus.failed => ('연결 실패', Colors.red),
+    };
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
         color: Color(0xFF161618),
       ),
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      child: Text(
-        message,
-        style: TextStyle(color: isConnected ? Color(0xFF30D158) : Colors.red),
-      ),
+      child: Text(label, style: TextStyle(color: color)),
     );
   }
 }

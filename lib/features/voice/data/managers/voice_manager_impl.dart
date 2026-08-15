@@ -17,9 +17,11 @@ class VoiceManagerImpl implements VoiceManager {
   final _stateController = StreamController<VoiceState>.broadcast();
   final _requestController = StreamController<SignalingRequest>();
 
+  VoiceState _currentState = const VoiceState();
   bool _disposed = false;
 
-  VoiceState _currentState = const VoiceState();
+  RTCIceConnectionState? _iceState;
+  RTCPeerConnectionState? _peerState;
 
   StreamSubscription<SignalingResponse>? _subscription;
   RTCPeerConnection? _peerConnection;
@@ -38,6 +40,28 @@ class VoiceManagerImpl implements VoiceManager {
     if (_disposed) return;
     _currentState = updater(_currentState);
     _stateController.add(_currentState);
+  }
+
+  VoiceConnectionStatus _resolveStatus() {
+    // ICE failed는 가장 확정적인 신호이므로 즉시 최종 실패로 취급
+    if (_iceState == RTCIceConnectionState.RTCIceConnectionStateFailed) {
+      return VoiceConnectionStatus.failed;
+    }
+
+    switch (_peerState) {
+      case RTCPeerConnectionState.RTCPeerConnectionStateFailed:
+        return VoiceConnectionStatus.failed;
+      case RTCPeerConnectionState.RTCPeerConnectionStateConnected:
+        if (_iceState ==
+            RTCIceConnectionState.RTCIceConnectionStateDisconnected) {
+          return VoiceConnectionStatus.unstable;
+        }
+        return VoiceConnectionStatus.connected;
+      case RTCPeerConnectionState.RTCPeerConnectionStateDisconnected:
+        return VoiceConnectionStatus.unstable;
+      default:
+        return VoiceConnectionStatus.connecting;
+    }
   }
 
   @override
@@ -98,25 +122,11 @@ class VoiceManagerImpl implements VoiceManager {
   }
 
   void _handleConnectionState(RTCPeerConnectionState state) {
-    switch (state) {
-      case RTCPeerConnectionState.RTCPeerConnectionStateConnected:
-        _emit(
-          (s) => s.copyWith(
-            statusMessage: '연결 양호',
-            isConnected:
-                state == RTCPeerConnectionState.RTCPeerConnectionStateConnected,
-          ),
-        );
-        _startVAD();
-        break;
-      case RTCPeerConnectionState.RTCPeerConnectionStateFailed:
-        _emit((s) => s.copyWith(statusMessage: '연결 실패', isConnected: false));
-        break;
-      case RTCPeerConnectionState.RTCPeerConnectionStateDisconnected:
-        _emit((s) => s.copyWith(statusMessage: '연결 끊김', isConnected: false));
-        break;
-      default:
-        break;
+    _peerState = state;
+    _emit((s) => s.copyWith(status: _resolveStatus()));
+
+    if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
+      _startVAD();
     }
   }
 
@@ -202,20 +212,8 @@ class VoiceManagerImpl implements VoiceManager {
   }
 
   void _handleIceConnectionState(RTCIceConnectionState state) {
-    print(state);
-    // switch (state) {
-    //   case RTCIceConnectionState.RTCIceConnectionStateConnected:
-    //     _emit((s) => s.copyWith(statusMessage: '연결 양호'));
-    //     break;
-    //   case RTCIceConnectionState.RTCIceConnectionStateFailed:
-    //     _emit((s) => s.copyWith(statusMessage: '연결 실패', isConnected: false));
-    //     break;
-    //   case RTCIceConnectionState.RTCIceConnectionStateDisconnected:
-    //     _emit((s) => s.copyWith(statusMessage: '연결 끊김', isConnected: false));
-    //     break;
-    //   default:
-    //     break;
-    // }
+    _iceState = state;
+    _emit((s) => s.copyWith(status: _resolveStatus()));
   }
 
   Future<void> _handleSignalingResponse(SignalingResponse response) async {
@@ -244,18 +242,13 @@ class VoiceManagerImpl implements VoiceManager {
 
       for (final userTrack in offer.joinedUserTracks.userTracks) {
         final user = User.fromProto(userTrack.user);
-        print(user);
         updatedMap[userTrack.trackId] = user;
         users.add(user);
       }
 
-      _emit(
-        (s) => s.copyWith(
-          trackUserMap: updatedMap,
-          users: users,
-          statusMessage: '👥 참여자 업데이트: ${users.length}명',
-        ),
-      );
+      print('👥 참여자 업데이트: ${users.length}명');
+
+      _emit((s) => s.copyWith(trackUserMap: updatedMap, users: users));
     }
 
     await _peerConnection!.setRemoteDescription(
