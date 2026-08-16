@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/voice_manager_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
@@ -17,8 +18,13 @@ class VoiceView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Future(
+      () => ref.read(activeVoiceSessionProvider.notifier).start(channelId),
+    );
+
     ref.listen(voiceViewModelProvider(channelId: channelId), (previous, next) {
       if (next.value?.terminated == true && context.mounted) {
+        ref.read(activeVoiceSessionProvider.notifier).end();
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('연결이 불안정하여 통화가 종료되었습니다')));
@@ -364,7 +370,12 @@ class _VoiceControls extends ConsumerWidget {
               shape: CircleBorder(),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: isReady ? () => context.pop() : null,
+                onTap: isReady
+                    ? () {
+                        ref.read(activeVoiceSessionProvider.notifier).end();
+                        context.pop();
+                      }
+                    : null,
                 child: Icon(Icons.phone_disabled_outlined, size: 20.0),
               ),
             ),
