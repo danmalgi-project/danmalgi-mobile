@@ -5,6 +5,7 @@ import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/voice_manager_provider.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/voice_screen_visible_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +13,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class VoiceView extends ConsumerWidget {
+class VoiceView extends ConsumerStatefulWidget {
   const VoiceView({super.key, required this.channelId});
   final int channelId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<VoiceView> createState() => _VoiceViewState();
+}
+
+class _VoiceViewState extends ConsumerState<VoiceView> {
+  late final _visible = ref.read(voiceScreenVisibleProvider.notifier);
+
+  @override
+  void initState() {
+    super.initState();
+    Future(() => _visible.set(true));
+  }
+
+  @override
+  void dispose() {
+    Future(() => _visible.set(false));
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     Future(
-      () => ref.read(activeVoiceSessionProvider.notifier).start(channelId),
+      () =>
+          ref.read(activeVoiceSessionProvider.notifier).start(widget.channelId),
     );
 
-    ref.listen(voiceViewModelProvider(channelId: channelId), (previous, next) {
+    ref.listen(voiceViewModelProvider(channelId: widget.channelId), (
+      previous,
+      next,
+    ) {
       if (next.value?.terminated == true && context.mounted) {
         ref.read(activeVoiceSessionProvider.notifier).end();
         ScaffoldMessenger.of(
@@ -33,13 +57,13 @@ class VoiceView extends ConsumerWidget {
     });
 
     final AsyncValue<DirectMessageChannel> channelAsync = ref.watch(
-      directMessageChannelProvider(channelId: channelId),
+      directMessageChannelProvider(channelId: widget.channelId),
     );
     final AsyncValue<VoiceState> voiceAsync = ref.watch(
-      voiceViewModelProvider(channelId: channelId),
+      voiceViewModelProvider(channelId: widget.channelId),
     );
     final VoiceViewModel voiceNotifier = ref.read(
-      voiceViewModelProvider(channelId: channelId).notifier,
+      voiceViewModelProvider(channelId: widget.channelId).notifier,
     );
 
     return channelAsync.when(
@@ -124,7 +148,7 @@ class VoiceView extends ConsumerWidget {
                   Text('연결 실패: $error'),
                   ElevatedButton(
                     onPressed: () => ref.invalidate(
-                      voiceViewModelProvider(channelId: channelId),
+                      voiceViewModelProvider(channelId: widget.channelId),
                     ),
                     child: const Text('재시도'),
                   ),
@@ -135,7 +159,7 @@ class VoiceView extends ConsumerWidget {
             // 정상 상태
             AsyncData(:final value) => _VoiceBody(
               state: value,
-              channelId: channelId,
+              channelId: widget.channelId,
             ),
 
             _ => const SizedBox.shrink(),
