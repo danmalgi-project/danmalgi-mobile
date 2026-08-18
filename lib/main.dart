@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
 import 'package:danmalgi_mobile/core/theme/app_theme.dart';
 import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_mini_bar.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/views/voice_overlay.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -69,7 +70,7 @@ class MyApp extends ConsumerWidget {
       builder: (context, child) => Stack(
         children: [
           AppMessageWrapper(child: child!),
-          const VoiceMiniBar(),
+          const VoiceOverlay(),
         ],
       ),
     );

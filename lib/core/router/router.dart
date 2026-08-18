@@ -1,7 +1,6 @@
 import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/views/voice_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,14 +65,6 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
         builder: (context, state) {
           final channelId = int.parse(state.pathParameters['channelId']!);
           return ChatView(channelId: channelId);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.voiceTemplate,
-        name: RouteNames.voice,
-        builder: (context, state) {
-          final channelId = int.parse(state.pathParameters['channelId']!);
-          return VoiceView(channelId: channelId);
         },
       ),
       GoRoute(

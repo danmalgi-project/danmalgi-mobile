@@ -5,6 +5,7 @@ import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 
@@ -228,9 +229,10 @@ class ChatViewState extends ConsumerState<ChatView> {
                             //   // final bytes = await image.readAsBytes();
                             // },
                             onTap: () async {
-                              context.push(
-                                RoutePaths.voice(Int64(widget.channelId)),
-                              );
+                              ref
+                                  .read(activeVoiceSessionProvider.notifier)
+                                  .start(widget.channelId);
+
                               // final bytes = await image.readAsBytes();
                             },
                             child: const Icon(Icons.add),
