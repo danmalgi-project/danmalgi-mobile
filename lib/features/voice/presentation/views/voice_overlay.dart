@@ -22,22 +22,25 @@ class _VoiceOverlayState extends ConsumerState<VoiceOverlay>
 
   static const _bubbleSize = 108.0;
   static const _bubbleMargin = 16.0;
-  // progress가 이 값보다 크면(=드래그 60% 미만) 손을 뗐을 때 풀스크린으로 복귀,
-  // 이하이면(=드래그 60% 이상) PiP로 자동 수렴.
-  static const _collapseThreshold = 0.4;
-  // progress가 이 값 아래로 내려가면(=드래그 약 15%) 헤더/컨트롤이 완전히 사라짐.
-  static const _chromeFadeEnd = 0.85;
 
-  static const _dragSensitivity = 1.2;
+  static const _commitDuration = Duration(milliseconds: 280);
+  static const _collapseDistanceFactor = 0.3;
+  static const _chromeFadeDistance = 80.0;
+
+  bool _isOpen = true;
+  bool _isCollapseDragging = false;
+  double _dragTranslateY = 0.0;
+
+  Animation<Rect?>? _commitRectAnim;
+  bool _commitToOpen = true;
 
   Offset _bubbleDragOffset = Offset.zero;
-
   bool _isPipDrag = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, value: 1.0);
+    _controller = AnimationController(vsync: this);
   }
 
   @override
@@ -46,18 +49,56 @@ class _VoiceOverlayState extends ConsumerState<VoiceOverlay>
     super.dispose();
   }
 
-  void _onCollapseDragUpdate(DragUpdateDetails details, Size screenSize) {
-    final delta = details.delta.dy / screenSize.height * _dragSensitivity;
-    _controller.value = (_controller.value - delta).clamp(0.0, 1.0);
+  void _onCollapseDragStart() {
+    _isCollapseDragging = true;
+    _dragTranslateY = 0.0;
   }
 
-  void _onCollapseDragEnd(DragEndDetails details) {
-    final target = _controller.value > _collapseThreshold ? 1.0 : 0.0;
-    _controller.animateTo(
-      target,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOutCubic,
+  void _onCollapseDragUpdate(DragUpdateDetails details, Size screenSize) {
+    setState(() {
+      _dragTranslateY = (_dragTranslateY + details.delta.dy).clamp(
+        0.0,
+        screenSize.height,
+      );
+    });
+  }
+
+  void _onCollapseDragEnd(
+    DragEndDetails details,
+    Size screenSize,
+    Rect fullBodyRect,
+    Rect effectiveBubbleRect,
+  ) {
+    final collapseDistance = screenSize.height * _collapseDistanceFactor;
+    final toOpen = _dragTranslateY < collapseDistance;
+    final currentRect = fullBodyRect.translate(0, _dragTranslateY);
+
+    setState(() => _isCollapseDragging = false);
+    _commitTo(toOpen, currentRect, fullBodyRect, effectiveBubbleRect);
+  }
+
+  void _commitTo(bool toOpen, Rect currentRect, Rect openRect, Rect pipRect) {
+    final tween = RectTween(
+      begin: currentRect,
+      end: toOpen ? openRect : pipRect,
     );
+
+    setState(() {
+      _commitToOpen = toOpen;
+      _commitRectAnim = tween.animate(
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+      );
+    });
+
+    _controller
+      ..value = 0.0
+      ..animateTo(1.0, duration: _commitDuration).then((_) {
+        if (!mounted) return;
+        setState(() {
+          _isOpen = toOpen;
+          _commitRectAnim = null;
+        });
+      });
   }
 
   void _onBubblePanUpdate(
@@ -152,41 +193,52 @@ class _VoiceOverlayState extends ConsumerState<VoiceOverlay>
       _bubbleSize,
     );
     final effectiveBubbleRect = bubbleRect.shift(_bubbleDragOffset);
-
-    // 1단계가 끝나는 시점(헤더 높이만큼 아래로 밀린) 바디 위치 — 2단계는 여기서 이어받음
-    final phase1EndRect = fullBodyRect.translate(0, headerHeight);
-
     return Material(
       type: MaterialType.transparency,
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          final progress = _controller.value;
+          final Rect bodyRect;
+          final double collapseFade;
+          final double chromeOpacity;
 
-          final chromeOpacity =
-              ((progress - _chromeFadeEnd) / (1.0 - _chromeFadeEnd)).clamp(
+          if (_isCollapseDragging) {
+            bodyRect = fullBodyRect.translate(0, _dragTranslateY);
+            collapseFade = 0.0;
+            chromeOpacity = (1 - _dragTranslateY / _chromeFadeDistance).clamp(
+              0.0,
+              1.0,
+            );
+          } else if (_commitRectAnim?.value != null) {
+            final rect = _commitRectAnim!.value!;
+            bodyRect = rect;
+            if (_commitToOpen) {
+              collapseFade = 0.0;
+              final translateY = (rect.top - fullBodyRect.top).clamp(
+                0.0,
+                double.infinity,
+              );
+              chromeOpacity = (1 - translateY / _chromeFadeDistance).clamp(
                 0.0,
                 1.0,
               );
-          final chromeIgnoring = chromeOpacity < 0.5;
-
-          final Rect bodyRect;
-          final double collapseT;
-          if (progress >= _collapseThreshold) {
-            final t =
-                (progress - _collapseThreshold) / (1.0 - _collapseThreshold);
-            bodyRect = Rect.lerp(phase1EndRect, fullBodyRect, t)!;
-            collapseT = 0.0;
+            } else {
+              collapseFade = (_controller.value / 0.3).clamp(
+                0.0,
+                1.0,
+              ); // 축소 애니메이션 초반 30%에서만 빠르게 크로스페이드
+              chromeOpacity = 0.0;
+            }
           } else {
-            final t = progress / _collapseThreshold;
-            bodyRect = Rect.lerp(effectiveBubbleRect, phase1EndRect, t)!;
-            collapseT = 1 - t;
+            bodyRect = _isOpen ? fullBodyRect : effectiveBubbleRect;
+            collapseFade = _isOpen ? 0.0 : 1.0;
+            chromeOpacity = _isOpen ? 1.0 : 0.0;
           }
 
-          // 축소가 시작되고 처음 30% 구간에서만 그리드→아바타 크로스페이드
-          final gridOpacity = (1 - collapseT / 0.3).clamp(0.0, 1.0);
-          final avatarOpacity = 1 - gridOpacity;
-          final radius = ui.lerpDouble(0.0, 20.0, collapseT)!;
+          final chromeIgnoring = chromeOpacity < 0.5;
+          final gridOpacity = 1 - collapseFade;
+          final avatarOpacity = collapseFade;
+          final radius = ui.lerpDouble(0.0, 20.0, collapseFade)!;
 
           return Stack(
             children: [
@@ -200,58 +252,92 @@ class _VoiceOverlayState extends ConsumerState<VoiceOverlay>
               // 바디 — 헤더/카드/버블 전 구간을 관통하는 단일 Rect + 제스처
               Positioned.fromRect(
                 rect: bodyRect,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onPanStart: (_) => _isPipDrag = progress <= 0.0,
-                  onPanUpdate: (d) {
-                    if (_isPipDrag) {
-                      _onBubblePanUpdate(d, bubbleRect, screenSize, padding);
-                    } else {
-                      _onCollapseDragUpdate(d, screenSize);
-                    }
-                  },
-                  onPanEnd: (d) {
-                    if (_isPipDrag) {
-                      _onBubblePanEnd(bubbleRect, screenSize, padding);
-                    } else {
-                      _onCollapseDragEnd(d);
-                    }
-                  },
-                  onTap: progress < 0.5
-                      ? () => _controller.animateTo(
-                          1.0,
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutCubic,
-                        )
-                      : null,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      if (gridOpacity > 0)
-                        Opacity(
-                          opacity: gridOpacity,
-                          child: IgnorePointer(
-                            child: _VoiceBodyOf(channelId: channelId),
+                child: IgnorePointer(
+                  ignoring: _commitRectAnim != null,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onPanStart: (_) {
+                      if (_isOpen) {
+                        _isPipDrag = false;
+                        _onCollapseDragStart();
+                      } else {
+                        _isPipDrag = true;
+                      }
+                    },
+                    onPanUpdate: (d) {
+                      if (_isPipDrag) {
+                        _onBubblePanUpdate(d, bubbleRect, screenSize, padding);
+                      } else {
+                        _onCollapseDragUpdate(d, screenSize);
+                      }
+                    },
+                    onPanEnd: (d) {
+                      if (_isPipDrag) {
+                        _onBubblePanEnd(bubbleRect, screenSize, padding);
+                      } else {
+                        _onCollapseDragEnd(
+                          d,
+                          screenSize,
+                          fullBodyRect,
+                          effectiveBubbleRect,
+                        );
+                      }
+                    },
+                    onPanCancel: () {
+                      if (!_isPipDrag && _isCollapseDragging) {
+                        setState(() => _isCollapseDragging = false);
+                        _commitTo(
+                          true,
+                          fullBodyRect.translate(0, _dragTranslateY),
+                          fullBodyRect,
+                          effectiveBubbleRect,
+                        );
+                      }
+                    },
+                    onTap: !_isOpen
+                        ? () => _commitTo(
+                            true,
+                            effectiveBubbleRect,
+                            fullBodyRect,
+                            effectiveBubbleRect,
+                          )
+                        : null,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        if (gridOpacity > 0)
+                          Opacity(
+                            opacity: gridOpacity,
+                            child: IgnorePointer(
+                              child: OverflowBox(
+                                alignment: Alignment.topCenter,
+                                minWidth: fullBodyRect.width,
+                                maxWidth: fullBodyRect.width,
+                                minHeight: fullBodyRect.height,
+                                maxHeight: fullBodyRect.height,
+                                child: _VoiceBodyOf(channelId: channelId),
+                              ),
+                            ),
                           ),
-                        ),
-                      if (avatarOpacity > 0)
-                        Opacity(
-                          opacity: avatarOpacity,
-                          child: IgnorePointer(
-                            child: Center(
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(radius),
-                                  child: _AvatarBubbleCard(
-                                    channelId: channelId,
+                        if (avatarOpacity > 0)
+                          Opacity(
+                            opacity: avatarOpacity,
+                            child: IgnorePointer(
+                              child: Center(
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(radius),
+                                    child: _AvatarBubbleCard(
+                                      channelId: channelId,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -317,9 +403,10 @@ class _VoiceHeader extends ConsumerWidget {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 12.0, 12.0, 12.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Column(
@@ -441,8 +528,11 @@ class _VoiceBody extends ConsumerWidget {
         builder: (context, constraints) {
           const spacing = 16.0;
           const crossAxisCount = 2;
+          const horizontalPadding = 20.0;
+
+          final availableWidth = constraints.maxWidth - horizontalPadding * 2;
           final itemSize =
-              (constraints.maxWidth - spacing * (crossAxisCount - 1)) /
+              (availableWidth - spacing * (crossAxisCount - 1)) /
               crossAxisCount;
 
           final itemProfileSize = itemSize * 0.25;
@@ -450,7 +540,7 @@ class _VoiceBody extends ConsumerWidget {
           return Container(
             padding: const EdgeInsets.symmetric(
               vertical: 16.0,
-              horizontal: 20.0,
+              horizontal: horizontalPadding,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -461,9 +551,11 @@ class _VoiceBody extends ConsumerWidget {
               spacing: spacing,
               runSpacing: spacing,
               children: [
-                for (final user in allUsers)
+                for (var i = 0; i < allUsers.length; i++)
                   SizedBox(
-                    width: itemSize,
+                    width: (allUsers.length.isOdd && i == allUsers.length - 1)
+                        ? itemSize * 2 + spacing
+                        : itemSize,
                     height: itemSize,
                     child: Material(
                       color: const Color(0xFF161618),
@@ -475,7 +567,7 @@ class _VoiceBody extends ConsumerWidget {
                           Stack(
                             children: [
                               CachedCircleAvatar(
-                                url: user.imageUrl,
+                                url: allUsers[i].imageUrl,
                                 radius: itemProfileSize,
                                 backgroundColor: Colors.transparent,
                               ),
@@ -500,7 +592,7 @@ class _VoiceBody extends ConsumerWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            user.name,
+                            allUsers[i].name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14.0,
