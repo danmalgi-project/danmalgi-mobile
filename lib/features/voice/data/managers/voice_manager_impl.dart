@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:danmalgi_mobile/core/generated/signaling/v1/signaling.pbgrpc.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:danmalgi_mobile/features/voice/data/managers/ice_candidate_buffer.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -26,6 +27,10 @@ class VoiceManagerImpl implements VoiceManager {
   StreamSubscription<SignalingResponse>? _subscription;
   RTCPeerConnection? _peerConnection;
   MediaStream? _localStream;
+
+  Future<void> _processingChain = Future.value();
+
+  late final IceCandidateBuffer _candidateBuffer;
 
   Timer? _audioLevelTimer;
   static const double _speakingThreshold = 0.02;
@@ -71,7 +76,13 @@ class VoiceManagerImpl implements VoiceManager {
 
     _subscription = _client
         .signaling(_requestController.stream)
-        .listen(_handleSignalingResponse, onError: _handleError);
+        .listen(_enqueueSignalingResponse, onError: _handleError);
+  }
+
+  void _enqueueSignalingResponse(SignalingResponse response) {
+    _processingChain = _processingChain
+        .then((_) => _handleSignalingResponse(response))
+        .catchError((e, st) => _handleError(e));
   }
 
   @override
@@ -90,6 +101,8 @@ class VoiceManagerImpl implements VoiceManager {
       ],
       'sdpSemantics': 'unified-plan',
     });
+
+    _candidateBuffer = IceCandidateBuffer();
 
     _localStream?.getTracks().forEach((track) {
       _peerConnection!.addTrack(track, _localStream!);
@@ -254,6 +267,9 @@ class VoiceManagerImpl implements VoiceManager {
     await _peerConnection!.setRemoteDescription(
       RTCSessionDescription(offer.sdp.sdpData, offer.sdp.sdpType),
     );
+    for (final candidate in _candidateBuffer.onRemoteDescriptionSet()) {
+      await _peerConnection!.addCandidate(candidate);
+    }
 
     final answer = await _peerConnection!.createAnswer();
     await _peerConnection!.setLocalDescription(answer);
@@ -273,20 +289,21 @@ class VoiceManagerImpl implements VoiceManager {
   }
 
   Future<void> _handleCandidate(Candidate candidateData) async {
-    await _peerConnection!.addCandidate(
-      RTCIceCandidate(
-        candidateData.candidate,
-        candidateData.sdpMid,
-        candidateData.sdpMlineIndex,
-      ),
+    final candidate = RTCIceCandidate(
+      candidateData.candidate,
+      candidateData.sdpMid,
+      candidateData.sdpMlineIndex,
     );
+
+    for (final c in _candidateBuffer.add(candidate)) {
+      await _peerConnection!.addCandidate(c);
+    }
     print('📥 ICE Candidate 수신');
-    // _emit((s) => s.copyWith(statusMessage: '📥 ICE Candidate 수신'));
   }
 
   void _handleError(dynamic error) {
     print(error);
-    // _emit((s) => s.copyWith(statusMessage: '❌ 오류: $error', isConnected: false));
+    _emit((s) => s.copyWith(status: VoiceConnectionStatus.failed));
   }
 
   Future<MediaStream> _getLocalAudioStream() async {
