@@ -5,6 +5,7 @@ import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/voice_manager_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'voice_view_model.g.dart';
@@ -44,6 +45,16 @@ class VoiceViewModel extends _$VoiceViewModel {
 
     await repo.join();
     return const VoiceState();
+  }
+
+  Future<List<MediaDeviceInfo>> getAudioOutputs() {
+    final repo = ref.read(voiceManagerProvider(channelId: channelId));
+    return repo.getAudioOutputs();
+  }
+
+  Future<void> selectAudioOutput(String deviceId) {
+    final repo = ref.read(voiceManagerProvider(channelId: channelId));
+    return repo.selectAudioOutput(deviceId);
   }
 
   void _handleStatusChange(VoiceConnectionStatus status) {

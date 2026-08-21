@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class MockVoiceManager implements VoiceManager {
   final _stateController = StreamController<VoiceState>.broadcast();
@@ -34,6 +35,12 @@ class MockVoiceManager implements VoiceManager {
     joinCalled = true;
     if (joinException != null) throw joinException!;
   }
+
+  @override
+  Future<List<MediaDeviceInfo>> getAudioOutputs() async => [];
+
+  @override
+  Future<void> selectAudioOutput(String deviceId) async {}
 
   @override
   Future<void> toggleMicMute(bool mute) async {
