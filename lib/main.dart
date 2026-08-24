@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
 import 'package:danmalgi_mobile/core/theme/app_theme.dart';
 import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/views/voice_overlay.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/views/voice_pip_overlay.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -26,9 +25,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-if (!Platform.isWindows) {
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-}
+  if (!Platform.isWindows) {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  }
 
   // AppLogger.initialize();
 
@@ -55,6 +54,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
@@ -69,8 +69,8 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.dark,
       builder: (context, child) => Stack(
         children: [
-          AppMessageWrapper(child: child!),
-          const VoiceOverlay(),
+          Positioned.fill(child: AppMessageWrapper(child: child!)),
+          const VoicePipOverlay(),
         ],
       ),
     );

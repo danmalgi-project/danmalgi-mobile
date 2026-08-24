@@ -1,5 +1,6 @@
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,9 +79,7 @@ class FriendListTile extends ConsumerWidget {
                 if (directMessageChannel == null) return;
 
                 if (context.mounted) {
-                  ref
-                      .read(activeVoiceSessionProvider.notifier)
-                      .start(directMessageChannel.dmId.toInt());
+                  openVoiceCall(ref, directMessageChannel.dmId.toInt());
                 }
               },
               child: Container(
