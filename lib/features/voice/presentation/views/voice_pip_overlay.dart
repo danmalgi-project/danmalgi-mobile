@@ -1,4 +1,5 @@
 import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/geometry/voice_pip_geometry.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_call_animation_provider.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_pip_offset_provider.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
@@ -17,45 +18,35 @@ class VoicePipOverlay extends ConsumerStatefulWidget {
 class _VoicePipOverlayState extends ConsumerState<VoicePipOverlay> {
   Offset? _dragOffset;
 
-  void _onPanUpdate(DragUpdateDetails details, Rect rect) {
-    setState(() => _dragOffset = rect.topLeft + details.delta);
+  void _onPanStart(Rect rect) {
+    _dragOffset = rect.topLeft;
   }
 
-  void _onPanEnd(Size screenSize, EdgeInsets padding, Rect rect) {
-    final current = rect.topLeft;
-    final centerX = current.dx + kVoicePipSize / 2;
-    final centerY = current.dy + kVoicePipSize / 2;
+  void _onPanUpdate(DragUpdateDetails details) {
+    final current = _dragOffset;
+    if (current == null) return;
+    setState(() => _dragOffset = current + details.delta);
+  }
 
-    final distLeft = centerX;
-    final distRight = screenSize.width - centerX;
-    final distTop = centerY - padding.top;
-    final distBottom = screenSize.height - padding.bottom - centerY;
+  void _onPanEnd(Size screenSize, EdgeInsets padding) {
+    final dragged = _dragOffset;
+    if (dragged == null) return;
 
-    final minDist = [
-      distLeft,
-      distRight,
-      distTop,
-      distBottom,
-    ].reduce((a, b) => a < b ? a : b);
+    final rect = voicePipRect(
+      screenSize: screenSize,
+      padding: padding,
+      offset: dragged,
+    );
 
-    final Offset snapped;
-    if (minDist == distLeft) {
-      snapped = Offset(kVoicePipMargin, current.dy);
-    } else if (minDist == distRight) {
-      snapped = Offset(
-        screenSize.width - kVoicePipSize - kVoicePipMargin,
-        current.dy,
-      );
-    } else if (minDist == distTop) {
-      snapped = Offset(current.dx, padding.top + kVoicePipMargin);
-    } else {
-      snapped = Offset(
-        current.dx,
-        screenSize.height - padding.bottom - kVoicePipSize - kVoicePipMargin,
-      );
-    }
-
-    ref.read(voicePipOffsetProvider.notifier).update(snapped);
+    ref
+        .read(voicePipOffsetProvider.notifier)
+        .update(
+          snapVoicePipToEdge(
+            rect: rect,
+            screenSize: screenSize,
+            padding: padding,
+          ),
+        );
     setState(() => _dragOffset = null);
   }
 
@@ -85,9 +76,10 @@ class _VoicePipOverlayState extends ConsumerState<VoicePipOverlay> {
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () => openVoiceCall(ref, channelId),
-            onPanUpdate: (d) => _onPanUpdate(d, rect),
-            onPanEnd: (_) => _onPanEnd(screenSize, padding, rect),
-            onPanCancel: () => _onPanEnd(screenSize, padding, rect),
+            onPanStart: (_) => _onPanStart(rect),
+            onPanUpdate: _onPanUpdate,
+            onPanEnd: (_) => _onPanEnd(screenSize, padding),
+            onPanCancel: () => _onPanEnd(screenSize, padding),
             child: Material(
               elevation: 8,
               borderRadius: BorderRadius.circular(20),

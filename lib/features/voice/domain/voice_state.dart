@@ -7,6 +7,10 @@ enum VoiceConnectionStatus { connecting, connected, unstable, failed }
 
 @freezed
 abstract class VoiceState with _$VoiceState {
+  const VoiceState._();
+
+  List<User> get participants => [?currentUser, ...users];
+
   const factory VoiceState({
     User? currentUser,
     @Default([]) List<User> users,
