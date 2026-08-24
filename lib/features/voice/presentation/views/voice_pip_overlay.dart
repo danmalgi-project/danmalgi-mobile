@@ -15,10 +15,38 @@ class VoicePipOverlay extends ConsumerStatefulWidget {
   ConsumerState<VoicePipOverlay> createState() => _VoicePipOverlayState();
 }
 
-class _VoicePipOverlayState extends ConsumerState<VoicePipOverlay> {
+class _VoicePipOverlayState extends ConsumerState<VoicePipOverlay>
+    with SingleTickerProviderStateMixin {
+  static const _snapDuration = Duration(milliseconds: 260);
+  static const _snapCurve = Curves.easeOutCubic;
+
+  late final AnimationController _snap = AnimationController(
+    vsync: this,
+    duration: _snapDuration,
+  );
+
   Offset? _dragOffset;
+  Animation<Offset>? _snapAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _snap.addListener(() {
+      final animation = _snapAnimation;
+      if (animation == null) return;
+      setState(() => _dragOffset = animation.value);
+    });
+  }
+
+  @override
+  void dispose() {
+    _snap.dispose();
+    super.dispose();
+  }
 
   void _onPanStart(Rect rect) {
+    _snap.stop();
+    _snapAnimation = null;
     _dragOffset = rect.topLeft;
   }
 
@@ -28,26 +56,44 @@ class _VoicePipOverlayState extends ConsumerState<VoicePipOverlay> {
     setState(() => _dragOffset = current + details.delta);
   }
 
-  void _onPanEnd(Size screenSize, EdgeInsets padding) {
+  void _settle(
+    Size screenSize,
+    EdgeInsets padding, {
+    Offset velocity = Offset.zero,
+  }) {
     final dragged = _dragOffset;
     if (dragged == null) return;
 
-    final rect = voicePipRect(
+    final from = voicePipRect(
       screenSize: screenSize,
       padding: padding,
       offset: dragged,
+    ).topLeft;
+
+    final target = snapVoicePipToEdge(
+      rect: Rect.fromLTWH(from.dx, from.dy, kVoicePipSize, kVoicePipSize),
+      screenSize: screenSize,
+      padding: padding,
+      velocity: velocity,
     );
 
-    ref
-        .read(voicePipOffsetProvider.notifier)
-        .update(
-          snapVoicePipToEdge(
-            rect: rect,
-            screenSize: screenSize,
-            padding: padding,
-          ),
-        );
-    setState(() => _dragOffset = null);
+    // 최종 위치는 먼저 확정. _dragOffset이 화면상으로만 따라간다.
+    ref.read(voicePipOffsetProvider.notifier).update(target);
+
+    final animation = Tween(
+      begin: from,
+      end: target,
+    ).animate(CurvedAnimation(parent: _snap, curve: _snapCurve));
+    _snapAnimation = animation;
+
+    _snap.forward(from: 0.0).whenCompleteOrCancel(() {
+      // 새 드래그가 끼어들어 취소된 경우엔 그쪽 상태를 건드리지 않는다.
+      if (!mounted || _snapAnimation != animation) return;
+      setState(() {
+        _dragOffset = null;
+        _snapAnimation = null;
+      });
+    });
   }
 
   @override
@@ -78,8 +124,12 @@ class _VoicePipOverlayState extends ConsumerState<VoicePipOverlay> {
             onTap: () => openVoiceCall(ref, channelId),
             onPanStart: (_) => _onPanStart(rect),
             onPanUpdate: _onPanUpdate,
-            onPanEnd: (_) => _onPanEnd(screenSize, padding),
-            onPanCancel: () => _onPanEnd(screenSize, padding),
+            onPanEnd: (d) => _settle(
+              screenSize,
+              padding,
+              velocity: d.velocity.pixelsPerSecond,
+            ),
+            onPanCancel: () => _settle(screenSize, padding),
             child: Material(
               elevation: 8,
               borderRadius: BorderRadius.circular(20),
