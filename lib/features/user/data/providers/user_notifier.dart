@@ -59,7 +59,12 @@ await ref.read(localStorageServiceProvider).setUser(remoteUser);
       final cachedUser = ref.read(localStorageServiceProvider).cachedUserOrNull;
 
       // 서버와 다르면 캐시 업데이트
-      if (cachedUser != remoteUser) {
+      if (cachedUser == null ||
+          cachedUser.id != remoteUser.id ||
+          cachedUser.name != remoteUser.name ||
+          cachedUser.tag != remoteUser.tag ||
+          cachedUser.status != remoteUser.status ||
+          cachedUser.imageUrl != remoteUser.imageUrl) {
         await ref.read(localStorageServiceProvider).setUser(remoteUser);
         // state 갱신
         state = AsyncData(UserState(user: remoteUser));
