@@ -30,11 +30,12 @@ class UserNotifier extends AsyncNotifier<UserState?> {
       return UserState(user: cachedUser);
     }
 
-    print('[UserNotifier] calling getUserByToken...');
+    print('[UserNotifier] needsRecover, calling getUserByToken...');
     try {
       final remoteUser = await ref
           .read(userRepositoryProvider)
           .getUserByToken();
+await ref.read(localStorageServiceProvider).setUser(remoteUser);
       return UserState(user: remoteUser);
     } catch (e) {
       print('[UserNotifier] getUserByToken 실패: $e');
