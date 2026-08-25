@@ -25,11 +25,10 @@ class UserNotifier extends AsyncNotifier<UserState?> {
         .watch(localStorageServiceProvider)
         .cachedUserOrNull;
 
-    if (cachedUser != null) {
-      Future.microtask(() => _syncWithServer());
+    if (cachedUser != null && cachedUser.status == UserStatus.ACTIVE) {
+      unawaited(_syncWithServer());
       return UserState(user: cachedUser);
     }
-    print('[UserNotifier] needsRecover');
 
     print('[UserNotifier] calling getUserByToken...');
     try {
