@@ -49,6 +49,7 @@ await ref.read(localStorageServiceProvider).setUser(remoteUser);
       final remoteUser = await ref
           .read(userRepositoryProvider)
           .getUserByToken();
+      if (!ref.mounted) return;
 
       // TODO: User를 nullable로 받지 않고 아마 에러 핸들링으로 추후 작업해서 catch 부분에서 logout 처리해야할 듯
       // if (remoteUser == null) {
