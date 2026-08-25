@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/providers/app_auth_status_provider.dart';
+import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_state.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_step.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
@@ -174,7 +175,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
   Color _buttonColor(OnboardingStep step) {
     return switch (step) {
-      OnboardingStep.welcome => const Color(0xFFFFE500),
+      OnboardingStep.welcome => AppColors.accent,
 
       OnboardingStep.nickname => const Color(0xFF4F7CFF),
 

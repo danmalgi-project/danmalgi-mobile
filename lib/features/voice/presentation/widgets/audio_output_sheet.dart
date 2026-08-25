@@ -26,10 +26,13 @@ Future<void> showAudioOutputSheet(
         children: [
           for (final device in devices)
             ListTile(
-              leading: const Icon(Icons.volume_up, color: AppColors.textSub),
+              leading: const Icon(
+                Icons.volume_up,
+                color: AppColors.textSecondary,
+              ),
               title: Text(
                 device.label,
-                style: const TextStyle(color: AppColors.textMain),
+                style: const TextStyle(color: AppColors.textPrimary),
               ),
               onTap: () {
                 notifier.selectAudioOutput(device.deviceId);

@@ -34,7 +34,7 @@ class VoiceCallControls extends ConsumerWidget {
           children: [
             VoiceControlButton(
               icon: isMuted ? Icons.mic_off : Icons.mic_none_rounded,
-              foreground: isMuted ? AppColors.error : AppColors.textMain,
+              foreground: isMuted ? AppColors.danger : AppColors.textPrimary,
               onTap: isReady ? notifier.toggleMicMute : null,
             ),
             VoiceControlButton(

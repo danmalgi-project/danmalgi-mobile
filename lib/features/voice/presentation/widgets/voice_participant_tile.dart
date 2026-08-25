@@ -52,7 +52,7 @@ class VoiceParticipantTile extends StatelessWidget {
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: AppColors.textMain,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -79,7 +79,7 @@ class _MuteBadge extends StatelessWidget {
         child: Icon(
           Icons.mic_off_outlined,
           size: size,
-          color: AppColors.textMain,
+          color: AppColors.textPrimary,
         ),
       ),
     );

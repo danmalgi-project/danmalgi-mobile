@@ -1,4 +1,5 @@
-import 'package:danmalgi_mobile/core/theme/app_colors.dart';
+import 'package:danmalgi_mobile/core/theme/app_button_styles.dart';
+import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/features/auth/presentation/providers/login_view_model.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/welcome_card_widget.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
@@ -47,6 +48,8 @@ class WelcomeMain extends StatelessWidget {
 }
 
 class AuthMain extends ConsumerWidget {
+  const AuthMain({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
@@ -60,85 +63,26 @@ class AuthMain extends ConsumerWidget {
           children: [
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  // TODO: 기존 데이터가 남아있을 때 로그인을 실패하는 경우가 발생할 수 있을 것 같은데 이는 어떻게 해결할지
-                  await ref
-                      .read(loginViewModelProvider.notifier)
-                      .login(oAuthType: OAuthType.GOOGLE);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppPrimitiveColors.white,
-                  foregroundColor: AppPrimitiveColors.black,
-                  disabledBackgroundColor: AppPrimitiveColors.white.withValues(
-                    alpha: 0.6,
-                  ),
-                  disabledForegroundColor: AppPrimitiveColors.black.withValues(
-                    alpha: 0.4,
-                  ),
-                  overlayColor: AppPrimitiveColors.black.withValues(
-                    alpha: 0.05,
-                  ),
-                  elevation: 0,
-                  shape: StadiumBorder(),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset("assets/Icons/Google.svg"),
-                    SizedBox(width: 8.0),
-                    Text(
-                      "Sign up with Google",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ],
-                ),
+              child: ElevatedButton.icon(
+                style: AppButtonStyles.inverse,
+                icon: SvgPicture.asset('assets/Icons/Google.svg'),
+                label: const Text('Sign up with Google'),
+                onPressed: () => ref
+                    .read(loginViewModelProvider.notifier)
+                    .login(oAuthType: OAuthType.GOOGLE),
               ),
             ),
             SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  // TODO: 기존 데이터가 남아있을 때 로그인을 실패하는 경우가 발생할 수 있을 것 같은데 이는 어떻게 해결할지
-                  await ref
-                      .read(loginViewModelProvider.notifier)
-                      .login(oAuthType: OAuthType.GOOGLE);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppPrimitiveColors.white,
-                  foregroundColor: AppPrimitiveColors.black,
-                  disabledBackgroundColor: AppPrimitiveColors.white.withValues(
-                    alpha: 0.6,
-                  ),
-                  disabledForegroundColor: AppPrimitiveColors.black.withValues(
-                    alpha: 0.4,
-                  ),
-                  overlayColor: AppPrimitiveColors.black.withValues(
-                    alpha: 0.05,
-                  ),
-                  elevation: 0,
-                  shape: StadiumBorder(),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset("assets/Icons/Apple.svg"),
-                    SizedBox(width: 8.0),
-                    Text(
-                      "Sign up with Apple",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ],
-                ),
+              child: ElevatedButton.icon(
+                style: AppButtonStyles.inverse,
+                icon: SvgPicture.asset('assets/Icons/Apple.svg'),
+                label: const Text('Sign up with Apple'),
+                onPressed: () => ref
+                    .read(loginViewModelProvider.notifier)
+                    .login(oAuthType: OAuthType.GOOGLE),
               ),
             ),
           ],

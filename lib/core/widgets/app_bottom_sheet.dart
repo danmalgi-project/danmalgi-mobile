@@ -42,7 +42,7 @@ class _Handle extends StatelessWidget {
       height: 4,
       margin: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.textSub.withValues(alpha: 0.3),
+        color: AppColors.textSecondary.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -73,7 +73,7 @@ Future<T?> showAppBottomSheet<T>({
     context: context,
     isScrollControlled: true,
     isDismissible: isDismissible,
-    backgroundColor: AppColors.surface,
+    backgroundColor: AppColors.surfacePrimary,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
