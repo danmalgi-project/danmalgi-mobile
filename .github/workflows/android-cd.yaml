@@ -1,0 +1,70 @@
+name: Firebase App Distribution (Android)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-distriute:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions /checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+      
+      - name: Provision build-time configuration
+        env:
+          ENV_B64:              ${{ secrets.ENV_B64 }}
+          FIREBASE_OPTIONS_B64: ${{ secrets.FIREBASE_OPTIONS_B64 }}
+          GOOGLE_SERVICES_B64:  ${{ secrets.GOOGLE_SERVICES_B64 }}
+        run: |
+          echo "$ENV_B64"              | base64 -d > .env
+          echo "$FIREBASE_OPTIONS_B64" | base64 -d > lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_B64"  | base64 -d > android/app/google-services.json
+
+      - name: Provision Android signing config
+        env:
+          KEYSTORE_B64:   ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS:      ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD:   ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          releaseStoreFile=upload-keystore.jks
+          releaseStorePassword=$STORE_PASSWORD
+          releaseKeyAlias=$KEY_ALIAS
+          releaseKeyPassword=$KEY_PASSWORD
+          EOF
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release \
+               --build-number=${{ github.run_number }}
+
+      - name: Distribute to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS }}
+          groups: internal-testers
+          file: build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: ${{ github.event.head_commit.message }}
