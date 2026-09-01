@@ -99,7 +99,7 @@ class LoginViewModel extends AsyncNotifier<void> {
     } catch (_) {}
 
     await ref.read(secureStorageProvider).deleteAccessToken();
-    await ref.read(localStorageServiceProvider).clearLocalData();
+    await ref.read(localStorageServiceProvider).clearUserData();
   }
 }
 

@@ -35,7 +35,7 @@ class UserNotifier extends AsyncNotifier<UserState?> {
       final remoteUser = await ref
           .read(userRepositoryProvider)
           .getUserByToken();
-await ref.read(localStorageServiceProvider).setUser(remoteUser);
+      await ref.read(localStorageServiceProvider).setUser(remoteUser);
       return UserState(user: remoteUser);
     } catch (e) {
       print('[UserNotifier] getUserByToken 실패: $e');
@@ -79,13 +79,23 @@ await ref.read(localStorageServiceProvider).setUser(remoteUser);
   Future<void> register({required String nickname, required String tag}) async {
     state = const AsyncLoading();
 
+    final User user;
     try {
-      final user = await ref
+      user = await ref
           .read(userRepositoryProvider)
           .register(nickname: nickname, tag: tag);
+
       state = AsyncData(UserState(user: user));
     } catch (e, st) {
       state = AsyncError(e, st);
+      return;
+    }
+
+    try {
+      await ref.read(authNotifierProvider.notifier).persistSession();
+      await ref.read(localStorageServiceProvider).setUser(user);
+    } catch (e) {
+      print('[UserNotifier] 세션 저장 실패: $e');
     }
   }
 

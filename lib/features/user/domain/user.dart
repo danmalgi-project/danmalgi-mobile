@@ -17,6 +17,9 @@ sealed class User with _$User {
     required String email,
     required String name,
     required String tag,
+    @Default(
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTum_J6gEMzt30wsdGbhC58x78n51GyV0wz0s0Qr51DOkluLSGcY7B0DIo&s=10",
+    )
     String? imageUrl,
     OAuthType? oauthType,
     UserStatus? status,

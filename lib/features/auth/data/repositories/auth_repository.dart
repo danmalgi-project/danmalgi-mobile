@@ -5,6 +5,7 @@ import 'package:danmalgi_mobile/features/auth/domain/auth_state.dart';
 import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
 
 class AuthRepository {
   final AuthServiceClient client;
@@ -28,10 +29,12 @@ class AuthRepository {
     final response = await client.authorization(request);
 
     final token = response.accessToken;
-    await secureStorage.setAccessToken(token);
-
     final signedUser = User.fromProto(response.user);
-    await localStorage.setUser(signedUser);
+
+    if (signedUser.status != UserStatus.PENDING) {
+      await secureStorage.setAccessToken(token);
+      await localStorage.setUser(signedUser);
+    }
 
     return AuthState(accessToken: token);
   }

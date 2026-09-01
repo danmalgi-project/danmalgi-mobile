@@ -9,11 +9,12 @@ class LocalStorageService {
 
   LocalStorageService(this._prefs);
 
-  // Auth
+  // User
   static const _keyId = 'id';
   static const _keyEmail = 'email';
   static const _keyName = 'name';
   static const _keyTag = 'tag';
+  static const _keyImageUrl = 'imageUrl';
   static const _keyOAuthType = 'oAuthType';
   static const _keyUserStatus = 'userStatus';
   static const _keyLastLoginTime = 'lastLoginTime';
@@ -32,6 +33,10 @@ class LocalStorageService {
 
   Future setTag(String tag) async {
     await _prefs.setString(_keyTag, tag);
+  }
+
+  Future setImageUrl(String imageUrl) async {
+    await _prefs.setString(_keyImageUrl, imageUrl);
   }
 
   Future setOAuthType(OAuthType oauthType) async {
@@ -54,16 +59,21 @@ class LocalStorageService {
 
   String? get tag => _prefs.getString(_keyTag);
 
-  // TODO: 추후 리스트 형태로 변경 & Null 값 에러 핸들링 추가
-  OAuthType? get oAuthType =>
-      OAuthType.values.byName(_prefs.getString(_keyOAuthType) ?? "GOOGLE");
+  String? get imageUrl => _prefs.getString(_keyImageUrl);
 
-  UserStatus? get status =>
-      UserStatus.values.byName(_prefs.getString(_keyUserStatus) ?? "PENDING");
+  OAuthType? get oAuthType {
+    final raw = _prefs.getString(_keyOAuthType);
+    return raw == null ? null : OAuthType.values.asNameMap()[raw];
+  }
+
+  UserStatus? get status {
+    final raw = _prefs.getString(_keyUserStatus);
+    return raw == null ? null : UserStatus.values.asNameMap()[raw];
+  }
 
   DateTime? get lastLoginTime {
-    final timestamp = _prefs.getInt(_keyLastLoginTime) ?? 0;
-    return DateTime.fromMillisecondsSinceEpoch(timestamp);
+    final ts = _prefs.getInt(_keyLastLoginTime);
+    return ts == null ? null : DateTime.fromMillisecondsSinceEpoch(ts);
   }
 
   Future setUser(User user) async {
@@ -71,6 +81,7 @@ class LocalStorageService {
     await setEmail(user.email);
     await setName(user.name);
     await setTag(user.tag);
+    await setImageUrl(user.imageUrl ?? "");
     // TODO: OAuthType 에러 핸들링 필요
     await setOAuthType(user.oauthType ?? OAuthType.GOOGLE);
     await setStatus(user.status ?? UserStatus.PENDING);
@@ -82,40 +93,43 @@ class LocalStorageService {
     final email = this.email;
     final oauthType = this.oAuthType;
     final status = this.status;
+    final imageUrl = this.imageUrl;
 
     if (id == null || id <= 0) return null;
-
     if (email == null || email.isEmpty) return null;
+    if (status == null) return null;
 
     return User(
       id: id,
       name: name ?? "",
       email: email,
       tag: tag ?? "",
+      imageUrl: imageUrl,
       oauthType: oauthType,
       status: status,
       lastLoginTime: lastLoginTime,
     );
   }
 
-  Future clearAuthData() async {
-    // TODO
+  Future clearUserData() async {
+    await _prefs.remove(_keyId);
+    await _prefs.remove(_keyEmail);
+    await _prefs.remove(_keyName);
+    await _prefs.remove(_keyTag);
+    await _prefs.remove(_keyImageUrl);
+    await _prefs.remove(_keyOAuthType);
+    await _prefs.remove(_keyUserStatus);
+    await _prefs.remove(_keyLastLoginTime);
   }
 
   // OnBoarding
   static const String _keyOnBoardingVersion = 'onboardingVersion';
-  static const String _keyNewUserFlow = 'onboardingNewUserFlow';
 
   Future setOnBoardingVersion(int version) async {
     await _prefs.setInt(_keyOnBoardingVersion, version);
   }
 
-  Future setNewUserFlow(bool isNewUserFlow) async {
-    await _prefs.setBool(_keyNewUserFlow, isNewUserFlow);
-  }
-
   int? get onBoardingVersion => _prefs.getInt(_keyOnBoardingVersion);
-  bool? get isNewUserFlow => _prefs.getBool(_keyNewUserFlow);
 
   // ETC
   Future clearLocalData() async {
