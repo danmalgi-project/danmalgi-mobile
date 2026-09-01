@@ -1,7 +1,64 @@
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_primary_button.dart';
 import 'package:flutter/material.dart';
 
-class WelcomeCardWidget extends StatelessWidget {
-  const WelcomeCardWidget({super.key});
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
+import 'package:flutter_svg/svg.dart';
+
+class WelcomeForm extends StatelessWidget {
+  const WelcomeForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(top: 256, child: _WelcomeCardWidget()),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFE500),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                padding: const EdgeInsets.all(12),
+                child: SvgPicture.asset("assets/Icons/Icon-call_end.svg"),
+              ),
+            ),
+            SizedBox(height: 32),
+            OnboardingMainFrame(
+              title: '모든 대화,\n한 곳에서.',
+              description: '채팅, 음성통화, 화면공유까지',
+              body: null,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class WelcomeFooter extends StatelessWidget {
+  final void Function()? onNext;
+
+  const WelcomeFooter({super.key, this.onNext});
+
+  @override
+  Widget build(BuildContext context) {
+    return OnboardingPrimaryButton(
+      label: '시작하기',
+      isLoading: false,
+      onPressed: onNext,
+    );
+  }
+}
+
+class _WelcomeCardWidget extends StatelessWidget {
+  const _WelcomeCardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

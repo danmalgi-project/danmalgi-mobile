@@ -8,6 +8,7 @@ abstract class OnboardingState with _$OnboardingState {
   const OnboardingState._();
 
   const factory OnboardingState({
+    @Default(false) bool hasStarted,
     @Default(false) bool isNewUserFlow,
     @Default(false) bool isCompleted,
     @Default(false) bool isSaving,
@@ -18,10 +19,6 @@ abstract class OnboardingState with _$OnboardingState {
     OnboardingStep.welcome,
     OnboardingStep.auth,
 
-    if (isNewUserFlow) ...[
-      OnboardingStep.nickname,
-      OnboardingStep.profile,
-      OnboardingStep.ready,
-    ],
+    if (isNewUserFlow) ...[OnboardingStep.register, OnboardingStep.ready],
   ];
 }

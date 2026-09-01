@@ -1,45 +1,29 @@
-class RegisterState {
-  String? nickname;
-  String? tag;
-  String? nicknameError;
-  String? tagError;
-  final String? error;
+import 'dart:typed_data';
 
-  RegisterState({
-    this.nickname,
-    this.tag,
-    this.nicknameError,
-    this.tagError,
-    this.error,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  bool get isButtonEnabled =>
-      nickname != null &&
-      nickname!.isNotEmpty &&
-      tag != null &&
-      tag!.isNotEmpty &&
-      nicknameError == null &&
-      tagError == null;
+part 'register_state.freezed.dart';
 
-  bool get hasNameTag =>
-      nickname != null &&
-      nickname!.isNotEmpty &&
-      tag != null &&
-      tag!.isNotEmpty;
+@freezed
+abstract class RegisterState with _$RegisterState {
+  const RegisterState._();
 
-  RegisterState copyWith({
+  const factory RegisterState({
     String? nickname,
-    String? tag,
+    @Default('0000') String tag,
+    Uint8List? profileImage,
     String? nicknameError,
     String? tagError,
     String? error,
-  }) {
-    return RegisterState(
-      nickname: nickname ?? this.nickname,
-      tag: tag ?? this.tag,
-      nicknameError: nicknameError,
-      tagError: tagError,
-      error: error,
-    );
-  }
+    @Default(false) bool isSubmitting,
+  }) = _RegisterState;
+
+  String get _trimmedNickname => nickname?.trim() ?? '';
+
+  bool get hasNickname => _trimmedNickname.isNotEmpty;
+
+  bool get isButtonEnabled =>
+      hasNickname && nicknameError == null && !isSubmitting;
+
+  String get displayNickname => hasNickname ? _trimmedNickname : '단말기';
 }

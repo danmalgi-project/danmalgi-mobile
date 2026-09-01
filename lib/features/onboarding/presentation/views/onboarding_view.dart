@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/providers/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
+import 'package:danmalgi_mobile/features/auth/presentation/widgets/auth_step.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_state.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_step.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
-import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_build_main_widgets.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/ready_step.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/welcome_step.dart';
+import 'package:danmalgi_mobile/features/user/presentation/providers/register_view_model.dart';
+import 'package:danmalgi_mobile/features/user/presentation/widgets/register_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -20,30 +24,28 @@ class OnboardingView extends ConsumerStatefulWidget {
 
 class _OnboardingViewState extends ConsumerState<OnboardingView> {
   late final PageController _pageController;
-  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    final steps = ref.read(onboardingControllerProvider).steps;
+    final index = steps.indexOf(ref.read(onboardingStepProvider));
+    _pageController = PageController(initialPage: index < 0 ? 0 : index);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(
+        ref
+            .read(onboardingControllerProvider.notifier)
+            .handleAuthState(ref.read(appAuthStatusProvider)),
+      );
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-
-  Future<void> _goToNextPage() async {
-    final state = ref.read(onboardingControllerProvider);
-
-    if (!_pageController.hasClients) return;
-    if (_currentIndex >= state.steps.length - 1) return;
-
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
   }
 
   Future<void> _completeOnboarding() async {
@@ -54,9 +56,21 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingControllerProvider);
 
+    final step = ref.watch(onboardingStepProvider);
+
     ref.listen<AppAuthState>(appAuthStatusProvider, (previous, next) {
       unawaited(
         ref.read(onboardingControllerProvider.notifier).handleAuthState(next),
+      );
+    });
+
+    ref.listen<OnboardingStep>(onboardingStepProvider, (prev, next) {
+      final index = ref.read(onboardingControllerProvider).steps.indexOf(next);
+      if (index < 0 || !_pageController.hasClients) return;
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
       );
     });
 
@@ -68,10 +82,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: state.steps.length,
-                // physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (index) {
-                  setState(() => _currentIndex = index);
-                },
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) => _buildMain(state.steps[index]),
               ),
             ),
@@ -89,7 +100,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: _buildBottom(state.steps[_currentIndex], state),
+              child: _buildBottom(step),
             ),
 
             SizedBox(height: 16),
@@ -99,105 +110,21 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  Widget _buildMain(OnboardingStep step) {
-    return switch (step) {
-      OnboardingStep.welcome => const WelcomeMain(),
+  Widget _buildMain(OnboardingStep step) => switch (step) {
+    OnboardingStep.welcome => const WelcomeForm(),
+    OnboardingStep.auth => AuthForm(),
+    OnboardingStep.register => RegisterForm(),
+    OnboardingStep.ready => const ReadyForm(),
+  };
 
-      OnboardingStep.auth => AuthMain(),
-
-      OnboardingStep.nickname => WelcomeMain(),
-
-      OnboardingStep.profile => WelcomeMain(),
-
-      OnboardingStep.ready => const WelcomeMain(),
-    };
-  }
-
-  Widget _buildBottom(OnboardingStep step, OnboardingState state) {
-    if (step == OnboardingStep.auth) {
-      return const Text(
-        '계속 진행하면 이용약관 및 개인정보처리방침에\n동의하는 것으로 간주됩니다.',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Color(0xFF8E8E93), fontSize: 14),
-      );
-    }
-
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: state.isSaving ? null : () => _handlePrimaryAction(step),
-        style: ElevatedButton.styleFrom(
-          foregroundColor: _buttonTextColor(step),
-          backgroundColor: _buttonColor(step),
-          // textStyle: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-          shape: StadiumBorder(),
-        ),
-        child: state.isSaving
-            ? const CircularProgressIndicator()
-            : Text(_buttonText(step)),
-      ),
-    );
-  }
-
-  Future<void> _handlePrimaryAction(OnboardingStep step) async {
-    switch (step) {
-      case OnboardingStep.welcome:
-        await _goToNextPage();
-
-      case OnboardingStep.nickname:
-        await _goToNextPage();
-
-      case OnboardingStep.profile:
-        await _goToNextPage();
-
-      case OnboardingStep.ready:
-        await _completeOnboarding();
-
-      case OnboardingStep.auth:
-        break;
-    }
-  }
-
-  String _buttonText(OnboardingStep step) {
-    return switch (step) {
-      OnboardingStep.welcome => "시작하기",
-
-      OnboardingStep.nickname => "설정하기",
-
-      OnboardingStep.profile => "설정하기",
-
-      OnboardingStep.ready => "시작하기",
-
-      OnboardingStep.auth => "",
-    };
-  }
-
-  Color _buttonColor(OnboardingStep step) {
-    return switch (step) {
-      OnboardingStep.welcome => AppColors.accent,
-
-      OnboardingStep.nickname => const Color(0xFF4F7CFF),
-
-      OnboardingStep.profile => const Color(0xFF8A6DFF),
-
-      OnboardingStep.ready => const Color(0xFF22A06B),
-
-      OnboardingStep.auth => Colors.transparent,
-    };
-  }
-
-  Color _buttonTextColor(OnboardingStep step) {
-    return switch (step) {
-      OnboardingStep.welcome => const Color(0xFF000000),
-
-      OnboardingStep.nickname => const Color(0xFF4F7CFF),
-
-      OnboardingStep.profile => const Color(0xFF8A6DFF),
-
-      OnboardingStep.ready => const Color(0xFF22A06B),
-
-      OnboardingStep.auth => Colors.transparent,
-    };
-  }
+  Widget _buildBottom(OnboardingStep step) => switch (step) {
+    OnboardingStep.welcome => WelcomeFooter(
+      onNext: () => ref.read(onboardingControllerProvider.notifier).start(),
+    ),
+    OnboardingStep.auth => const AuthFooter(),
+    OnboardingStep.register => const RegisterFooter(),
+    OnboardingStep.ready => ReadyFooter(
+      onNext: () => ref.read(onboardingControllerProvider.notifier).complete(),
+    ),
+  };
 }

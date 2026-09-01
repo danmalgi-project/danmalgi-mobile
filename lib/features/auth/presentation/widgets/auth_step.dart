@@ -1,54 +1,16 @@
 import 'package:danmalgi_mobile/core/theme/app_button_styles.dart';
+import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
+import 'package:danmalgi_mobile/core/theme/app_typography.dart';
 import 'package:danmalgi_mobile/features/auth/presentation/providers/login_view_model.dart';
-import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/welcome_card_widget.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:flutter/material.dart';
-
-import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class WelcomeMain extends StatelessWidget {
-  const WelcomeMain({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(top: 256, child: WelcomeCardWidget()),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFE500),
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                padding: const EdgeInsets.all(12),
-                child: SvgPicture.asset("assets/Icons/Icon-call_end.svg"),
-              ),
-            ),
-            SizedBox(height: 32),
-            OnboardingMainFrame(
-              title: '모든 대화,\n한 곳에서.',
-              description: '채팅, 음성통화, 화면공유까지',
-              body: null,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class AuthMain extends ConsumerWidget {
-  const AuthMain({super.key});
+class AuthForm extends ConsumerWidget {
+  const AuthForm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,6 +50,19 @@ class AuthMain extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AuthFooter extends StatelessWidget {
+  const AuthFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '계속 진행하면 이용약관 및 개인정보처리방침에\n동의하는 것으로 간주됩니다.',
+      textAlign: TextAlign.center,
+      style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
     );
   }
 }

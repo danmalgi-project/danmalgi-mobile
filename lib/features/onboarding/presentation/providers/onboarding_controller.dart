@@ -1,7 +1,10 @@
 import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
+import 'package:danmalgi_mobile/core/providers/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_state.dart';
+import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_step.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_controller.g.dart';
@@ -15,22 +18,23 @@ class OnboardingController extends _$OnboardingController {
   @override
   OnboardingState build() {
     final savedVersion = _storage.onBoardingVersion ?? 0;
-    final isNewUserFLow = _storage.isNewUserFlow ?? false;
 
     return OnboardingState(
       isCompleted: savedVersion >= currentOnboardingVersion,
-      isNewUserFlow: isNewUserFLow,
     );
+  }
+
+  void start() {
+    if (state.hasStarted) return;
+    state = state.copyWith(hasStarted: true);
   }
 
   Future<void> handleAuthState(AppAuthState authState) async {
     await authState.maybeWhen(
-      needsRegistration: () async {
-        await startNewUserFlow();
-      },
+      needsRegistration: () async => startNewUserFlow(),
+      unauthenticated: () async =>
+          state = state.copyWith(isNewUserFlow: false, hasStarted: false),
       authenticated: (_) async {
-        // 신규 사용자는 회원가입 이후에도 추가 설정이 남아 있으므로
-        // 여기에서 바로 완료시키지 않습니다.
         if (!state.isNewUserFlow) {
           await complete();
         }
@@ -39,16 +43,9 @@ class OnboardingController extends _$OnboardingController {
     );
   }
 
-  Future<void> startNewUserFlow() async {
+  void startNewUserFlow() {
     if (state.isNewUserFlow) return;
-
-    state = state.copyWith(isNewUserFlow: true, errorMessage: null);
-
-    try {
-      await _storage.setNewUserFlow(true);
-    } catch (error) {
-      state = state.copyWith(errorMessage: '온보딩 진행 상태를 저장하지 못했습니다.');
-    }
+    state = state.copyWith(isNewUserFlow: true);
   }
 
   Future<void> complete() async {
@@ -58,8 +55,6 @@ class OnboardingController extends _$OnboardingController {
 
     try {
       await _storage.setOnBoardingVersion(currentOnboardingVersion);
-
-      await _storage.setNewUserFlow(false);
 
       state = state.copyWith(
         isCompleted: true,
@@ -78,3 +73,16 @@ class OnboardingController extends _$OnboardingController {
     state = state.copyWith(errorMessage: null);
   }
 }
+
+final onboardingStepProvider = Provider<OnboardingStep>((ref) {
+  final auth = ref.watch(appAuthStatusProvider);
+  final onboarding = ref.watch(onboardingControllerProvider);
+
+  if (!onboarding.hasStarted) return OnboardingStep.welcome;
+
+  return auth.maybeWhen(
+    needsRegistration: () => OnboardingStep.register,
+    authenticated: (_) => OnboardingStep.ready,
+    orElse: () => OnboardingStep.auth,
+  );
+});
