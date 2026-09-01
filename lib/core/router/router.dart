@@ -1,6 +1,8 @@
 import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/router/root_navigator_key_provider.dart';
+import 'package:danmalgi_mobile/core/router/router_refresh_notifier.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:flutter/material.dart';
 
@@ -19,28 +21,24 @@ import 'package:danmalgi_mobile/features/home/presentation/views/home_view.dart'
 import 'package:danmalgi_mobile/features/home/presentation/widgets/scaffold_with_nav_bar.dart';
 import 'package:danmalgi_mobile/features/user/presentation/views/register_view.dart';
 
+enum _Zone { splash, onboarding, main }
+
 final routerProvider = Provider<GoRouter>((ref) {
   final routerKey = ref.watch(rootNavigatorKeyProvider);
 
-  final listenable = ValueNotifier<AppAuthState>(AppAuthState.loading());
-  ref.onDispose(listenable.dispose);
+  final refresh = RouterRefreshNotifier(ref, [
+    appAuthStatusProvider,
+    onboardingControllerProvider.select((s) => s.isCompleted),
+  ]);
+
+  ref.onDispose(refresh.dispose);
 
   AppAuthState lastStableState = const AppAuthState.loading();
-
-  final logger = ref.watch(appLoggerServiceProvider);
-  ref.listen(appAuthStatusProvider, (previous, next) async {
-    logger.d('🔄 Auth state change: $previous → $next');
-    if (previous != next) {
-      listenable.value = next;
-    } else {
-      logger.d('🚫 Skipping ValueNotifier update (same state type)');
-    }
-  });
 
   return GoRouter(
     navigatorKey: routerKey,
     initialLocation: RoutePaths.splash,
-    refreshListenable: listenable,
+    refreshListenable: refresh,
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
@@ -49,14 +47,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => SplashView(),
       ),
       GoRoute(
-        path: RoutePaths.login,
-        name: RouteNames.login,
+        path: RoutePaths.onboarding,
+        name: RouteNames.onboarding,
         builder: (context, state) => OnboardingView(),
-      ),
-      GoRoute(
-        path: RoutePaths.register,
-        name: RouteNames.register,
-        builder: (context, state) => RegisterView(),
       ),
       GoRoute(
         path: RoutePaths.chatTemplate,
@@ -124,57 +117,39 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
     redirect: (context, state) {
       final currentPath = state.uri.path;
-      final appAuthState = listenable.value;
+      final authState = ref.read(appAuthStatusProvider);
+      final onboardingDone = ref.read(onboardingControllerProvider).isCompleted;
 
-      final bool isTransient = appAuthState.maybeWhen(
+      final bool isTransient = authState.maybeWhen(
         loading: () => true,
         bootstrapping: () => true,
         orElse: () => false,
       );
-      if (!isTransient) {
-        lastStableState = appAuthState;
-      }
-      final effectiveState = isTransient ? lastStableState : appAuthState;
+      if (!isTransient) lastStableState = authState;
+      final effective = isTransient ? lastStableState : authState;
 
-      final bool isAuthPage =
-          currentPath == RoutePaths.login ||
-          currentPath == RoutePaths.register ||
+      final zone = effective.when(
+        loading: () => _Zone.splash,
+        bootstrapping: () => _Zone.splash,
+        unauthenticated: () => _Zone.onboarding,
+        needsRegistration: () => _Zone.onboarding,
+        authenticated: (_) => onboardingDone ? _Zone.main : _Zone.onboarding,
+        blocked: () => _Zone.onboarding,
+        withdrawn: () => _Zone.onboarding,
+        error: (_, __) => _Zone.onboarding,
+      );
+
+      final bool isOutsideMain =
+          currentPath == RoutePaths.onboarding ||
           currentPath == RoutePaths.splash;
 
-      return effectiveState.when(
-        loading: () {
-          // 초기 판정 중에는 splash에 머무르게
-          return currentPath == RoutePaths.splash ? null : RoutePaths.splash;
-        },
-        bootstrapping: () {
-          // 토큰은 있는데 user 복구 중 → splash(또는 별도 “복구중” 페이지) 유지
-          return currentPath == RoutePaths.splash ? null : RoutePaths.splash;
-        },
-        unauthenticated: () {
-          // 로그인 화면만 허용
-          return currentPath == RoutePaths.login ? null : RoutePaths.login;
-        },
-        needsRegistration: () {
-          // 가입 완료 페이지로 강제
-          return currentPath == RoutePaths.register
-              ? null
-              : RoutePaths.register;
-        },
-        authenticated: (user) {
-          // 이미 인증됐는데 auth 페이지에 있으면 메인으로 보냄
-          if (isAuthPage) return RoutePaths.directMessageChannelList;
-          return null;
-        },
-        blocked: () {
-          return currentPath == RoutePaths.login ? null : RoutePaths.login;
-        },
-        withdrawn: () {
-          return currentPath == RoutePaths.login ? null : RoutePaths.login;
-        },
-        error: (error, canRetry) {
-          return currentPath == RoutePaths.login ? null : RoutePaths.login;
-        },
-      );
+      return switch (zone) {
+        _Zone.splash =>
+          currentPath == RoutePaths.splash ? null : RoutePaths.splash,
+        _Zone.onboarding =>
+          currentPath == RoutePaths.onboarding ? null : RoutePaths.onboarding,
+        _Zone.main => isOutsideMain ? RoutePaths.home : null,
+      };
     },
   );
 });

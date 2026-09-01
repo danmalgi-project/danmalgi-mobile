@@ -7,10 +7,11 @@ class RoutePaths {
   // Home
   static const String home = '/';
 
+  // Onboarding
+  static const String onboarding = '/onboarding';
+
   // Auth
-  static const String login = '/login';
   static const String logout = '/logout';
-  static const String register = '/register';
 
   // DirectMessage
   static const String directMessageChannelList = '/direct-message';
@@ -31,9 +32,8 @@ class RoutePaths {
 class RouteNames {
   static const String splash = 'splash';
   static const String home = 'home';
-  static const String login = 'login';
+  static const String onboarding = 'onboarding';
   static const String logout = 'logout';
-  static const String register = 'register';
   static const String directMessageChannelList = 'direct-message-list';
   static const String chat = 'chat';
   static const String friend = 'friend';
