@@ -4,7 +4,13 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths-ignore: ['**.md', 'docs/**']
+    paths:
+      - 'lib/**'
+      - 'ios/**'
+      - 'assets/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - '.github/workflows/ios-cd.yaml'
 
 permissions:
   contents: read
@@ -74,7 +80,10 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8:    ${{ secrets.ASC_KEY_P8 }}
           CHANGELOG:     ${{ github.event.head_commit.message || github.sha }}
-        run: bundle exec fastlane ios upload changelog:"$CHANGELOG"
+        run: |
+          IPA=$(ls "$GITHUB_WORKSPACE"/build/ios/ipa/*.ipa | head -n1)
+          echo "Uploading: $IPA"
+          bundle exec fastlane ios upload ipa:"$IPA"
 
       - name: Upload logs on failure
         if: failure()

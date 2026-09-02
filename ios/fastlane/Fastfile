@@ -45,14 +45,14 @@ platform :ios do
 
   desc "CI: 빌드된 ipa를 TestFlight에 업로드"
   lane :upload do |options|
-    ipa = options[:ipa] || Dir["../build/ios/ipa/*.ipa"].first
+    ipa = options[:ipa]
+    ipa ||= Dir[File.join(ENV["GITHUB_WORKSPACE"] || "..", "build/ios/ipa/*.ipa")].first
     UI.user_error!("ipa를 찾을 수 없습니다 (build/ios/ipa/*.ipa)") if ipa.nil?
 
     upload_to_testflight(
-      ipa:                          ipa,
+      ipa:                               ipa,
       skip_waiting_for_build_processing: true,
-      distribute_external:          false,
-      changelog:                    options[:changelog]
+      distribute_external:               false
     )
   end
 end
