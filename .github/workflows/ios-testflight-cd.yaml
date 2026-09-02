@@ -1,0 +1,89 @@
+name: TestFlight (iOS)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-cd
+  cancel-in-progress: false
+
+jobs:
+  build-and-upload:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: ios
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.7'
+          cache: true
+
+      - name: Provision build-time configuration
+        env:
+          ENV_B64:                 ${{ secrets.ENV_B64 }}
+          FIREBASE_OPTIONS_B64:    ${{ secrets.FIREBASE_OPTIONS_B64 }}
+          GOOGLE_SERVICE_INFO_B64: ${{ secrets.GOOGLE_SERVICE_INFO_B64 }}
+        run: |
+          echo "$ENV_B64"                 | base64 -d > .env
+          echo "$FIREBASE_OPTIONS_B64"    | base64 -d > lib/firebase_options.dart
+          echo "$GOOGLE_SERVICE_INFO_B64" | base64 -d > ios/Runner/GoogleService-Info.plist
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Install signing assets (fastlane match)
+        working-directory: ios
+        env:
+          MATCH_GIT_URL:                 ${{ secrets.MATCH_GIT_URL }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD:                ${{ secrets.MATCH_PASSWORD }}
+          MATCH_KEYCHAIN_NAME:           fastlane_tmp_keychain
+          MATCH_KEYCHAIN_PASSWORD:       ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          ASC_KEY_ID:                    ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID:                 ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8:                    ${{ secrets.ASC_KEY_P8 }}
+        run: bundle exec fastlane ios certificates
+
+      - name: Build IPA
+        run: |
+          flutter build ipa --release \
+            --build-number=${{ github.run_number }} \
+            --export-options-plist=ios/ExportOptions.plist
+
+      - name: Upload to TestFlight
+        working-directory: ios
+        env:
+          ASC_KEY_ID:    ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8:    ${{ secrets.ASC_KEY_P8 }}
+          CHANGELOG:     ${{ github.event.head_commit.message || github.sha }}
+        run: bundle exec fastlane ios upload changelog:"$CHANGELOG"
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-logs
+          path: |
+            ~/Library/Logs/gym
+            build/ios/logs
+          if-no-files-found: ignore
