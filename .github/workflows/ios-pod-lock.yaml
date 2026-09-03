@@ -1,0 +1,25 @@
+name: Update iOS Podfile.lock
+on:
+  workflow_dispatch:
+
+jobs:
+  update-lock:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: ios
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.0'
+          cache: true
+      - run: flutter pub get
+      - name: Update Firebase pods
+        working-directory: ios
+        run: bundle exec pod update Firebase/CoreOnly firebase_core firebase_messaging --repo-update
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Podfile.lock
+          path: ios/Podfile.lock
