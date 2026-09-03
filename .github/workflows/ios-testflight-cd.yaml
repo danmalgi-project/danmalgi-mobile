@@ -56,6 +56,10 @@ jobs:
       - name: Run code generation
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Install CocoaPods dependencies
+        working-directory: ios
+        run: bundle exec pod install --repo-update
+
       - name: Install signing assets (fastlane match)
         working-directory: ios
         env:
@@ -84,6 +88,13 @@ jobs:
           IPA=$(ls "$GITHUB_WORKSPACE"/build/ios/ipa/*.ipa | head -n1)
           echo "Uploading: $IPA"
           bundle exec fastlane ios upload ipa:"$IPA"
+
+      - name: Upload resolved Podfile.lock
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: podfile-lock
+          path: ios/Podfile.lock
 
       - name: Upload logs on failure
         if: failure()
