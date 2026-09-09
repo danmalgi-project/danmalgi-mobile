@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:danmalgi_mobile/features/auth/domain/auth_state.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,6 +19,10 @@ class UserNotifier extends AsyncNotifier<UserState?> {
 
     if (auth == null) {
       print('[UserNotifier] auth null → null 반환');
+      return null;
+    }
+
+    if (auth.isPending) {
       return null;
     }
 
@@ -79,21 +84,28 @@ class UserNotifier extends AsyncNotifier<UserState?> {
   Future<void> register({required String nickname, required String tag}) async {
     state = const AsyncLoading();
 
-    final User user;
+    final ({User user, String accessToken}) result;
     try {
-      user = await ref
+      result = await ref
           .read(userRepositoryProvider)
           .register(nickname: nickname, tag: tag);
-
-      state = AsyncData(UserState(user: user));
     } catch (e, st) {
       state = AsyncError(e, st);
       return;
     }
 
     try {
-      await ref.read(authNotifierProvider.notifier).persistSession();
-      await ref.read(localStorageServiceProvider).setUser(user);
+      await ref
+          .read(authNotifierProvider.notifier)
+          .replaceToken(result.accessToken);
+    } catch (e) {
+      print('[UserNotifier] 토큰 저장 실패: $e');
+    }
+
+    state = AsyncData(UserState(user: result.user));
+
+    try {
+      await ref.read(localStorageServiceProvider).setUser(result.user);
     } catch (e) {
       print('[UserNotifier] 세션 저장 실패: $e');
     }

@@ -237,9 +237,11 @@ class RegisterRequest extends $pb.GeneratedMessage {
 class RegisterResponse extends $pb.GeneratedMessage {
   factory RegisterResponse({
     $2.User? user,
+    $core.String? accessToken,
   }) {
     final result = create();
     if (user != null) result.user = user;
+    if (accessToken != null) result.accessToken = accessToken;
     return result;
   }
 
@@ -257,6 +259,7 @@ class RegisterResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'auth.v1'),
       createEmptyInstance: create)
     ..aOM<$2.User>(1, _omitFieldNames ? '' : 'user', subBuilder: $2.User.create)
+    ..aOS(2, _omitFieldNames ? '' : 'accessToken')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -288,6 +291,18 @@ class RegisterResponse extends $pb.GeneratedMessage {
   void clearUser() => $_clearField(1);
   @$pb.TagNumber(1)
   $2.User ensureUser() => $_ensure(0);
+
+  /// Access token reissued for the newly created user.
+  /// The token used to call Register only identifies a pending registration
+  /// session, so the client must replace it with this one.
+  @$pb.TagNumber(2)
+  $core.String get accessToken => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set accessToken($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAccessToken() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAccessToken() => $_clearField(2);
 }
 
 /// UpsertFcmToken

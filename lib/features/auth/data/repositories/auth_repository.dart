@@ -30,12 +30,18 @@ class AuthRepository {
 
     final token = response.accessToken;
     final signedUser = User.fromProto(response.user);
+    final isPending = signedUser.status == UserStatus.PENDING;
 
-    if (signedUser.status != UserStatus.PENDING) {
+    if (!isPending) {
       await secureStorage.setAccessToken(token);
       await localStorage.setUser(signedUser);
     }
 
-    return AuthState(accessToken: token);
+    // if (signedUser.status != UserStatus.PENDING) {
+    //   await secureStorage.setAccessToken(token);
+    //   await localStorage.setUser(signedUser);
+    // }
+
+    return AuthState(accessToken: token, isPending: isPending);
   }
 }

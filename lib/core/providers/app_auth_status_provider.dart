@@ -34,6 +34,10 @@ final appAuthStatusProvider = Provider<AppAuthState>((ref) {
     return const AppAuthState.unauthenticated();
   }
 
+  if (auth.isPending) {
+    return AppAuthState.needsRegistration();
+  }
+
   if (userAsync.isLoading) {
     return const AppAuthState.bootstrapping();
   }

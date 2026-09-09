@@ -47,7 +47,10 @@ class UserRepository {
     return user;
   }
 
-  Future<User> register({required String nickname, required String tag}) async {
+  Future<({User user, String accessToken})> register({
+    required String nickname,
+    required String tag,
+  }) async {
     final request = RegisterRequest(nickname: nickname, tag: tag);
 
     final response = await authClient.register(request);
@@ -58,7 +61,7 @@ class UserRepository {
 
     await localStorage.setUser(user);
 
-    return user;
+    return (user: user, accessToken: response.accessToken);
   }
 
   Future<void> upsertFCMToken({required String fcmToken}) async {

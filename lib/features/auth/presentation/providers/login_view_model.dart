@@ -81,7 +81,13 @@ class LoginViewModel extends AsyncNotifier<void> {
 
       // 2. 성공 시, 전역 상태(AuthNotifier)를 업데이트합니다.
       // 이 순간 GoRouter가 감지하고 홈 화면으로 이동시킵니다.
-      ref.read(authNotifierProvider.notifier).updateState(authState);
+      ref
+          .read(authNotifierProvider.notifier)
+          .replaceToken(
+            authState.accessToken,
+            isPending: authState.isPending,
+            persist: false,
+          );
 
       state = const AsyncData(null);
     } on AppException catch (e) {

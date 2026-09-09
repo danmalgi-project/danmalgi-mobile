@@ -23,14 +23,17 @@ class AuthNotifier extends AsyncNotifier<AuthState?> {
     return AuthState(accessToken: token);
   }
 
-  void updateState(AuthState? authState) async {
-    state = AsyncData(authState);
-  }
-
-  Future<void> persistSession() async {
-    final token = state.value?.accessToken;
-    if (token == null) return;
-    await ref.read(secureStorageProvider).setAccessToken(token);
+  Future<void> replaceToken(
+    String accessToken, {
+    bool isPending = false,
+    bool persist = true,
+  }) async {
+    state = AsyncData(
+      AuthState(accessToken: accessToken, isPending: isPending),
+    );
+    if (persist) {
+      await ref.read(secureStorageProvider).setAccessToken(accessToken);
+    }
   }
 
   Future<void> logout() async {

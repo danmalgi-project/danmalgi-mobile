@@ -71,12 +71,14 @@ const RegisterResponse$json = {
   '1': 'RegisterResponse',
   '2': [
     {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.user.v1.User', '10': 'user'},
+    {'1': 'access_token', '3': 2, '4': 1, '5': 9, '10': 'accessToken'},
   ],
 };
 
 /// Descriptor for `RegisterResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List registerResponseDescriptor = $convert.base64Decode(
-    'ChBSZWdpc3RlclJlc3BvbnNlEiEKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXJSBHVzZXI=');
+    'ChBSZWdpc3RlclJlc3BvbnNlEiEKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXJSBHVzZXISIQ'
+    'oMYWNjZXNzX3Rva2VuGAIgASgJUgthY2Nlc3NUb2tlbg==');
 
 @$core.Deprecated('Use upsertFcmTokenRequestDescriptor instead')
 const UpsertFcmTokenRequest$json = {
