@@ -1,31 +1,21 @@
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class DirectMessageChannelListState {
-  List<DirectMessageChannel> directMessageChannelList = [];
-  int currentOffset;
-  final String? error;
+part 'direct_message_channel_list_state.freezed.dart';
 
-  DirectMessageChannelListState({
-    required this.directMessageChannelList,
-    this.currentOffset = 0,
-    this.error,
-  });
+@freezed
+abstract class DirectMessageChannelListState
+    with _$DirectMessageChannelListState {
+  const DirectMessageChannelListState._();
 
   int get length => directMessageChannelList.length;
   bool get isEmpty => directMessageChannelList.isEmpty;
   bool get isNotEmpty => directMessageChannelList.isNotEmpty;
   bool get hasError => error != null;
 
-  DirectMessageChannelListState copyWith({
-    List<DirectMessageChannel>? directMessageChannelList,
-    int? currentOffset,
+  const factory DirectMessageChannelListState({
+    @Default([]) List<DirectMessageChannelListItem> directMessageChannelList,
+    @Default(0) int currentOffset,
     String? error,
-  }) {
-    return DirectMessageChannelListState(
-      directMessageChannelList:
-          directMessageChannelList ?? this.directMessageChannelList,
-      currentOffset: currentOffset ?? this.currentOffset,
-      error: error ?? this.error,
-    );
-  }
+  }) = _DirectMessageChannelListState;
 }

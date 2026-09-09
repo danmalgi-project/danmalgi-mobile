@@ -4,20 +4,24 @@ import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart';
 
 class DirectMessageChannelListTile extends ConsumerWidget {
-  final DirectMessageChannel channel;
+  final DirectMessageChannelListItem item;
 
-  const DirectMessageChannelListTile({super.key, required this.channel});
+  const DirectMessageChannelListTile({super.key, required this.item});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final channel = item.channel;
+
     final currentUser = ref.watch(currentUserProvider);
     final otherUser = channel.users.firstWhereOrNull(
       (u) => u.id != currentUser?.id,
@@ -163,49 +167,55 @@ class DirectMessageChannelListTile extends ConsumerWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
 
-                            Text(
-                              "마지막 대화",
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color: Color(0xFF8E8E93),
+                            if (item.hasLastMessage())
+                              Text(
+                                item.lastMessage.content,
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Color(0xFF8E8E93),
+                                ),
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
                               ),
-                              overflow: TextOverflow.fade,
-                              maxLines: 1,
-                            ),
                           ],
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "15분 전",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: Color(0xFF8E8E93),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xFFFFD60A),
-                              ),
-                              margin: EdgeInsets.zero,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 2.0,
-                                horizontal: 6.0,
-                              ),
-                              child: Text(
-                                "1",
+                        if (item.hasLastMessage())
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                timeago.format(
+                                  item.lastMessage.createdAt.toDateTime(
+                                    toLocal: true,
+                                  ),
+                                ),
                                 style: TextStyle(
-                                  fontSize: 10,
-                                  color: Color(0xFF1C1C1E),
-                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12.0,
+                                  color: Color(0xFF8E8E93),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFFFFD60A),
+                                ),
+                                margin: EdgeInsets.zero,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 2.0,
+                                  horizontal: 6.0,
+                                ),
+                                child: Text(
+                                  "1",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Color(0xFF1C1C1E),
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),

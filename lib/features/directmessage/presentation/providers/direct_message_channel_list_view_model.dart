@@ -10,6 +10,7 @@ import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/repositories/direct_message_channel_repository.dart';
 import 'package:danmalgi_mobile/features/directmessage/domain/direct_message_channel_list_state.dart';
+import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart';
 
 final directMessageChannelListViewModelProvider =
     AsyncNotifierProvider<
@@ -32,8 +33,18 @@ class DirectMessageChannelListViewModel
 
     final testData = List.generate(
       20,
-      (i) =>
-          DirectMessageChannel(dmId: Int64(1000 + i), channelName: "[TEST$i]"),
+      (i) => DirectMessageChannelListItem(
+        channel: DirectMessageChannel(
+          dmId: Int64(1000 + i),
+          channelName: "[TEST$i]",
+        ),
+        lastMessage: LastMessage(
+          messageId: Int64(1),
+          content: "어 내가 $i인데",
+          senderId: Int64(9999),
+          createdAt: Timestamp.fromDateTime(DateTime.now()),
+        ),
+      ),
     );
 
     return DirectMessageChannelListState(
@@ -53,7 +64,7 @@ class DirectMessageChannelListViewModel
       state = AsyncData(
         currentState.copyWith(
           directMessageChannelList: [
-            newChannel,
+            DirectMessageChannelListItem(channel: newChannel),
             ...currentState.directMessageChannelList,
           ],
           currentOffset: currentState.currentOffset + 1,
@@ -76,11 +87,11 @@ class DirectMessageChannelListViewModel
     final currentState = state.value;
     if (currentState != null) {
       final cachedChannel = currentState.directMessageChannelList
-          .where((channel) => channel.dmId.toInt() == id)
+          .where((item) => item.channel.dmId.toInt() == id)
           .firstOrNull;
 
       if (cachedChannel != null) {
-        return cachedChannel;
+        return cachedChannel.channel;
       }
     }
 

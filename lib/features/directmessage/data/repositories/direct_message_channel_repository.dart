@@ -28,7 +28,7 @@ class DirectMessageChannelRepository {
     // return response.directMessageChannel;
   }
 
-  Future<List<DirectMessageChannel>> getDirectMessageChannelList({
+  Future<List<DirectMessageChannelListItem>> getDirectMessageChannelList({
     int offset = 0,
     limit = 10,
   }) async {
@@ -41,7 +41,7 @@ class DirectMessageChannelRepository {
     //   refreshTime: DateTime.now(),
     // ).toProto();
     final response = await client.getDirectMessageChannelList(Empty());
-    return response.directMessageChannels;
+    return response.items;
   }
 
   Future<DirectMessageChannel> uploadChannelImage({
