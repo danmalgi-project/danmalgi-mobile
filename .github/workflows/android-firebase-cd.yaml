@@ -3,14 +3,8 @@ name: Firebase App Distribution (Android)
 on:
   workflow_dispatch:
   push:
-    branches: [main]
-    paths:
-      - 'lib/**'
-      - 'android/**'
-      - 'assets/**'
-      - 'pubspec.yaml'
-      - 'pubspec.lock'
-      - '.github/workflows/android-cd.yaml'
+    tags:
+      - 'v*'
 
 permissions:
   contents: read
