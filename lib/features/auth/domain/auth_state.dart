@@ -1,9 +1,11 @@
-class AuthState {
-  final String accessToken;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  AuthState({required this.accessToken});
+part 'auth_state.freezed.dart';
 
-  AuthState copyWith({String? accessToken}) {
-    return AuthState(accessToken: accessToken ?? this.accessToken);
-  }
+@freezed
+abstract class AuthState with _$AuthState {
+  const factory AuthState({
+    required String accessToken,
+    @Default(false) bool isPending,
+  }) = _AuthState;
 }
