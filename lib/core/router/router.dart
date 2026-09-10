@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/router/root_navigator_key_provider.dart';
 import 'package:danmalgi_mobile/core/router/router_refresh_notifier.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:danmalgi_mobile/core/providers/app_auth_status_provider.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/core/providers/logger_provider.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
 import 'package:danmalgi_mobile/core/widgets/splash_view.dart';

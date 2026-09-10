@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
+import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/features/user/presentation/providers/register_view_model.dart';
 import 'package:danmalgi_mobile/features/user/presentation/widgets/register_step.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class RegisterView extends ConsumerWidget {
               height: 60,
               child: TextButton(
                 onPressed: () async =>
-                    await ref.read(authNotifierProvider.notifier).logout(),
+                    await ref.read(sessionProvider.notifier).logout(),
                 child: const Text(
                   "다른 계정으로 가입하기",
                   style: TextStyle(

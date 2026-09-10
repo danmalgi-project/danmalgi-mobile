@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:flutter/services.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
@@ -47,7 +48,7 @@ class UserRepository {
     return user;
   }
 
-  Future<({User user, String accessToken})> register({
+  Future<Session> register({
     required String nickname,
     required String tag,
   }) async {
@@ -59,9 +60,7 @@ class UserRepository {
       response.user,
     ).copyWith(lastLoginTime: DateTime.now());
 
-    await localStorage.setUser(user);
-
-    return (user: user, accessToken: response.accessToken);
+    return Session.registered(token: response.accessToken, user: user);
   }
 
   Future<void> upsertFCMToken({required String fcmToken}) async {

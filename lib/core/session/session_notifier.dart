@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/providers/social_auth_provider.dart';
 import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
+import 'package:danmalgi_mobile/core/session/auth_credentials.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
@@ -13,9 +15,12 @@ part 'session_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class SessionNotifier extends _$SessionNotifier {
+  AuthCredentials get _tokens => ref.read(authCredentialsProvider);
+
   @override
   Future<Session> build() async {
     final token = await ref.watch(secureStorageProvider).getAccessToken();
+    _tokens.token = token;
     if (token == null) return const Session.anonymous();
 
     final cached = ref.read(localStorageServiceProvider).cachedUserOrNull;
@@ -24,14 +29,29 @@ class SessionNotifier extends _$SessionNotifier {
       return Session.registered(token: token, user: cached);
     }
 
-    final user = await ref.read(userRepositoryProvider).getUserByToken();
-    await ref.read(localStorageServiceProvider).setUser(user);
-    return Session.registered(token: token, user: user);
+    try {
+      final user = await ref.read(userRepositoryProvider).getUserByToken();
+      final session = Session.registered(token: token, user: user);
+      await _apply(session);
+      return session;
+    } on AppException catch (e) {
+      final expired = e.maybeWhen(
+        unauthenticated: (_) => true,
+        orElse: () => false,
+      );
+      if (!expired) rethrow;
+      await _apply(const Session.anonymous());
+      return const Session.anonymous();
+    }
   }
 
   Future<void> commit(Session next) async {
     state = AsyncData(next);
+    await _apply(next);
+  }
 
+  Future<void> _apply(Session next) async {
+    _tokens.token = next.token;
     try {
       switch (next) {
         case Registered(:final token, :final user):

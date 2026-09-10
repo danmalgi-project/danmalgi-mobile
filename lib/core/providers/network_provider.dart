@@ -1,5 +1,7 @@
 import 'package:danmalgi_mobile/core/generated/signaling/v1/signaling.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/error_interceptor.dart';
+import 'package:danmalgi_mobile/core/session/auth_credentials.dart';
+import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +13,6 @@ import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgr
 import 'package:danmalgi_mobile/core/generated/user/v1/user.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/grpc_channel_service.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/auth_interceptor.dart';
-import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
 import 'package:grpc/grpc.dart';
 
 /// gRPC Clients
@@ -51,15 +52,14 @@ final signalingClientProvider = Provider<GrpcChannelService>((ref) {
 /// feature: Auth
 // final authInterceptorProvider = Provider<AuthInterceptor>((ref) => AuthInterceptor(token: ref.watch(tokenProvider)!.accessToken));
 final authInterceptorProvider = Provider<AuthInterceptor>(
-  (ref) => AuthInterceptor(
-    getToken: () => ref.read(authNotifierProvider).value?.accessToken,
-  ),
+  (ref) =>
+      AuthInterceptor(getToken: () => ref.read(authCredentialsProvider).token),
 );
 // final authInterceptorProvider = Provider<AuthInterceptor>((ref) => AuthInterceptor(ref));
 
 final errorInterceptorProvider = Provider<ErrorInterceptor>(
   (ref) => ErrorInterceptor(
-    logout: () => ref.read(authNotifierProvider.notifier).logout(),
+    logout: () => ref.read(sessionProvider.notifier).logout(),
   ),
 );
 
