@@ -1,16 +1,12 @@
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:danmalgi_mobile/core/widgets/async_value_handler.dart';
-import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
-import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_list_tile.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:danmalgi_mobile/features/directmessage/domain/direct_message_channel_list_state.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/widgets/direct_message_channel_list_tile.dart';
 import 'package:flutter_svg/svg.dart';
@@ -113,8 +109,9 @@ class _DirectMessageChannelListViewState
                 SliverList.builder(
                   itemCount: state.length,
                   itemBuilder: (context, index) {
-                    final channel = state.directMessageChannelList[index];
-                    return DirectMessageChannelListTile(channel: channel);
+                    final item = state.directMessageChannelList[index];
+                    print(item);
+                    return DirectMessageChannelListTile(item: item);
                   },
                 ),
             ],

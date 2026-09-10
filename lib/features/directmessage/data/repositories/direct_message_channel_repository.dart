@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
@@ -28,9 +29,9 @@ class DirectMessageChannelRepository {
     // return response.directMessageChannel;
   }
 
-  Future<List<DirectMessageChannel>> getDirectMessageChannelList({
+  Future<List<DirectMessageChannelListItem>> getDirectMessageChannelList({
     int offset = 0,
-    limit = 10,
+    int limit = 10,
   }) async {
     print('Fetching All DM Channels');
 
@@ -41,7 +42,18 @@ class DirectMessageChannelRepository {
     //   refreshTime: DateTime.now(),
     // ).toProto();
     final response = await client.getDirectMessageChannelList(Empty());
-    return response.directMessageChannels;
+    return _sortedByLastMessage(response.items);
+  }
+
+  List<DirectMessageChannelListItem> _sortedByLastMessage(
+    List<DirectMessageChannelListItem> items,
+  ) {
+    return items.sortedByCompare(
+      (i) => i.hasLastMessage()
+          ? i.lastMessage.createdAt.toDateTime()
+          : DateTime.fromMillisecondsSinceEpoch(0),
+      (a, b) => b.compareTo(a), // 최신이 위
+    );
   }
 
   Future<DirectMessageChannel> uploadChannelImage({

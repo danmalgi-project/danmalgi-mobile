@@ -63,6 +63,25 @@ class DirectMessageServiceClient extends $grpc.Client {
     return $createUnaryCall(_$uploadChannelImage, request, options: options);
   }
 
+  /// UpdateDirectMessageChannel updates group channel metadata for current members.
+  $grpc.ResponseFuture<$1.UpdateDirectMessageChannelResponse>
+      updateDirectMessageChannel(
+    $1.UpdateDirectMessageChannelRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateDirectMessageChannel, request,
+        options: options);
+  }
+
+  /// LeaveDirectMessageChannel removes only the caller from the channel.
+  $grpc.ResponseFuture<$0.Empty> leaveDirectMessageChannel(
+    $1.LeaveDirectMessageChannelRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$leaveDirectMessageChannel, request,
+        options: options);
+  }
+
   // method descriptors
 
   static final _$getDirectMessageChannelList =
@@ -81,6 +100,17 @@ class DirectMessageServiceClient extends $grpc.Client {
       '/dm.v1.DirectMessageService/UploadChannelImage',
       ($1.UploadChannelImageRequest value) => value.writeToBuffer(),
       $1.UploadChannelImageResponse.fromBuffer);
+  static final _$updateDirectMessageChannel = $grpc.ClientMethod<
+          $1.UpdateDirectMessageChannelRequest,
+          $1.UpdateDirectMessageChannelResponse>(
+      '/dm.v1.DirectMessageService/UpdateDirectMessageChannel',
+      ($1.UpdateDirectMessageChannelRequest value) => value.writeToBuffer(),
+      $1.UpdateDirectMessageChannelResponse.fromBuffer);
+  static final _$leaveDirectMessageChannel =
+      $grpc.ClientMethod<$1.LeaveDirectMessageChannelRequest, $0.Empty>(
+          '/dm.v1.DirectMessageService/LeaveDirectMessageChannel',
+          ($1.LeaveDirectMessageChannelRequest value) => value.writeToBuffer(),
+          $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('dm.v1.DirectMessageService')
@@ -116,6 +146,25 @@ abstract class DirectMessageServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $1.UploadChannelImageRequest.fromBuffer(value),
         ($1.UploadChannelImageResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.UpdateDirectMessageChannelRequest,
+            $1.UpdateDirectMessageChannelResponse>(
+        'UpdateDirectMessageChannel',
+        updateDirectMessageChannel_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.UpdateDirectMessageChannelRequest.fromBuffer(value),
+        ($1.UpdateDirectMessageChannelResponse value) =>
+            value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$1.LeaveDirectMessageChannelRequest, $0.Empty>(
+            'LeaveDirectMessageChannel',
+            leaveDirectMessageChannel_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $1.LeaveDirectMessageChannelRequest.fromBuffer(value),
+            ($0.Empty value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.GetDirectMessageChannelListResponse>
@@ -145,4 +194,22 @@ abstract class DirectMessageServiceBase extends $grpc.Service {
 
   $async.Future<$1.UploadChannelImageResponse> uploadChannelImage(
       $grpc.ServiceCall call, $1.UploadChannelImageRequest request);
+
+  $async.Future<$1.UpdateDirectMessageChannelResponse>
+      updateDirectMessageChannel_Pre($grpc.ServiceCall $call,
+          $async.Future<$1.UpdateDirectMessageChannelRequest> $request) async {
+    return updateDirectMessageChannel($call, await $request);
+  }
+
+  $async.Future<$1.UpdateDirectMessageChannelResponse>
+      updateDirectMessageChannel(
+          $grpc.ServiceCall call, $1.UpdateDirectMessageChannelRequest request);
+
+  $async.Future<$0.Empty> leaveDirectMessageChannel_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.LeaveDirectMessageChannelRequest> $request) async {
+    return leaveDirectMessageChannel($call, await $request);
+  }
+
+  $async.Future<$0.Empty> leaveDirectMessageChannel(
+      $grpc.ServiceCall call, $1.LeaveDirectMessageChannelRequest request);
 }

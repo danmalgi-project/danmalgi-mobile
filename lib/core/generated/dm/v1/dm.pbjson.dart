@@ -20,12 +20,12 @@ const GetDirectMessageChannelListResponse$json = {
   '1': 'GetDirectMessageChannelListResponse',
   '2': [
     {
-      '1': 'direct_message_channels',
+      '1': 'items',
       '3': 1,
       '4': 3,
       '5': 11,
-      '6': '.dm.v1.DirectMessageChannel',
-      '10': 'directMessageChannels'
+      '6': '.dm.v1.DirectMessageChannelListItem',
+      '10': 'items'
     },
   ],
 };
@@ -33,9 +33,38 @@ const GetDirectMessageChannelListResponse$json = {
 /// Descriptor for `GetDirectMessageChannelListResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getDirectMessageChannelListResponseDescriptor =
     $convert.base64Decode(
-        'CiNHZXREaXJlY3RNZXNzYWdlQ2hhbm5lbExpc3RSZXNwb25zZRJTChdkaXJlY3RfbWVzc2FnZV'
-        '9jaGFubmVscxgBIAMoCzIbLmRtLnYxLkRpcmVjdE1lc3NhZ2VDaGFubmVsUhVkaXJlY3RNZXNz'
-        'YWdlQ2hhbm5lbHM=');
+        'CiNHZXREaXJlY3RNZXNzYWdlQ2hhbm5lbExpc3RSZXNwb25zZRI5CgVpdGVtcxgBIAMoCzIjLm'
+        'RtLnYxLkRpcmVjdE1lc3NhZ2VDaGFubmVsTGlzdEl0ZW1SBWl0ZW1z');
+
+@$core.Deprecated('Use directMessageChannelListItemDescriptor instead')
+const DirectMessageChannelListItem$json = {
+  '1': 'DirectMessageChannelListItem',
+  '2': [
+    {
+      '1': 'channel',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.dm.v1.DirectMessageChannel',
+      '10': 'channel'
+    },
+    {
+      '1': 'last_message',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.dm.v1.LastMessage',
+      '10': 'lastMessage'
+    },
+  ],
+};
+
+/// Descriptor for `DirectMessageChannelListItem`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List directMessageChannelListItemDescriptor =
+    $convert.base64Decode(
+        'ChxEaXJlY3RNZXNzYWdlQ2hhbm5lbExpc3RJdGVtEjUKB2NoYW5uZWwYASABKAsyGy5kbS52MS'
+        '5EaXJlY3RNZXNzYWdlQ2hhbm5lbFIHY2hhbm5lbBI1CgxsYXN0X21lc3NhZ2UYAiABKAsyEi5k'
+        'bS52MS5MYXN0TWVzc2FnZVILbGFzdE1lc3NhZ2U=');
 
 @$core.Deprecated('Use createDirectMessageChannelRequestDescriptor instead')
 const CreateDirectMessageChannelRequest$json = {
@@ -110,6 +139,60 @@ final $typed_data.Uint8List uploadChannelImageResponseDescriptor =
         'ChpVcGxvYWRDaGFubmVsSW1hZ2VSZXNwb25zZRJRChZkaXJlY3RfbWVzc2FnZV9jaGFubmVsGA'
         'EgASgLMhsuZG0udjEuRGlyZWN0TWVzc2FnZUNoYW5uZWxSFGRpcmVjdE1lc3NhZ2VDaGFubmVs');
 
+@$core.Deprecated('Use updateDirectMessageChannelRequestDescriptor instead')
+const UpdateDirectMessageChannelRequest$json = {
+  '1': 'UpdateDirectMessageChannelRequest',
+  '2': [
+    {'1': 'dm_id', '3': 1, '4': 1, '5': 3, '10': 'dmId'},
+    {'1': 'channel_name', '3': 2, '4': 1, '5': 9, '10': 'channelName'},
+    {'1': 'image', '3': 3, '4': 1, '5': 12, '10': 'image'},
+    {'1': 'extension', '3': 4, '4': 1, '5': 9, '10': 'extension'},
+  ],
+};
+
+/// Descriptor for `UpdateDirectMessageChannelRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateDirectMessageChannelRequestDescriptor =
+    $convert.base64Decode(
+        'CiFVcGRhdGVEaXJlY3RNZXNzYWdlQ2hhbm5lbFJlcXVlc3QSEwoFZG1faWQYASABKANSBGRtSW'
+        'QSIQoMY2hhbm5lbF9uYW1lGAIgASgJUgtjaGFubmVsTmFtZRIUCgVpbWFnZRgDIAEoDFIFaW1h'
+        'Z2USHAoJZXh0ZW5zaW9uGAQgASgJUglleHRlbnNpb24=');
+
+@$core.Deprecated('Use updateDirectMessageChannelResponseDescriptor instead')
+const UpdateDirectMessageChannelResponse$json = {
+  '1': 'UpdateDirectMessageChannelResponse',
+  '2': [
+    {
+      '1': 'direct_message_channel',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.dm.v1.DirectMessageChannel',
+      '10': 'directMessageChannel'
+    },
+  ],
+};
+
+/// Descriptor for `UpdateDirectMessageChannelResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateDirectMessageChannelResponseDescriptor =
+    $convert.base64Decode(
+        'CiJVcGRhdGVEaXJlY3RNZXNzYWdlQ2hhbm5lbFJlc3BvbnNlElEKFmRpcmVjdF9tZXNzYWdlX2'
+        'NoYW5uZWwYASABKAsyGy5kbS52MS5EaXJlY3RNZXNzYWdlQ2hhbm5lbFIUZGlyZWN0TWVzc2Fn'
+        'ZUNoYW5uZWw=');
+
+@$core.Deprecated('Use leaveDirectMessageChannelRequestDescriptor instead')
+const LeaveDirectMessageChannelRequest$json = {
+  '1': 'LeaveDirectMessageChannelRequest',
+  '2': [
+    {'1': 'dm_id', '3': 1, '4': 1, '5': 3, '10': 'dmId'},
+  ],
+};
+
+/// Descriptor for `LeaveDirectMessageChannelRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List leaveDirectMessageChannelRequestDescriptor =
+    $convert.base64Decode(
+        'CiBMZWF2ZURpcmVjdE1lc3NhZ2VDaGFubmVsUmVxdWVzdBITCgVkbV9pZBgBIAEoA1IEZG1JZA'
+        '==');
+
 @$core.Deprecated('Use directMessageChannelDescriptor instead')
 const DirectMessageChannel$json = {
   '1': 'DirectMessageChannel',
@@ -127,6 +210,10 @@ const DirectMessageChannel$json = {
     {'1': 'is_group', '3': 4, '4': 1, '5': 8, '10': 'isGroup'},
     {'1': 'channel_image_url', '3': 5, '4': 1, '5': 9, '10': 'channelImageUrl'},
   ],
+  '9': [
+    {'1': 6, '2': 7},
+  ],
+  '10': ['last_message'],
 };
 
 /// Descriptor for `DirectMessageChannel`. Decode as a `google.protobuf.DescriptorProto`.
@@ -134,4 +221,28 @@ final $typed_data.Uint8List directMessageChannelDescriptor = $convert.base64Deco
     'ChREaXJlY3RNZXNzYWdlQ2hhbm5lbBITCgVkbV9pZBgBIAEoA1IEZG1JZBIjCgV1c2VycxgCIA'
     'MoCzINLnVzZXIudjEuVXNlclIFdXNlcnMSIQoMY2hhbm5lbF9uYW1lGAMgASgJUgtjaGFubmVs'
     'TmFtZRIZCghpc19ncm91cBgEIAEoCFIHaXNHcm91cBIqChFjaGFubmVsX2ltYWdlX3VybBgFIA'
-    'EoCVIPY2hhbm5lbEltYWdlVXJs');
+    'EoCVIPY2hhbm5lbEltYWdlVXJsSgQIBhAHUgxsYXN0X21lc3NhZ2U=');
+
+@$core.Deprecated('Use lastMessageDescriptor instead')
+const LastMessage$json = {
+  '1': 'LastMessage',
+  '2': [
+    {'1': 'message_id', '3': 1, '4': 1, '5': 3, '10': 'messageId'},
+    {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+    {'1': 'sender_id', '3': 3, '4': 1, '5': 3, '10': 'senderId'},
+    {
+      '1': 'created_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'createdAt'
+    },
+  ],
+};
+
+/// Descriptor for `LastMessage`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List lastMessageDescriptor = $convert.base64Decode(
+    'CgtMYXN0TWVzc2FnZRIdCgptZXNzYWdlX2lkGAEgASgDUgltZXNzYWdlSWQSGAoHY29udGVudB'
+    'gCIAEoCVIHY29udGVudBIbCglzZW5kZXJfaWQYAyABKANSCHNlbmRlcklkEjkKCmNyZWF0ZWRf'
+    'YXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgljcmVhdGVkQXQ=');
