@@ -1,5 +1,5 @@
-import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
-import 'package:danmalgi_mobile/core/providers/app_auth_status_provider.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_state.dart';

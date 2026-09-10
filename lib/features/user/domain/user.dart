@@ -12,6 +12,10 @@ part 'user.freezed.dart';
 
 @freezed
 sealed class User with _$User {
+  const User._();
+
+  bool get isPending => status == UserStatus.PENDING;
+
   const factory User({
     required int id,
     required String email,

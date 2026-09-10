@@ -4,8 +4,7 @@ import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
 import 'package:danmalgi_mobile/core/providers/local_user_settings_service_provider.dart';
 import 'package:danmalgi_mobile/core/providers/social_auth_provider.dart';
-import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
-import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
+import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:flutter/services.dart';
@@ -28,8 +27,6 @@ class LoginViewModel extends AsyncNotifier<void> {
         case OAuthType.GOOGLE:
           // double check
           await ref.read(googleSignInProvider).signOut();
-          // TODO: 로그아웃 순서를 제대로 파악해야함. 인터넷이 없거나 로그아웃을 실패했을 경우 기존 계정을 남길지 아니면 아예 로그아웃시켜서 정상화 후에 다시 로그인 시킬지 선택 (전자는 구현하기 어렵고 후자를 선택할 가능성이 높음)
-          await _clearSession();
 
           try {
             final GoogleSignInCredentials? credentials = await ref
@@ -71,23 +68,15 @@ class LoginViewModel extends AsyncNotifier<void> {
       }
 
       final deviceId = await ref.read(deviceIdProvider.future);
-      final authState = await ref
+
+      final session = await ref
           .read(authRepositoryProvider)
           .authorization(
             idToken: idToken,
             deviceId: deviceId,
             oAuthType: oAuthType,
           );
-
-      // 2. 성공 시, 전역 상태(AuthNotifier)를 업데이트합니다.
-      // 이 순간 GoRouter가 감지하고 홈 화면으로 이동시킵니다.
-      ref
-          .read(authNotifierProvider.notifier)
-          .replaceToken(
-            authState.accessToken,
-            isPending: authState.isPending,
-            persist: false,
-          );
+      await ref.read(sessionProvider.notifier).commit(session);
 
       state = const AsyncData(null);
     } on AppException catch (e) {
@@ -96,16 +85,6 @@ class LoginViewModel extends AsyncNotifier<void> {
     } catch (e, st) {
       state = AsyncError(e, st);
     }
-  }
-
-  // 로그인 기능에 사용될 예정 (더블 체크 용도)
-  Future<void> _clearSession() async {
-    try {
-      await ref.read(googleSignInProvider).signOut();
-    } catch (_) {}
-
-    await ref.read(secureStorageProvider).deleteAccessToken();
-    await ref.read(localStorageServiceProvider).clearUserData();
   }
 }
 

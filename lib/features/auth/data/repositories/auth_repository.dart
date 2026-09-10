@@ -1,11 +1,10 @@
 import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/core/services/secure_storage_service.dart';
-import 'package:danmalgi_mobile/features/auth/domain/auth_state.dart';
+import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
-import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
 
 class AuthRepository {
   final AuthServiceClient client;
@@ -15,7 +14,7 @@ class AuthRepository {
 
   AuthRepository(this.client, this.secureStorage, this.localStorage);
 
-  Future<AuthState> authorization({
+  Future<Session> authorization({
     required String idToken,
     required String deviceId,
     required OAuthType oAuthType,
@@ -27,21 +26,10 @@ class AuthRepository {
     );
 
     final response = await client.authorization(request);
+    final user = User.fromProto(response.user);
 
-    final token = response.accessToken;
-    final signedUser = User.fromProto(response.user);
-    final isPending = signedUser.status == UserStatus.PENDING;
-
-    if (!isPending) {
-      await secureStorage.setAccessToken(token);
-      await localStorage.setUser(signedUser);
-    }
-
-    // if (signedUser.status != UserStatus.PENDING) {
-    //   await secureStorage.setAccessToken(token);
-    //   await localStorage.setUser(signedUser);
-    // }
-
-    return AuthState(accessToken: token, isPending: isPending);
+    return user.isPending
+        ? Session.pending(token: response.accessToken)
+        : Session.registered(token: response.accessToken, user: user);
   }
 }

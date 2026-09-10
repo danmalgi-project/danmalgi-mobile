@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
+import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
-import 'package:danmalgi_mobile/features/user/data/providers/user_notifier.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
 import 'package:image_picker/image_picker.dart';
 
 class LogoutView extends ConsumerWidget {
@@ -38,12 +36,14 @@ class LogoutView extends ConsumerWidget {
                       if (image == null) return;
                       final bytes = await image.readAsBytes();
 
-                      await ref
-                          .read(userNotifierProvider.notifier)
+                      // TODO: Profile View Model 부분에 uploadProfileImage 추가될 예정 그 전까지 Repository 불러와서 사용
+                      final user = await ref
+                          .read(userRepositoryProvider)
                           .uploadProfileImage(
                             bytes: bytes,
                             mimeType: image.mimeType,
                           );
+                      await ref.read(sessionProvider.notifier).updateUser(user);
                     },
                   ),
                   SizedBox(height: 18.0),
@@ -103,7 +103,7 @@ class LogoutView extends ConsumerWidget {
             // ),
             ElevatedButton(
               onPressed: () async =>
-                  await ref.read(authNotifierProvider.notifier).logout(),
+                  await ref.read(sessionProvider.notifier).logout(),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),

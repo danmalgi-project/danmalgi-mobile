@@ -2,8 +2,6 @@ import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
 import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
-import 'package:danmalgi_mobile/features/auth/data/providers/auth_notifier.dart';
-import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_primary_button.dart';
 import 'package:danmalgi_mobile/features/user/presentation/providers/register_view_model.dart';

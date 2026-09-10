@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:danmalgi_mobile/features/user/data/providers/user_notifier.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/register_state.dart';
 
@@ -39,14 +39,16 @@ class RegisterViewModel extends Notifier<RegisterState> {
         return;
       }
 
-      await ref
-          .read(userNotifierProvider.notifier)
-          .register(nickname: state.nickname!, tag: state.tag!);
+      final session = await ref
+          .read(userRepositoryProvider)
+          .register(nickname: state.nickname!, tag: state.tag);
+      await ref.read(sessionProvider.notifier).commit(session);
 
       if (state.profileImage != null) {
-        await ref
-            .read(userNotifierProvider.notifier)
+        final user = await ref
+            .read(userRepositoryProvider)
             .uploadProfileImage(bytes: state.profileImage!);
+        await ref.read(sessionProvider.notifier).updateUser(user);
       }
 
       state = state.copyWith(isSubmitting: false);
