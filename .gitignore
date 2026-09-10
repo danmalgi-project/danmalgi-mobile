@@ -148,3 +148,5 @@ migrate_working_dir/
 app.*.symbols
 app.*.map.json
 coverage/
+# Widget Preview related
+.widget_preview/
