@@ -1,15 +1,12 @@
 import 'dart:async';
 
-import 'package:danmalgi_mobile/core/domain/app_auth_state.dart';
-import 'package:danmalgi_mobile/core/providers/app_auth_status_provider.dart';
-import 'package:danmalgi_mobile/core/theme/app_colors.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/features/auth/presentation/widgets/auth_step.dart';
-import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_state.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_step.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/ready_step.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/welcome_step.dart';
-import 'package:danmalgi_mobile/features/user/presentation/providers/register_view_model.dart';
 import 'package:danmalgi_mobile/features/user/presentation/widgets/register_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,10 +43,6 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-
-  Future<void> _completeOnboarding() async {
-    await ref.read(onboardingControllerProvider.notifier).complete();
   }
 
   @override
