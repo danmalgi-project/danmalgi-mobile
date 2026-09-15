@@ -1,84 +1,79 @@
 import 'dart:async';
 
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
-import 'package:danmalgi_mobile/core/providers/social_auth_provider.dart';
 import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
-import 'package:danmalgi_mobile/core/session/auth_credentials.dart';
+import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
+import 'package:danmalgi_mobile/core/session/token_store.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
+import 'package:danmalgi_mobile/features/auth/data/providers/social_provider.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'session_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class SessionNotifier extends _$SessionNotifier {
-  AuthCredentials get _tokens => ref.read(authCredentialsProvider);
+  TokenStore get _store => ref.read(tokenStoreProvider);
+  LocalStorageService get _local => ref.read(localStorageServiceProvider);
 
   @override
   Future<Session> build() async {
-    final token = await ref.watch(secureStorageProvider).getAccessToken();
-    _tokens.token = token;
+    final token = await _store.restore();
     if (token == null) return const Session.anonymous();
 
-    final cached = ref.read(localStorageServiceProvider).cachedUserOrNull;
+    final cached = _local.cachedUserOrNull;
     if (cached != null && cached.status == UserStatus.ACTIVE) {
       unawaited(_refreshInBackground(token));
-      return Session.registered(token: token, user: cached);
+      return Session.registered(user: cached);
     }
 
     try {
       final user = await ref.read(userRepositoryProvider).getUserByToken();
-      final session = Session.registered(token: token, user: user);
-      await _apply(session);
-      return session;
+      await _local.setUser(user);
+      return Session.registered(user: user);
     } on AppException catch (e) {
       final expired = e.maybeWhen(
         unauthenticated: (_) => true,
         orElse: () => false,
       );
       if (!expired) rethrow;
-      await _apply(const Session.anonymous());
+      await _clearLocal();
       return const Session.anonymous();
     }
   }
 
-  Future<void> commit(Session next) async {
-    state = AsyncData(next);
-    await _apply(next);
-  }
-
-  Future<void> _apply(Session next) async {
-    _tokens.token = next.token;
-    try {
-      switch (next) {
-        case Registered(:final token, :final user):
-          await ref.read(secureStorageProvider).setAccessToken(token);
-          await ref.read(localStorageServiceProvider).setUser(user);
-        case Pending():
-          break;
-        case Anonymous():
-          await ref.read(secureStorageProvider).deleteAccessToken();
-          await ref.read(localStorageServiceProvider).clearUserData();
-      }
-    } catch (e) {
-      print('[Session] 세션 영속화 실패');
+  Future<void> signIn(AuthResult result) async {
+    final pending = result.user.isPending;
+    await _store.save(result.accessToken, persist: !pending);
+    if (pending) {
+      state = const AsyncData(Session.pending());
+      return;
     }
+    await _local.setUser(result.user);
+    state = AsyncData(Session.registered(user: result.user));
   }
 
   Future<void> updateUser(User user) async {
-    final current = state.value;
-    if (current is! Registered) return;
-    await commit(Session.registered(token: current.token, user: user));
+    if (state.value is! Registered) return;
+    await _local.setUser(user);
+    state = AsyncData(Session.registered(user: user));
   }
 
   Future<void> logout() async {
-    try {
-      await ref.read(googleSignInProvider).signOut();
-    } catch (_) {}
-    await commit(const Session.anonymous());
+    await _clearLocal();
+    state = const AsyncData(Session.anonymous());
+    for (final authenticator in ref.read(socialAuthenticatorProvider).values) {
+      try {
+        authenticator.signOut();
+      } catch (_) {}
+    }
+  }
+
+  Future<void> _clearLocal() async {
+    await _store.clear();
+    await _local.clearUserData();
   }
 
   Future<void> _refreshInBackground(String token) async {
@@ -87,7 +82,7 @@ class SessionNotifier extends _$SessionNotifier {
       if (!ref.mounted) return;
       final current = state.value;
       if (current is! Registered || current.user == remote) return;
-      await commit(Session.registered(token: token, user: remote));
+      await updateUser(remote);
     } catch (_) {}
   }
 }

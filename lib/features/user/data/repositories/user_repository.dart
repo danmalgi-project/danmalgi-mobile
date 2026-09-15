@@ -48,7 +48,7 @@ class UserRepository {
     return user;
   }
 
-  Future<Session> register({
+  Future<AuthResult> register({
     required String nickname,
     required String tag,
   }) async {
@@ -60,7 +60,7 @@ class UserRepository {
       response.user,
     ).copyWith(lastLoginTime: DateTime.now());
 
-    return Session.registered(token: response.accessToken, user: user);
+    return (user: user, accessToken: response.accessToken);
   }
 
   Future<void> upsertFCMToken({required String fcmToken}) async {

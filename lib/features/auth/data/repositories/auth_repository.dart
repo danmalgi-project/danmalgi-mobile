@@ -2,8 +2,8 @@ import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/core/services/secure_storage_service.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
+import 'package:danmalgi_mobile/features/auth/domain/social_credential.dart';
 import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
-import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 
 class AuthRepository {
@@ -14,22 +14,19 @@ class AuthRepository {
 
   AuthRepository(this.client, this.secureStorage, this.localStorage);
 
-  Future<Session> authorization({
-    required String idToken,
+  Future<AuthResult> authorization({
+    required SocialCredential credential,
     required String deviceId,
-    required OAuthType oAuthType,
   }) async {
     final request = AuthorizationRequest(
-      idToken: idToken,
-      oauthType: oAuthType.toProto(),
+      idToken: credential.idToken,
+      oauthType: credential.type.toProto(),
       deviceId: deviceId,
     );
 
     final response = await client.authorization(request);
     final user = User.fromProto(response.user);
 
-    return user.isPending
-        ? Session.pending(token: response.accessToken)
-        : Session.registered(token: response.accessToken, user: user);
+    return (user: user, accessToken: response.accessToken);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:danmalgi_mobile/core/generated/signaling/v1/signaling.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/error_interceptor.dart';
-import 'package:danmalgi_mobile/core/session/auth_credentials.dart';
+import 'package:danmalgi_mobile/core/session/token_store.dart';
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,7 +53,7 @@ final signalingClientProvider = Provider<GrpcChannelService>((ref) {
 // final authInterceptorProvider = Provider<AuthInterceptor>((ref) => AuthInterceptor(token: ref.watch(tokenProvider)!.accessToken));
 final authInterceptorProvider = Provider<AuthInterceptor>(
   (ref) =>
-      AuthInterceptor(getToken: () => ref.read(authCredentialsProvider).token),
+      AuthInterceptor(getToken: () => ref.read(tokenStoreProvider).accessToken),
 );
 // final authInterceptorProvider = Provider<AuthInterceptor>((ref) => AuthInterceptor(ref));
 
