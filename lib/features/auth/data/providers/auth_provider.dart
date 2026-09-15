@@ -1,4 +1,6 @@
-import 'package:danmalgi_mobile/core/providers/local_user_settings_service_provider.dart';
+import 'package:danmalgi_mobile/features/auth/data/authenticators/google_authenticator.dart';
+import 'package:danmalgi_mobile/features/auth/domain/social_authenticator.dart';
+import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:danmalgi_mobile/core/providers/network_provider.dart';

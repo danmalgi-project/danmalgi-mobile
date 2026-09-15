@@ -3,16 +3,15 @@ import 'dart:math';
 
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/register_state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final registerViewModelProvider =
-    NotifierProvider<RegisterViewModel, RegisterState>(RegisterViewModel.new);
+part 'register_view_model.g.dart';
 
-// TODO: AsyncNotifer + AsyncValue.guard로 전환 예정
-class RegisterViewModel extends Notifier<RegisterState> {
+@riverpod
+class RegisterViewModel extends _$RegisterViewModel {
   final _random = Random();
 
   @override
@@ -39,10 +38,10 @@ class RegisterViewModel extends Notifier<RegisterState> {
         return;
       }
 
-      final session = await ref
+      final result = await ref
           .read(userRepositoryProvider)
           .register(nickname: state.nickname!, tag: state.tag);
-      await ref.read(sessionProvider.notifier).commit(session);
+      await ref.read(sessionProvider.notifier).signIn(result);
 
       if (state.profileImage != null) {
         final user = await ref

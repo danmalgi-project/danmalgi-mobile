@@ -14,6 +14,7 @@ class AuthForm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(loginViewModelProvider).isLoading;
     return Padding(
       padding: EdgeInsets.only(top: 36),
       child: OnboardingMainFrame(
@@ -29,9 +30,11 @@ class AuthForm extends ConsumerWidget {
                 style: AppButtonStyles.inverse,
                 icon: SvgPicture.asset('assets/Icons/Google.svg'),
                 label: const Text('Sign up with Google'),
-                onPressed: () => ref
-                    .read(loginViewModelProvider.notifier)
-                    .login(oAuthType: OAuthType.GOOGLE),
+                onPressed: isLoading
+                    ? null
+                    : () => ref
+                          .read(loginViewModelProvider.notifier)
+                          .login(oAuthType: OAuthType.GOOGLE),
               ),
             ),
             SizedBox(height: 12),
@@ -42,9 +45,11 @@ class AuthForm extends ConsumerWidget {
                 style: AppButtonStyles.inverse,
                 icon: SvgPicture.asset('assets/Icons/Apple.svg'),
                 label: const Text('Sign up with Apple'),
-                onPressed: () => ref
-                    .read(loginViewModelProvider.notifier)
-                    .login(oAuthType: OAuthType.GOOGLE),
+                onPressed: isLoading
+                    ? null
+                    : () => ref
+                          .read(loginViewModelProvider.notifier)
+                          .login(oAuthType: OAuthType.GOOGLE),
               ),
             ),
           ],
