@@ -4,6 +4,7 @@ import 'package:danmalgi_mobile/core/router/router_refresh_notifier.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
+import 'package:danmalgi_mobile/features/user/presentation/views/profile_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -106,9 +107,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: RoutePaths.logout,
-                name: RouteNames.logout,
-                builder: (context, state) => LogoutView(),
+                path: RoutePaths.profile,
+                name: RouteNames.profile,
+                builder: (context, state) => ProfileView(),
               ),
             ],
           ),

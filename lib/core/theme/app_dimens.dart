@@ -41,6 +41,7 @@ abstract final class AppStroke {
 abstract final class AppPadding {
   static const cardNormal = EdgeInsets.symmetric(vertical: 12, horizontal: 20);
   static const cardActive = EdgeInsets.all(20);
+  static const listButton = EdgeInsets.symmetric(vertical: 8, horizontal: 16);
   static const chatBubble = EdgeInsets.symmetric(vertical: 10, horizontal: 14);
   static const statusBar = EdgeInsets.symmetric(vertical: 16, horizontal: 24);
   static const rsvpPill = EdgeInsets.symmetric(vertical: 4, horizontal: 8);
