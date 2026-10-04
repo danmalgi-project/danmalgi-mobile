@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
+import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/core/theme/app_theme.dart';
 import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
+import 'package:danmalgi_mobile/features/settings/data/providers/device_settings_notifier.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/views/voice_pip_overlay.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +16,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/core/router/router.dart';
 import 'package:danmalgi_mobile/core/services/notification_service.dart';
 import 'package:danmalgi_mobile/firebase_options.dart';
@@ -36,6 +37,7 @@ Future<void> main() async {
   await Permission.notification.request();
 
   final prefs = await SharedPreferences.getInstance();
+  await _migrateLegacyPrefs(prefs);
 
   runApp(
     ProviderScope(
@@ -45,12 +47,36 @@ Future<void> main() async {
   );
 }
 
+Future<void> _migrateLegacyPrefs(SharedPreferences prefs) async {
+  final legacy = prefs.getInt('onboardingVersion');
+  if (legacy != null) {
+    await prefs.setInt('device.onboardingVersion', legacy);
+  }
+
+  for (final k in const [
+    'onboardingVersion',
+    'id',
+    'email',
+    'name',
+    'tag',
+    'imageUrl',
+    'oAuthType',
+    'userStatus',
+    'lastLoginTime',
+  ]) {
+    await prefs.remove(k);
+  }
+}
+
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final themeMode = ref.watch(
+      deviceSettingsProvider.select((s) => s.themeMode),
+    );
 
     return MaterialApp.router(
       routerConfig: router,
@@ -66,7 +92,7 @@ class MyApp extends ConsumerWidget {
       ),
       theme: AppTheme.dark,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.dark,
+      themeMode: themeMode,
       builder: (context, child) => Stack(
         children: [
           Positioned.fill(child: AppMessageWrapper(child: child!)),

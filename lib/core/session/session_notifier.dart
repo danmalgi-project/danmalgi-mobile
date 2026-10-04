@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
-import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/core/session/token_store.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
+import 'package:danmalgi_mobile/core/session/user_cache.dart';
+import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/social_provider.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'session_notifier.g.dart';
@@ -16,14 +18,14 @@ part 'session_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class SessionNotifier extends _$SessionNotifier {
   TokenStore get _store => ref.read(tokenStoreProvider);
-  LocalStorageService get _local => ref.read(localStorageServiceProvider);
+  UserCache get _cache => ref.read(userCacheProvider);
 
   @override
   Future<Session> build() async {
     final token = await _store.restore();
     if (token == null) return const Session.anonymous();
 
-    final cached = _local.cachedUserOrNull;
+    final cached = _cache.read();
     if (cached != null && cached.status == UserStatus.ACTIVE) {
       unawaited(_refreshInBackground(token));
       return Session.registered(user: cached);
@@ -31,7 +33,7 @@ class SessionNotifier extends _$SessionNotifier {
 
     try {
       final user = await ref.read(userRepositoryProvider).getUserByToken();
-      await _local.setUser(user);
+      await _cache.write(user);
       return Session.registered(user: user);
     } on AppException catch (e) {
       final expired = e.maybeWhen(
@@ -51,13 +53,13 @@ class SessionNotifier extends _$SessionNotifier {
       state = const AsyncData(Session.pending());
       return;
     }
-    await _local.setUser(result.user);
+    await _cache.write(result.user);
     state = AsyncData(Session.registered(user: result.user));
   }
 
   Future<void> updateUser(User user) async {
     if (state.value is! Registered) return;
-    await _local.setUser(user);
+    await _cache.write(user);
     state = AsyncData(Session.registered(user: user));
   }
 
@@ -73,7 +75,7 @@ class SessionNotifier extends _$SessionNotifier {
 
   Future<void> _clearLocal() async {
     await _store.clear();
-    await _local.clearUserData();
+    await _cache.clear();
   }
 
   Future<void> _refreshInBackground(String token) async {

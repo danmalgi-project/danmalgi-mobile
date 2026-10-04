@@ -1,5 +1,5 @@
-import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
 import 'package:danmalgi_mobile/core/services/secure_storage_service.dart';
+import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TokenStore {
