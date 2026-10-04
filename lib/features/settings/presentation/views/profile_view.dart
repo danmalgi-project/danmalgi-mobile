@@ -17,7 +17,9 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(requireCurrentUserProvider);
+    final user = ref.watch(
+      requireCurrentUserProvider,
+    ); // TODO: 추후 require 말고 다른 방법으로 수정
 
     return Scaffold(
       appBar: AppBar(
