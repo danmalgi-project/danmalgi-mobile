@@ -20,7 +20,7 @@ class CachedCircleAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       backgroundImage: (url == null) ? null : CachedNetworkImageProvider(url!),
-      backgroundColor: backgroundColor,
+      backgroundColor: (url == null) ? backgroundColor : Colors.transparent,
       onBackgroundImageError: (e, st) {
         // print("Avatar Error: ${url!}");
         // print(e);

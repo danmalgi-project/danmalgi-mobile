@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
-import 'package:danmalgi_mobile/core/providers/local_user_settings_service_provider.dart';
+import 'package:danmalgi_mobile/core/session/device_id.dart';
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/auth_provider.dart';
 import 'package:danmalgi_mobile/features/auth/data/providers/social_provider.dart';

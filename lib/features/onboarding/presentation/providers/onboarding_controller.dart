@@ -1,7 +1,8 @@
 import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
-import 'package:danmalgi_mobile/core/providers/storage_provider.dart';
-import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
+import 'package:danmalgi_mobile/core/storage/pref_key.dart';
+import 'package:danmalgi_mobile/core/storage/pref_store.dart';
+import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_state.dart';
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_step.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,15 +10,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_controller.g.dart';
 
+final _onboardingVersionKey = PrefKey.integer('onboardingVersion');
+
 @riverpod
 class OnboardingController extends _$OnboardingController {
   static const int currentOnboardingVersion = 1;
 
-  LocalStorageService get _storage => ref.read(localStorageServiceProvider);
+  PrefStore get _prefs => ref.read(devicePrefsProvider);
 
   @override
   OnboardingState build() {
-    final savedVersion = _storage.onBoardingVersion ?? 0;
+    final savedVersion = ref
+        .watch(devicePrefsProvider)
+        .get(_onboardingVersionKey);
 
     return OnboardingState(
       isCompleted: savedVersion >= currentOnboardingVersion,
@@ -54,7 +59,7 @@ class OnboardingController extends _$OnboardingController {
     state = state.copyWith(isSaving: true, errorMessage: null);
 
     try {
-      await _storage.setOnBoardingVersion(currentOnboardingVersion);
+      await _prefs.set(_onboardingVersionKey, currentOnboardingVersion);
 
       state = state.copyWith(
         isCompleted: true,

@@ -10,11 +10,11 @@ class RoutePaths {
   // Onboarding
   static const String onboarding = '/onboarding';
 
-  // Auth
-  static const String logout = '/logout';
-
   // DirectMessage
   static const String directMessageChannelList = '/direct-message';
+
+  // Profile
+  static const String profile = '/profile';
 
   // Chat
   static const String chatTemplate = '/chat/:channelId';
@@ -33,8 +33,8 @@ class RouteNames {
   static const String splash = 'splash';
   static const String home = 'home';
   static const String onboarding = 'onboarding';
-  static const String logout = 'logout';
   static const String directMessageChannelList = 'direct-message-list';
+  static const String profile = 'profile';
   static const String chat = 'chat';
   static const String friend = 'friend';
   static const String addFriend = 'friend-add';

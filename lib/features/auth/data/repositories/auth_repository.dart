@@ -1,6 +1,4 @@
 import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
-import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
-import 'package:danmalgi_mobile/core/services/secure_storage_service.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_credential.dart';
 import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
@@ -9,10 +7,7 @@ import 'package:danmalgi_mobile/features/user/domain/user.dart';
 class AuthRepository {
   final AuthServiceClient client;
 
-  final SecureStorageService secureStorage;
-  final LocalStorageService localStorage;
-
-  AuthRepository(this.client, this.secureStorage, this.localStorage);
+  AuthRepository(this.client);
 
   Future<AuthResult> authorization({
     required SocialCredential credential,
