@@ -69,19 +69,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state, navigationShell) =>
             ScaffoldWithNavBar(navigationShell: navigationShell),
         branches: [
-          StatefulShellBranch(
-            // 채널 전환 과정에서 refresh를 진행하기 때문에 미리 생성되어 있어야함
-            preload: true,
-            routes: [
-              GoRoute(
-                path: RoutePaths.home,
-                name: RouteNames.home,
-                builder: (context, state) {
-                  return HomeView();
-                },
-              ),
-            ],
-          ),
+          // StatefulShellBranch(
+          //   // 채널 전환 과정에서 refresh를 진행하기 때문에 미리 생성되어 있어야함
+          //   preload: true,
+          //   routes: [
+          //     GoRoute(
+          //       path: RoutePaths.home,
+          //       name: RouteNames.home,
+          //       builder: (context, state) {
+          //         return HomeView();
+          //       },
+          //     ),
+          //   ],
+          // ),
           StatefulShellBranch(
             // 채널 전환 과정에서 refresh를 진행하기 때문에 미리 생성되어 있어야함
             preload: true,
@@ -149,7 +149,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           currentPath == RoutePaths.splash ? null : RoutePaths.splash,
         _Zone.onboarding =>
           currentPath == RoutePaths.onboarding ? null : RoutePaths.onboarding,
-        _Zone.main => isOutsideMain ? RoutePaths.home : null,
+        _Zone.main =>
+          isOutsideMain ? RoutePaths.directMessageChannelList : null,
       };
     },
   );

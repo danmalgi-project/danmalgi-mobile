@@ -1,7 +1,9 @@
-import 'package:danmalgi_mobile/core/widgets/bottom_nav_svg_icon.dart';
+import 'package:danmalgi_mobile/core/theme/app_colors.dart';
+import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
+import 'package:danmalgi_mobile/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -10,56 +12,102 @@ import 'package:danmalgi_mobile/features/directmessage/presentation/providers/di
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
 
+const _kTabAnimDuration = Duration(milliseconds: 220);
+
 class ScaffoldWithNavBar extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
-  const ScaffoldWithNavBar({required this.navigationShell});
+  const ScaffoldWithNavBar({super.key, required this.navigationShell});
+
+  static const _items = [
+    ('assets/Icons/Icon-message.svg', 'DM'),
+    ('assets/Icons/Icon-user.svg', '친구'),
+    ('assets/Icons/Icon-user.svg', '설정'),
+  ];
+
+  void _onTap(WidgetRef ref, int index) {
+    switch (index) {
+      case 0:
+        ref.invalidate(directMessageChannelListViewModelProvider);
+      case 1:
+        ref.invalidate(friendViewModelProvider);
+        ref.invalidate(relationshipViewModelProvider);
+    }
+    navigationShell.goBranch(index);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: Container(
-        color: const Color(0xFF121212),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: BottomNavigationBar(
-          currentIndex: navigationShell.currentIndex,
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedItemColor: Color(0xFFFFE500),
-          unselectedItemColor: Color(0xFF8E8E93),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          onTap: (value) {
-            switch (value) {
-              case 1:
-                ref.invalidate(directMessageChannelListViewModelProvider);
-                break;
-              case 2:
-                ref.invalidate(friendViewModelProvider);
-                ref.invalidate(relationshipViewModelProvider);
-                break;
-            }
-            navigationShell.goBranch(value);
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: const BottomNavSvgIcon('assets/Icons/Icon-home.svg'),
-              label: "홈",
+      bottomNavigationBar: ColoredBox(
+        color: AppColors.surfaceNav,
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.s12),
+            child: Row(
+              children: [
+                for (final (i, (icon, label)) in _items.indexed)
+                  Expanded(
+                    child: _NavTab(
+                      iconPath: icon,
+                      label: label,
+                      selected: navigationShell.currentIndex == i,
+                      onTap: () => _onTap(ref, i),
+                    ),
+                  ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: const BottomNavSvgIcon('assets/Icons/Icon-message.svg'),
-              label: "DM",
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavTab extends StatelessWidget {
+  const _NavTab({
+    required this.iconPath,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String iconPath;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconTheme = IconTheme.of(context);
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        if (!selected) HapticFeedback.selectionClick();
+        onTap();
+      },
+      child: TweenAnimationBuilder<Color?>(
+        tween: ColorTween(
+          end: selected ? AppColors.accent : AppColors.iconInactive,
+        ),
+        duration: _kTabAnimDuration,
+        builder: (context, color, _) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconTheme.merge(
+              data: IconThemeData(color: color, size: 20),
+              child: SvgPicture.asset(
+                iconPath,
+                width: iconTheme.size,
+                height: iconTheme.size,
+                colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: const BottomNavSvgIcon('assets/Icons/Icon-server.svg'),
-              label: "친구",
-            ),
-            BottomNavigationBarItem(
-              icon: const BottomNavSvgIcon('assets/Icons/Icon-user.svg'),
-              label: "프로필",
-            ),
+            const SizedBox(height: AppSpacing.s4),
+            Text(label, style: AppTypography.tab.copyWith(color: color)),
           ],
         ),
       ),
