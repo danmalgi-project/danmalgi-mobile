@@ -1,16 +1,26 @@
 import 'dart:io';
 
+import 'package:danmalgi_mobile/features/auth/data/authenticators/apple_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/data/authenticators/google_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_authenticator.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in_all_platforms/google_sign_in_all_platforms.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 final socialAuthenticatorProvider =
     Provider<Map<OAuthType, SocialAuthenticator>>(
       (ref) => {
         OAuthType.GOOGLE: GoogleAuthenticator(ref.watch(googleSignInProvider)),
+        OAuthType.APPLE: AppleAuthenticator(
+          Platform.isAndroid
+              ? WebAuthenticationOptions(
+                  clientId: dotenv.get('APPLE_SERVICE_ID'),
+                  redirectUri: Uri.parse(dotenv.get('APPLE_REDIRECT_URI')),
+                )
+              : null,
+        ),
       },
     );
 

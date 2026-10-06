@@ -1,2 +1,2 @@
 // ignore: constant_identifier_names
-enum OAuthType { GOOGLE }
+enum OAuthType { GOOGLE, APPLE }

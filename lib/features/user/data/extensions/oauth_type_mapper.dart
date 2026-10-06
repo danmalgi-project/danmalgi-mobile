@@ -6,6 +6,8 @@ extension OAuthTypeMapper on pb.OauthType {
     switch (this) {
       case pb.OauthType.GOOGLE:
         return OAuthType.GOOGLE;
+      case pb.OauthType.APPLE:
+        return OAuthType.APPLE;
       default:
         return OAuthType.GOOGLE;
     }
@@ -17,6 +19,8 @@ extension DomainOAuthTypeMapper on OAuthType {
     switch (this) {
       case OAuthType.GOOGLE:
         return pb.OauthType.GOOGLE;
+      case OAuthType.APPLE:
+        return pb.OauthType.APPLE;
     }
   }
 }
