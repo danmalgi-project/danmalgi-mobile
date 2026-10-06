@@ -35,15 +35,14 @@ final $typed_data.Uint8List userStatusDescriptor = $convert.base64Decode(
 const OauthType$json = {
   '1': 'OauthType',
   '2': [
-    {'1': 'NAVER', '2': 0},
-    {'1': 'GOOGLE', '2': 1},
-    {'1': 'KAKAO', '2': 2},
+    {'1': 'GOOGLE', '2': 0},
+    {'1': 'APPLE', '2': 1},
   ],
 };
 
 /// Descriptor for `OauthType`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List oauthTypeDescriptor = $convert.base64Decode(
-    'CglPYXV0aFR5cGUSCQoFTkFWRVIQABIKCgZHT09HTEUQARIJCgVLQUtBTxAC');
+final $typed_data.Uint8List oauthTypeDescriptor =
+    $convert.base64Decode('CglPYXV0aFR5cGUSCgoGR09PR0xFEAASCQoFQVBQTEUQAQ==');
 
 @$core.Deprecated('Use getUserByTokenResponseDescriptor instead')
 const GetUserByTokenResponse$json = {

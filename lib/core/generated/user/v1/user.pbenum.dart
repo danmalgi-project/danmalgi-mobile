@@ -40,19 +40,17 @@ class UserStatus extends $pb.ProtobufEnum {
 }
 
 class OauthType extends $pb.ProtobufEnum {
-  static const OauthType NAVER = OauthType._(0, _omitEnumNames ? '' : 'NAVER');
   static const OauthType GOOGLE =
-      OauthType._(1, _omitEnumNames ? '' : 'GOOGLE');
-  static const OauthType KAKAO = OauthType._(2, _omitEnumNames ? '' : 'KAKAO');
+      OauthType._(0, _omitEnumNames ? '' : 'GOOGLE');
+  static const OauthType APPLE = OauthType._(1, _omitEnumNames ? '' : 'APPLE');
 
   static const $core.List<OauthType> values = <OauthType>[
-    NAVER,
     GOOGLE,
-    KAKAO,
+    APPLE,
   ];
 
   static final $core.List<OauthType?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
   static OauthType? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
