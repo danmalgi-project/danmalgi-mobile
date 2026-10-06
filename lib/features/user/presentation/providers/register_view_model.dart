@@ -22,14 +22,20 @@ class RegisterViewModel extends _$RegisterViewModel {
 
     state = state.copyWith(isSubmitting: true, error: null, tagError: null);
 
-    try {
-      final exists = await ref
-          .read(userRepositoryProvider)
-          .verifyNamedAndTag(name: state.nickname!, tag: state.tag!);
+    // signIn이 세션을 바꾸면 라우터가 이 화면을 떠나면서 provider가 dispose되므로,
+    // await 이후에는 ref를 쓰지 않도록 필요한 의존성을 미리 잡아둔다.
+    final userRepository = ref.read(userRepositoryProvider);
+    final session = ref.read(sessionProvider.notifier);
+    final profileImage = state.profileImage;
 
-      print("${state.nickname!}, ${state.tag!}");
+    try {
+      final exists = await userRepository.verifyNamedAndTag(
+        name: state.nickname!,
+        tag: state.tag,
+      );
 
       if (exists) {
+        if (!ref.mounted) return;
         // TODO: 랜덤 TAG로 변경할 경우 필요 없도록 변경해야함
         state = RegisterState(
           isSubmitting: false,
@@ -38,22 +44,25 @@ class RegisterViewModel extends _$RegisterViewModel {
         return;
       }
 
-      final result = await ref
-          .read(userRepositoryProvider)
-          .register(nickname: state.nickname!, tag: state.tag);
-      await ref.read(sessionProvider.notifier).signIn(result);
+      final result = await userRepository.register(
+        nickname: state.nickname!,
+        tag: state.tag,
+      );
+      await session.signIn(result);
 
-      if (state.profileImage != null) {
-        final user = await ref
-            .read(userRepositoryProvider)
-            .uploadProfileImage(bytes: state.profileImage!);
-        await ref.read(sessionProvider.notifier).updateUser(user);
+      if (profileImage != null) {
+        final user = await userRepository.uploadProfileImage(
+          bytes: profileImage,
+        );
+        await session.updateUser(user);
       }
 
+      if (!ref.mounted) return;
       state = state.copyWith(isSubmitting: false);
     } catch (e) {
-      state = state.copyWith(isSubmitting: false, error: '가입에 실패했습니다.');
       print(e);
+      if (!ref.mounted) return;
+      state = state.copyWith(isSubmitting: false, error: '가입에 실패했습니다.');
     }
   }
 
