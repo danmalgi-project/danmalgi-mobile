@@ -14,19 +14,11 @@ class DeviceSettingsNotifier extends _$DeviceSettingsNotifier {
   @override
   DeviceSettings build() {
     final prefs = ref.watch(devicePrefsProvider);
-    return DeviceSettings(
-      themeMode: prefs.get(DeviceSettingKeys.themeMode),
-      audioOutputId: prefs.get(DeviceSettingKeys.audioOutputId),
-    );
+    return DeviceSettings(themeMode: prefs.get(DeviceSettingKeys.themeMode));
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     state = state.copyWith(themeMode: mode);
     await _prefs.set(DeviceSettingKeys.themeMode, mode);
-  }
-
-  Future<void> setAudioOutputId(String? id) async {
-    state = state.copyWith(audioOutputId: id);
-    await _prefs.set(DeviceSettingKeys.audioOutputId, id);
   }
 }

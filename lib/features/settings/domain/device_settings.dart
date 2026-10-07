@@ -5,8 +5,6 @@ part 'device_settings.freezed.dart';
 
 @freezed
 sealed class DeviceSettings with _$DeviceSettings {
-  const factory DeviceSettings({
-    @Default(ThemeMode.dark) ThemeMode themeMode,
-    String? audioOutputId,
-  }) = _DeviceSettings;
+  const factory DeviceSettings({@Default(ThemeMode.dark) ThemeMode themeMode}) =
+      _DeviceSettings;
 }
