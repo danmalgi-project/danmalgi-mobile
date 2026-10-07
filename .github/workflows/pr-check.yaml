@@ -1,0 +1,52 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: Read
+
+concurrency:
+  group: pr-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/futter-action@v2
+        with:
+          flutter-version: '3.47.0'
+          cache: true
+
+      - name: Provision build-time configuration
+        env:
+          FIREBASE_OPTIONS_B64: ${{ secrets.FIREBASE_OPTIONS_B64 }}
+        run: |
+          cp .env_example .env
+          echo "$FIREBASE_OPTIONS_B64" | base64 -d > lib/firebase_options.dart
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: |
+          git ls-files '*.dart' | grep -v '^lib/core/generated/' \
+            | xargs dart format --output=none --set-exit-if-changed
+
+      - name: Check import order
+        run: dart run import_sorter:main --exit-if-changed
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
