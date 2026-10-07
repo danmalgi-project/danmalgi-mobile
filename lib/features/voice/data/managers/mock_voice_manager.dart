@@ -37,12 +37,6 @@ class MockVoiceManager implements VoiceManager {
   }
 
   @override
-  Future<List<MediaDeviceInfo>> getAudioOutputs() async => [];
-
-  @override
-  Future<void> selectAudioOutput(String deviceId) async {}
-
-  @override
   Future<void> toggleMicMute(bool mute) async {
     isMuted = mute;
   }

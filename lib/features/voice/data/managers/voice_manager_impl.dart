@@ -86,13 +86,6 @@ class VoiceManagerImpl implements VoiceManager {
   }
 
   @override
-  Future<List<MediaDeviceInfo>> getAudioOutputs() => Helper.audiooutputs;
-
-  @override
-  Future<void> selectAudioOutput(String deviceId) =>
-      Helper.selectAudioOutput(deviceId);
-
-  @override
   Future<void> toggleMicMute(bool mute) async {
     _localStream?.getAudioTracks().forEach((track) {
       track.enabled = !mute; // false = 음소거
