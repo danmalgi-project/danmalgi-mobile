@@ -78,7 +78,6 @@ dev_dependencies:
   build_runner: ^2.13.1
   riverpod_generator: ^4.0.0+1
   freezed: ^4.0.1
-  import_sorter: ^4.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -134,11 +133,3 @@ flutter:
           weight: 800
         - asset: assets/fonts/Pretendard/Pretendard-Black.otf
           weight: 900
-
-import_sorter:
-  comments: false
-  ignored_files:
-    - \.g\.dart
-    - \.freezed\.dart
-    - \.pb.*\.dart
-    - firebase_options\.dart

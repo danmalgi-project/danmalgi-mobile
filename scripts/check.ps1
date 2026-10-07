@@ -14,9 +14,8 @@ function Invoke-Step {
   }
 }
 
-Invoke-Step 'build_runner' { dart run build_runner build --delete-conflicting-outputs }
-Invoke-Step 'remove unused imports' { dart fix --apply --code=unused_import --code=unnecessary_import }
-Invoke-Step 'import_sorter' { dart run import_sorter:main }
+Invoke-Step 'build_runner' { dart run build_runner build }
+Invoke-Step 'remove unused imports' { dart fix --apply --code=unused_import --code=unnecessary_import --code=directives_ordering }
 Invoke-Step 'dart format' {
   $files = git ls-files '*.dart' | Where-Object { $_ -notlike 'lib/core/generated/*' }
   dart format $files

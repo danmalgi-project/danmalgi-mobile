@@ -42,11 +42,8 @@ jobs:
           git ls-files '*.dart' | grep -v '^lib/core/generated/' \
             | xargs dart format --output=none --set-exit-if-changed
 
-      - name: Check import order
-        run: dart run import_sorter:main --exit-if-changed
-
       - name: Run code generation
-        run: dart run build_runner build --delete-conflicting-outputs
+        run: dart run build_runner build
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos

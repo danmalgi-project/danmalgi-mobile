@@ -2,7 +2,7 @@
   "[dart]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "never",
+      "source.organizeImports": "explicit",
       "source.fixAll": "never"
     }
   },

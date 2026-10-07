@@ -27,6 +27,7 @@ analyzer:
   
   errors:
     invalid_annotation_target: ignore
+    directives_ordering: warning 
 
   plugins:
     - riverpod_lint
