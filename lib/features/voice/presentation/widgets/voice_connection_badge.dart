@@ -1,5 +1,6 @@
-import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:flutter/material.dart';
+
+import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 
 class VoiceConnectionBadge extends StatelessWidget {
   const VoiceConnectionBadge({super.key, required this.status});

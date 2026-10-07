@@ -1,26 +1,20 @@
-import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
-import 'package:danmalgi_mobile/core/router/root_navigator_key_provider.dart';
-import 'package:danmalgi_mobile/core/router/router_refresh_notifier.dart';
-import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
-import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
-import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
-import 'package:danmalgi_mobile/features/settings/presentation/views/profile_view.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
-import 'package:danmalgi_mobile/core/providers/logger_provider.dart';
+import 'package:danmalgi_mobile/core/router/root_navigator_key_provider.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
+import 'package:danmalgi_mobile/core/router/router_refresh_notifier.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/core/widgets/splash_view.dart';
-import 'package:danmalgi_mobile/features/auth/presentation/views/logout_view.dart';
+import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/views/direct_message_channel_list_view.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/views/add_relationship_view.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/views/friend_view.dart';
-import 'package:danmalgi_mobile/features/home/presentation/views/home_view.dart';
 import 'package:danmalgi_mobile/features/home/presentation/widgets/scaffold_with_nav_bar.dart';
-import 'package:danmalgi_mobile/features/user/presentation/views/register_view.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
+import 'package:danmalgi_mobile/features/settings/presentation/views/profile_view.dart';
 
 enum _Zone { splash, onboarding, main }
 

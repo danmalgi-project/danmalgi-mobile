@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:go_router/go_router.dart';
-
 class SplashView extends StatelessWidget {
   final String id;
   const SplashView({super.key, this.id = '0'});

@@ -1,7 +1,8 @@
 import 'dart:ui';
 
-import 'package:danmalgi_mobile/features/voice/presentation/geometry/voice_call_metrics.dart';
 import 'package:flutter/material.dart';
+
+import 'package:danmalgi_mobile/features/voice/presentation/geometry/voice_call_metrics.dart';
 
 const kVoiceSettleDuration = Duration(milliseconds: 280);
 const kVoiceSettleCurve = Curves.easeOutCubic;

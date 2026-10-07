@@ -1,10 +1,11 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:danmalgi_mobile/core/storage/pref_key.dart';
 import 'package:danmalgi_mobile/core/storage/pref_store.dart';
 import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_cache.g.dart';
 

@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:danmalgi_mobile/core/storage/pref_store.dart';
 import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/features/settings/data/settings_keys.dart';
 import 'package:danmalgi_mobile/features/settings/domain/device_settings.dart';
-import 'package:flutter/material.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'device_settings_notifier.g.dart';
 

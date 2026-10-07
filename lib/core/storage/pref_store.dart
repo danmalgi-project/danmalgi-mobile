@@ -1,5 +1,6 @@
-import 'package:danmalgi_mobile/core/storage/pref_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:danmalgi_mobile/core/storage/pref_key.dart';
 
 class PrefStore {
   final SharedPreferences _prefs;

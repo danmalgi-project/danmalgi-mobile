@@ -1,15 +1,14 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+
+import 'package:fixnum/fixnum.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:danmalgi_mobile/core/widgets/async_value_handler.dart';
 import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
-import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
-import 'package:fixnum/fixnum.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/widgets/direct_message_channel_list_tile.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 
 class DirectMessageChannelListView extends ConsumerStatefulWidget {
   const DirectMessageChannelListView({super.key});

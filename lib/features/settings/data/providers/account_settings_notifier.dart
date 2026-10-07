@@ -1,10 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/storage/pref_store.dart';
 import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/features/settings/data/settings_keys.dart';
 import 'package:danmalgi_mobile/features/settings/domain/account_settings.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_settings_notifier.g.dart';
 

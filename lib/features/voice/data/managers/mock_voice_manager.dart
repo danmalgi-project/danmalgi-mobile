@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class MockVoiceManager implements VoiceManager {
   final _stateController = StreamController<VoiceState>.broadcast();

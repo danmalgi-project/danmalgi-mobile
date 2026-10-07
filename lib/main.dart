@@ -2,11 +2,6 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
-import 'package:danmalgi_mobile/core/theme/app_theme.dart';
-import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
-import 'package:danmalgi_mobile/features/settings/data/providers/device_settings_notifier.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/views/voice_pip_overlay.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +13,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:danmalgi_mobile/core/router/router.dart';
 import 'package:danmalgi_mobile/core/services/notification_service.dart';
+import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
+import 'package:danmalgi_mobile/core/theme/app_theme.dart';
+import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
+import 'package:danmalgi_mobile/features/settings/data/providers/device_settings_notifier.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/views/voice_pip_overlay.dart';
 import 'package:danmalgi_mobile/firebase_options.dart';
 
 final providerContainer = ProviderContainer();

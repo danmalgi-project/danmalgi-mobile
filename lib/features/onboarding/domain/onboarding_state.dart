@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:danmalgi_mobile/features/onboarding/domain/onboarding_step.dart';
 
 part 'onboarding_state.freezed.dart';

@@ -1,14 +1,15 @@
 import 'dart:io';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in_all_platforms/google_sign_in_all_platforms.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 import 'package:danmalgi_mobile/core/config/feature_flags.dart';
 import 'package:danmalgi_mobile/features/auth/data/authenticators/apple_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/data/authenticators/google_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_authenticator.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_sign_in_all_platforms/google_sign_in_all_platforms.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 final socialAuthenticatorProvider =
     Provider<Map<OAuthType, SocialAuthenticator>>(

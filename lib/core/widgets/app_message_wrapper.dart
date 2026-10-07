@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppMessageWrapper extends ConsumerWidget {
   final Widget child;

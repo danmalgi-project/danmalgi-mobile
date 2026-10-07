@@ -17,7 +17,7 @@ class AuthInterceptor implements ClientInterceptor {
     ClientStreamingInvoker<Q, R> invoker,
   ) {
     final String? token = getToken();
-    
+
     if (token != null && token.isNotEmpty) {
       options = options.mergedWith(
         CallOptions(metadata: {'authorization': 'Bearer $token'}),
@@ -35,13 +35,13 @@ class AuthInterceptor implements ClientInterceptor {
     ClientUnaryInvoker<Q, R> invoker,
   ) {
     final String? token = getToken();
-    
+
     if (token != null && token.isNotEmpty) {
       options = options.mergedWith(
         CallOptions(metadata: {'authorization': 'Bearer $token'}),
       );
     }
-    
+
     return invoker(method, request, options);
   }
 }

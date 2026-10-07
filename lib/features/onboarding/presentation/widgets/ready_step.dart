@@ -1,8 +1,9 @@
-import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_primary_button.dart';
 import 'package:flutter/material.dart';
 
-import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_primary_button.dart';
 
 class ReadyForm extends StatelessWidget {
   const ReadyForm({super.key});

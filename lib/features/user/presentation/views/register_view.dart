@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/features/user/presentation/providers/register_view_model.dart';
 import 'package:danmalgi_mobile/features/user/presentation/widgets/register_step.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterView extends ConsumerWidget {
   const RegisterView({super.key});

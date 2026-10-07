@@ -1,9 +1,10 @@
-import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
+import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final appAuthStatusProvider = Provider<AppAuthState>((ref) {
   final async = ref.watch(sessionProvider);

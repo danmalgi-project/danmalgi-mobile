@@ -1,6 +1,7 @@
+import 'package:uuid/uuid.dart';
+
 import 'package:danmalgi_mobile/core/services/local_storage_service.dart';
 import 'package:danmalgi_mobile/core/services/secure_storage_service.dart';
-import 'package:uuid/uuid.dart';
 
 class LocalUserSettingsService {
   final SecureStorageService secureStorage;

@@ -1,5 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
 import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/features/auth/presentation/widgets/auth_step.dart';
@@ -8,9 +13,6 @@ import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboa
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/ready_step.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/welcome_step.dart';
 import 'package:danmalgi_mobile/features/user/presentation/widgets/register_step.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingView extends ConsumerStatefulWidget {
   const OnboardingView({super.key});

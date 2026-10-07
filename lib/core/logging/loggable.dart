@@ -2,7 +2,7 @@ import 'package:danmalgi_mobile/core/services/app_logger_service.dart';
 
 mixin Loggable {
   AppLoggerService get logger;
-  
+
   String get loggerName => runtimeType.toString();
 
   void logDebug(String message) {

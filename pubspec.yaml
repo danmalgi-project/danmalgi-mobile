@@ -63,6 +63,7 @@ dependencies:
   sign_in_with_apple: ^8.2.0
   
 
+  async: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

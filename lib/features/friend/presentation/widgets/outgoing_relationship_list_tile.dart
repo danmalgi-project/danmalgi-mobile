@@ -25,10 +25,7 @@ class OutgoingRelationshipListTile extends ConsumerWidget {
             SizedBox(height: 19.0),
             GestureDetector(
               onTap: () async {
-                showAboutDialog(context: context, children: [
-                    
-                  ],
-                );
+                showAboutDialog(context: context, children: []);
               },
               child: CircleAvatar(
                 radius: 16.0,
