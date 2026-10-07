@@ -44,7 +44,7 @@ class VoiceCallControls extends ConsumerWidget {
               onTap: isReady ? () {} : null,
             ),
             if (defaultTargetPlatform == TargetPlatform.iOS)
-              const AudioRoutePickerButton()
+              AudioRoutePickerButton(enabled: isReady)
             else
               VoiceControlButton(
                 icon: Icons.speaker_group_outlined,
