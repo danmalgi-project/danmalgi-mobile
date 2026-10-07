@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+./scripts/check.sh
+
+if ! git diff --quiet; then
+  echo
+  echo "check.sh modified files. Review, commit, then push again."
+  git diff --stat
+  exit 1
+fi

@@ -1,4 +1,11 @@
 {
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never",
+      "source.fixAll": "never"
+    }
+  },
   "files.associations": {
     "algorithm": "cpp",
     "array": "cpp",
