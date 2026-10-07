@@ -92,7 +92,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
           ),
         );
       }
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }
@@ -110,7 +110,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             messageId: messageId,
             content: content,
           );
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }
@@ -121,7 +121,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
       await ref
           .read(chatRepositoryProvider)
           .deleteMessage(channelId: Int64(channelId), messageId: messageId);
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }
@@ -140,7 +140,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             .read(chatRepositoryProvider)
             .sendMessage(channelId: channelId, content: content, file: null);
       }
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }

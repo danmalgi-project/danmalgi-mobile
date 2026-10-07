@@ -59,7 +59,7 @@ class WelcomeFooter extends StatelessWidget {
 }
 
 class _WelcomeCardWidget extends StatelessWidget {
-  const _WelcomeCardWidget({super.key});
+  const _WelcomeCardWidget();
 
   @override
   Widget build(BuildContext context) {

@@ -35,7 +35,7 @@ class _DirectMessageChannelListViewState
         return RefreshIndicator(
           onRefresh: () async {
             try {
-              await ref.refresh(
+              final _ = await ref.refresh(
                 directMessageChannelListViewModelProvider.future,
               );
               print("test");

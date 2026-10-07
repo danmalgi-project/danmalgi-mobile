@@ -12,6 +12,7 @@ class VoiceCallRoute extends PageRoute<void> {
 
   VoiceCallRoute({required this.channelId});
 
+  AnimationController? get gestureController => controller;
   @override
   bool get opaque => false;
   @override
