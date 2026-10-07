@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/voice_manager_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'voice_view_model.g.dart';
 

@@ -1,8 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:danmalgi_mobile/core/session/app_auth_state.dart';
 import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final currentUserProvider = Provider<User?>(
   (ref) => ref

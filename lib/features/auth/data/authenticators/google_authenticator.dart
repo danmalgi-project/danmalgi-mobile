@@ -1,11 +1,9 @@
-import 'package:flutter/services.dart';
-
-import 'package:google_sign_in_all_platforms/google_sign_in_all_platforms.dart';
-
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_credential.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
+import 'package:flutter/services.dart';
+import 'package:google_sign_in_all_platforms/google_sign_in_all_platforms.dart';
 
 class GoogleAuthenticator implements SocialAuthenticator {
   final GoogleSignIn _googleSignIn;

@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:collection/collection.dart';
-
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
+import 'package:flutter/material.dart';
 
 class MockMeeting {
   const MockMeeting({

@@ -1,8 +1,7 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:danmalgi_mobile/core/providers/network_provider.dart';
 import 'package:danmalgi_mobile/features/voice/data/managers/voice_manager_impl.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'voice_manager_provider.g.dart';
 

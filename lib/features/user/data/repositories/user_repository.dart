@@ -1,11 +1,9 @@
-import 'package:flutter/services.dart';
-
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
-
 import 'package:danmalgi_mobile/core/generated/auth/v1/auth.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/generated/user/v1/user.pbgrpc.dart' as pb;
 import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:flutter/services.dart';
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
 class UserRepository {
   final pb.UserServiceClient client;

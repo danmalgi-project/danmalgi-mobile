@@ -1,6 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'direct_message_channel_list_state.freezed.dart';
 

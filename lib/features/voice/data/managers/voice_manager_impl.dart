@@ -3,13 +3,12 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
-
 import 'package:danmalgi_mobile/core/generated/signaling/v1/signaling.pbgrpc.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/voice/data/managers/ice_candidate_buffer.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class VoiceManagerImpl implements VoiceManager {
   final SignalingServiceClient _client;

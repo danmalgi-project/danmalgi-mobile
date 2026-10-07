@@ -1,7 +1,6 @@
+import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
-
-import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pbgrpc.dart';
 
 class FriendRepository {
   final FriendServiceClient client;

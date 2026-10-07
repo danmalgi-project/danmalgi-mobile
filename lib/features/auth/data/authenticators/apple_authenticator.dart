@@ -1,9 +1,8 @@
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_credential.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppleAuthenticator implements SocialAuthenticator {
   final WebAuthenticationOptions? _webOptions;

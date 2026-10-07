@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/session/session.dart';
 import 'package:danmalgi_mobile/core/session/token_store.dart';
@@ -10,6 +8,7 @@ import 'package:danmalgi_mobile/features/auth/data/providers/social_provider.dar
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'session_notifier.g.dart';
 

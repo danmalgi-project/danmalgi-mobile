@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:danmalgi_mobile/core/router/root_navigator_key_provider.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_call_animation_provider.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/views/voice_call_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class VoiceCallRoute extends PageRoute<void> {
   final int channelId;

@@ -2,15 +2,6 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:danmalgi_mobile/core/router/router.dart';
 import 'package:danmalgi_mobile/core/services/notification_service.dart';
 import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
@@ -19,6 +10,13 @@ import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
 import 'package:danmalgi_mobile/features/settings/data/providers/device_settings_notifier.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/views/voice_pip_overlay.dart';
 import 'package:danmalgi_mobile/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final providerContainer = ProviderContainer();
 

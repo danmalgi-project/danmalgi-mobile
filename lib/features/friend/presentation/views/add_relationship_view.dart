@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/widgets/outgoing_relationship_list_tile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AddRelationshipView extends ConsumerStatefulWidget {
   const AddRelationshipView({super.key});

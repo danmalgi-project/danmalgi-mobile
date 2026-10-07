@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:fixnum/fixnum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
 import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/friend/data/providers/friend_providers.dart';
 import 'package:danmalgi_mobile/features/friend/domain/relationship_state.dart';
+import 'package:fixnum/fixnum.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final relationshipViewModelProvider =
     AsyncNotifierProvider.autoDispose<RelationshipViewModel, RelationshipState>(

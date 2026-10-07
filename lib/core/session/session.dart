@@ -1,6 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'session.freezed.dart';
 

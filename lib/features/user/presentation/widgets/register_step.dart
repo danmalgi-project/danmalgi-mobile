@@ -1,8 +1,3 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
@@ -10,6 +5,9 @@ import 'package:danmalgi_mobile/core/widgets/rounded_text_field.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_primary_button.dart';
 import 'package:danmalgi_mobile/features/user/presentation/providers/register_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({super.key});

@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:flutter/material.dart';
 
 class VoiceParticipantTile extends StatelessWidget {
   const VoiceParticipantTile({

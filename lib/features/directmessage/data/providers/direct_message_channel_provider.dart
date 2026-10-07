@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'direct_message_channel_provider.g.dart';
 

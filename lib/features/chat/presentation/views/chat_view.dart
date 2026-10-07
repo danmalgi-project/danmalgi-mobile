@@ -1,18 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/widgets/message_tile.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class ChatView extends ConsumerStatefulWidget {
   final int channelId;

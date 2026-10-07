@@ -1,6 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:danmalgi_mobile/core/router/root_navigator_key_provider.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
 import 'package:danmalgi_mobile/core/router/router_refresh_notifier.dart';
@@ -15,6 +12,8 @@ import 'package:danmalgi_mobile/features/home/presentation/widgets/scaffold_with
 import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:danmalgi_mobile/features/settings/presentation/views/profile_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 enum _Zone { splash, onboarding, main }
 

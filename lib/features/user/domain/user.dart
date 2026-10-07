@@ -1,12 +1,10 @@
-import 'package:flutter/foundation.dart';
-
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart' as pb;
 import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
 import 'package:danmalgi_mobile/features/user/data/extensions/user_status_mapper.dart';
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user.freezed.dart';
 

@@ -1,7 +1,6 @@
+import 'package:danmalgi_mobile/core/services/app_logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-
-import 'package:danmalgi_mobile/core/services/app_logger_service.dart';
 
 final loggerProvider = Provider<Logger>((ref) {
   return Logger(

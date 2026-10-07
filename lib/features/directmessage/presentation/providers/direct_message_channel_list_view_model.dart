@@ -1,11 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:fixnum/fixnum.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
@@ -13,6 +7,10 @@ import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/domain/direct_message_channel_list_state.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fixnum/fixnum.dart';
+import 'package:flutter/widgets.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'direct_message_channel_list_view_model.g.dart';
 
