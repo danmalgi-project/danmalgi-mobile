@@ -1,6 +1,6 @@
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/audio_route_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,10 +9,8 @@ Future<void> showAudioOutputSheet(
   WidgetRef ref,
   int channelId,
 ) async {
-  final notifier = ref.read(
-    voiceViewModelProvider(channelId: channelId).notifier,
-  );
-  final devices = await notifier.getAudioOutputs();
+  final service = ref.read(audioRouteServiceProvider);
+  final devices = await service.outputs();
   if (!context.mounted) return;
 
   showModalBottomSheet(
@@ -35,7 +33,7 @@ Future<void> showAudioOutputSheet(
                 style: const TextStyle(color: AppColors.textPrimary),
               ),
               onTap: () {
-                notifier.selectAudioOutput(device.deviceId);
+                service.select(device.id);
                 Navigator.pop(sheetContext);
               },
             ),

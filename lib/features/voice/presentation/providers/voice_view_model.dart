@@ -47,16 +47,6 @@ class VoiceViewModel extends _$VoiceViewModel {
     return const VoiceState();
   }
 
-  Future<List<MediaDeviceInfo>> getAudioOutputs() {
-    final repo = ref.read(voiceManagerProvider(channelId: channelId));
-    return repo.getAudioOutputs();
-  }
-
-  Future<void> selectAudioOutput(String deviceId) {
-    final repo = ref.read(voiceManagerProvider(channelId: channelId));
-    return repo.selectAudioOutput(deviceId);
-  }
-
   void _handleStatusChange(VoiceConnectionStatus status) {
     final isBad =
         status == VoiceConnectionStatus.unstable ||
