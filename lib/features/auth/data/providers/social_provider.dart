@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:danmalgi_mobile/core/config/feature_flags.dart';
 import 'package:danmalgi_mobile/features/auth/data/authenticators/apple_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/data/authenticators/google_authenticator.dart';
 import 'package:danmalgi_mobile/features/auth/domain/social_authenticator.dart';
@@ -13,14 +14,15 @@ final socialAuthenticatorProvider =
     Provider<Map<OAuthType, SocialAuthenticator>>(
       (ref) => {
         OAuthType.GOOGLE: GoogleAuthenticator(ref.watch(googleSignInProvider)),
-        OAuthType.APPLE: AppleAuthenticator(
-          Platform.isAndroid
-              ? WebAuthenticationOptions(
-                  clientId: dotenv.get('APPLE_SERVICE_ID'),
-                  redirectUri: Uri.parse(dotenv.get('APPLE_REDIRECT_URI')),
-                )
-              : null,
-        ),
+        if (FeatureFlags.appleSignIn)
+          OAuthType.APPLE: AppleAuthenticator(
+            Platform.isAndroid
+                ? WebAuthenticationOptions(
+                    clientId: dotenv.get('APPLE_SERVICE_ID'),
+                    redirectUri: Uri.parse(dotenv.get('APPLE_REDIRECT_URI')),
+                  )
+                : null,
+          ),
       },
     );
 

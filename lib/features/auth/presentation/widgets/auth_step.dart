@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/config/feature_flags.dart';
 import 'package:danmalgi_mobile/core/theme/app_button_styles.dart';
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
@@ -28,9 +29,12 @@ class AuthForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loginViewModelProvider).isLoading;
 
-    final options = defaultTargetPlatform == TargetPlatform.iOS
-        ? [_apple, _google]
-        : [_google, _apple];
+    final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
+    final options = [
+      if (FeatureFlags.appleSignIn && isIOS) _apple,
+      _google,
+      if (FeatureFlags.appleSignIn && !isIOS) _apple,
+    ];
 
     return Padding(
       padding: EdgeInsets.only(top: 36),
