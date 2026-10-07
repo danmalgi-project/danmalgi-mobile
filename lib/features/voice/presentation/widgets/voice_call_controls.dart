@@ -3,7 +3,9 @@ import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_sessi
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/audio_output_sheet.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/widgets/audio_route_picker_button.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_control_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,12 +43,15 @@ class VoiceCallControls extends ConsumerWidget {
               icon: Icons.videocam_outlined,
               onTap: isReady ? () {} : null,
             ),
-            VoiceControlButton(
-              icon: Icons.speaker_group_outlined,
-              onTap: isReady
-                  ? () => showAudioOutputSheet(context, ref, channelId)
-                  : null,
-            ),
+            if (defaultTargetPlatform == TargetPlatform.iOS)
+              const AudioRoutePickerButton()
+            else
+              VoiceControlButton(
+                icon: Icons.speaker_group_outlined,
+                onTap: isReady
+                    ? () => showAudioOutputSheet(context, ref, channelId)
+                    : null,
+              ),
             VoiceControlButton(
               icon: Icons.phone_disabled_outlined,
               background: Color(0xFFFF2121),
