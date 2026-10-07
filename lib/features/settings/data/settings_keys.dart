@@ -7,8 +7,6 @@ abstract final class DeviceSettingKeys {
     ThemeMode.values,
     defaultValue: ThemeMode.dark,
   );
-
-  static final audioOutputId = PrefKey.string('audioOutputId');
 }
 
 abstract final class AccountSettingKeys {
