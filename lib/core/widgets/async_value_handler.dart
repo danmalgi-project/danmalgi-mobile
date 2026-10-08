@@ -23,8 +23,6 @@ class AsyncValueHandler<T> extends StatelessWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
 
       error: (error, stack) {
-        print(error.runtimeType);
-        print(stack);
         if (error is AppException) {
           return error.maybeWhen(
             unauthenticated: (_) => const SizedBox.shrink(),

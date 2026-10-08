@@ -37,8 +37,6 @@ class ErrorInterceptor implements ClientInterceptor {
       invoker(method, request, mergedOptions),
     ).catchError((Object error) {
       if (error is GrpcError) {
-        print(error);
-
         if (error.code == StatusCode.unauthenticated) {
           logout();
           throw const AppException.unauthenticated();

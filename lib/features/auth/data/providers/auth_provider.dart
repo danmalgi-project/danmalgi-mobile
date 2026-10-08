@@ -4,7 +4,5 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final client = ref.watch(authServiceClientProvider);
-  ref.onDispose(() => print("authRepository Disposed"));
-
   return AuthRepository(client);
 });

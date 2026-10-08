@@ -1,6 +1,9 @@
 import 'package:grpc/grpc.dart';
+import 'package:logging/logging.dart';
 
 class GrpcChannelService {
+  static final _log = Logger('grpc.GrpcChannelService');
+
   final String host;
   final int port;
   final ClientKeepAliveOptions? keepAlive;
@@ -24,6 +27,6 @@ class GrpcChannelService {
 
   Future<void> shutdown() async {
     await _channel.shutdown();
-    print('client shut down.');
+    _log.info('client shut down.');
   }
 }

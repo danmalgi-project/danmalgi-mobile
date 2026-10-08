@@ -1,12 +1,15 @@
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'active_voice_session_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class ActiveVoiceSession extends _$ActiveVoiceSession {
+  static final _log = Logger('voice.ActiveVoiceSession');
+
   ProviderSubscription<AsyncValue<VoiceState>>? _subscription;
 
   @override
@@ -17,7 +20,7 @@ class ActiveVoiceSession extends _$ActiveVoiceSession {
 
     end();
 
-    print("Voice Started !");
+    _log.info("Voice Started - Channel $channelId");
     _subscription = ref.listen(
       voiceViewModelProvider(channelId: channelId),
       (_, _) {},
@@ -27,7 +30,7 @@ class ActiveVoiceSession extends _$ActiveVoiceSession {
   }
 
   void end() {
-    print("Voice Ended !");
+    _log.fine("Voice Ended - Channel $state");
     _subscription?.close();
     _subscription = null;
     state = null;

@@ -1,6 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logging/logging.dart';
 
 class SecureStorageService {
+  static final _log = Logger('storage.SecureStorageService');
+
   final FlutterSecureStorage _storage;
 
   SecureStorageService(this._storage);
@@ -11,17 +14,17 @@ class SecureStorageService {
   Future<void> setAccessToken(String accessToken) async {
     try {
       await _storage.write(key: _accessTokenKey, value: accessToken);
-      print("Token saved securely: $accessToken");
-    } catch (e) {
-      print("Error saving token: $e");
+      _log.fine("Token saved securely");
+    } catch (e, st) {
+      _log.severe("Failed to save token", e, st);
     }
   }
 
   Future<String?> getAccessToken() async {
     try {
       return await _storage.read(key: _accessTokenKey);
-    } catch (e) {
-      print("Error retrieving token: $e");
+    } catch (e, st) {
+      _log.severe("Failed to get token", e, st);
       return null;
     }
   }
@@ -29,26 +32,26 @@ class SecureStorageService {
   Future<void> deleteAccessToken() async {
     try {
       await _storage.delete(key: _accessTokenKey);
-      print("Token deleted successfully!");
-    } catch (e) {
-      print("Error deleting storage: $e");
+      _log.fine("Token deleted successfully!");
+    } catch (e, st) {
+      _log.severe("Failed to delete token", e, st);
     }
   }
 
   Future<void> createDeviceId({required String deviceId}) async {
     try {
       await _storage.write(key: _deviceId, value: deviceId);
-      print("DeviceId created securely: $deviceId");
-    } catch (e) {
-      print("Error creating device id: $e");
+      _log.fine("DeviceId created securely");
+    } catch (e, st) {
+      _log.severe("Failed to create deviceId", e, st);
     }
   }
 
   Future<String?> getDeviceId() async {
     try {
       return await _storage.read(key: _deviceId);
-    } catch (e) {
-      print("Error retrieving device id: $e");
+    } catch (e, st) {
+      _log.severe("Failed to get deviceId", e, st);
       return null;
     }
   }
@@ -56,18 +59,18 @@ class SecureStorageService {
   Future<void> deleteDeviceId() async {
     try {
       await _storage.delete(key: _deviceId);
-      print("DeviceId deleted successfully!");
-    } catch (e) {
-      print("Error deleting device id: $e");
+      _log.fine("DeviceId deleted successfully!");
+    } catch (e, st) {
+      _log.severe("Failed to delete deviceId", e, st);
     }
   }
 
   Future<void> clearStorage() async {
     try {
       await _storage.deleteAll();
-      print("Storage cleared successfully!");
-    } catch (e) {
-      print("Error clearing storage: $e");
+      _log.fine("Storage cleared successfully!");
+    } catch (e, st) {
+      _log.severe("Failed to clear storage", e, st);
     }
   }
 }

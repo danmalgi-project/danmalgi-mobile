@@ -36,7 +36,6 @@ class _DirectMessageChannelListViewState
               final _ = await ref.refresh(
                 directMessageChannelListViewModelProvider.future,
               );
-              print("test");
             } catch (_) {}
           },
           child: CustomScrollView(
@@ -107,7 +106,6 @@ class _DirectMessageChannelListViewState
                   itemCount: state.length,
                   itemBuilder: (context, index) {
                     final item = state.directMessageChannelList[index];
-                    print(item);
                     return DirectMessageChannelListTile(item: item);
                   },
                 ),

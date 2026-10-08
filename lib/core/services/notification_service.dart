@@ -1,10 +1,14 @@
 import 'dart:io' show Platform;
 
+import 'package:danmalgi_mobile/core/logging/app_logging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:logging/logging.dart';
 
 class NotificationService {
+  static final _log = Logger('core.NotificationService');
+
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
@@ -31,6 +35,8 @@ class NotificationService {
 
     // Handle incoming messages
     _setupMessageHandlers();
+
+    _log.info('Notification initialized');
   }
 
   Future<void> _requestPermissions() async {
@@ -40,16 +46,16 @@ class NotificationService {
       sound: true,
       provisional: false, // Set true for quiet permissions on iOS
     );
-    print('Permission status: ${settings.authorizationStatus}');
+    _log.info('Permission status: ${settings.authorizationStatus}');
 
     // On iOS, you might want to request additional permissions
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('✅ User granted permission');
+      _log.info('✅ User granted permission');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('⚠️ User granted provisional permission');
+      _log.info('⚠️ User granted provisional permission');
     } else {
-      print('❌ User declined or has not accepted permission');
+      _log.warning('❌ User declined or has not accepted permission');
     }
   }
 
@@ -88,7 +94,7 @@ class NotificationService {
   Future<void> _setupFCMToken() async {
     final token = await _messaging.getToken();
     if (token != null) {
-      await onTokenUpdated?.call(token); // ← 콜백으로 전달
+      await onTokenUpdated?.call(token);
     }
 
     _messaging.onTokenRefresh.listen((newToken) {
@@ -121,7 +127,7 @@ class NotificationService {
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
-    print('Foreground message received: ${message.messageId}');
+    _log.fine('Foreground message received: ${message.messageId}');
 
     // Show local notification when app is in foreground
     final notification = message.notification;
@@ -153,13 +159,13 @@ class NotificationService {
   }
 
   void _handleNotificationTap(RemoteMessage message) {
-    print('Notification tapped: ${message.data}');
+    _log.fine('Notification tapped: ${message.data}');
     // Navigate to specific screen based on message.data
     // We'll use Riverpod to handle this navigation
   }
 
   void _onNotificationTapped(NotificationResponse response) {
-    print('Local notification tapped: ${response.payload}');
+    _log.fine('Local notification tapped: ${response.payload}');
     // Handle navigation here too
   }
 }
@@ -167,6 +173,9 @@ class NotificationService {
 // Background message handler (must be top-level function)
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  setupLogging();
   await Firebase.initializeApp();
-  print('Background message received: ${message.messageId}');
+  Logger(
+    'core.NotificationService',
+  ).fine('Background message received: ${message.messageId}');
 }

@@ -86,7 +86,6 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
                               final id = friendTextFieldController.text.split(
                                 "#",
                               );
-                              print(id);
                               await ref
                                   .read(relationshipViewModelProvider.notifier)
                                   .addRelationship(name: id[0], tag: id[1]);

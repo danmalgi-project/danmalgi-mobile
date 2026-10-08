@@ -22,7 +22,6 @@ class MockVoiceManager implements VoiceManager {
   void emitUsers(List<User> users) => emit(VoiceState(users: users));
 
   void emitError(String message) {
-    print('❌ $message');
     emit(const VoiceState(status: VoiceConnectionStatus.failed));
   }
 
