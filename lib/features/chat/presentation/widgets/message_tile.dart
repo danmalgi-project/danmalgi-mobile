@@ -1,12 +1,8 @@
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
-import 'package:flutter/material.dart';
-
-import 'package:collection/collection.dart';
-import 'package:fixnum/fixnum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:danmalgi_mobile/features/chat/domain/message.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
+import 'package:fixnum/fixnum.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class MessageTile extends ConsumerWidget {

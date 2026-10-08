@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
-
-import 'package:fixnum/fixnum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:danmalgi_mobile/features/chat/data/providers/chat_provider.dart';
 import 'package:danmalgi_mobile/features/chat/domain/chat_state.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message_status.dart';
+import 'package:fixnum/fixnum.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 final chatViewModelProvider = AsyncNotifierProvider.autoDispose
@@ -93,7 +91,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
           ),
         );
       }
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }
@@ -111,7 +109,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             messageId: messageId,
             content: content,
           );
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }
@@ -122,7 +120,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
       await ref
           .read(chatRepositoryProvider)
           .deleteMessage(channelId: Int64(channelId), messageId: messageId);
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }
@@ -141,7 +139,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             .read(chatRepositoryProvider)
             .sendMessage(channelId: channelId, content: content, file: null);
       }
-    } catch (e, stack) {
+    } catch (e) {
       print(e.toString());
       // state = AsyncError(e, stack);
     }

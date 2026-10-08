@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:grpc/grpc.dart';
-import 'package:grpc/service_api.dart';
-import 'package:async/async.dart';
 
 class ErrorInterceptor implements ClientInterceptor {
   final void Function() logout;

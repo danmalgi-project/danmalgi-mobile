@@ -53,7 +53,6 @@ dependencies:
   firebase_messaging: ^16.1.0
   flutter_local_notifications: ^22.3.0
   device_info_plus: ^13.2.0
-  import_sorter: ^4.6.0
   riverpod_annotation: ^4.0.0
   uuid: ^4.5.3
   image_picker: ^1.2.1
@@ -64,6 +63,7 @@ dependencies:
   sign_in_with_apple: ^8.2.0
   
 
+  async: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -133,11 +133,3 @@ flutter:
           weight: 800
         - asset: assets/fonts/Pretendard/Pretendard-Black.otf
           weight: 900
-
-import_sorter:
-  comments: false
-  ignored_files:
-    - \.g\.dart
-    - \.freezed\.dart
-    - \.pb.*\.dart
-    - \.firebase_options\.dart

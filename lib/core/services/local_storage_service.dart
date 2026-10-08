@@ -1,8 +1,7 @@
-import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
   final SharedPreferences _prefs;

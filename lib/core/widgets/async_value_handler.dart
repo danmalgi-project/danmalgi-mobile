@@ -1,7 +1,7 @@
+import 'package:danmalgi_mobile/core/error/app_exception.dart';
+import 'package:danmalgi_mobile/core/widgets/network_error_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:danmalgi_mobile/core/error/app_exception.dart';
-import 'package:danmalgi_mobile/core/widgets/network_error_view.dart'; // 어제 만든 에러 화면
 
 class AsyncValueHandler<T> extends StatelessWidget {
   final AsyncValue<T> asyncValue;

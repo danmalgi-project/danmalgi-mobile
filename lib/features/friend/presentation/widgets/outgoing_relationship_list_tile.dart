@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OutgoingRelationshipListTile extends ConsumerWidget {
   final Relationship relationship;
@@ -25,10 +23,7 @@ class OutgoingRelationshipListTile extends ConsumerWidget {
             SizedBox(height: 19.0),
             GestureDetector(
               onTap: () async {
-                showAboutDialog(context: context, children: [
-                    
-                  ],
-                );
+                showAboutDialog(context: context, children: []);
               },
               child: CircleAvatar(
                 radius: 16.0,

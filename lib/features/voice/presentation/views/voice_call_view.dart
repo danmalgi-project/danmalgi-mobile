@@ -2,6 +2,7 @@ import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_sessi
 import 'package:danmalgi_mobile/features/voice/presentation/geometry/voice_call_metrics.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/geometry/voice_call_morph.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_pip_offset_provider.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_call_controls.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_call_header.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_participant_grid.dart';
@@ -23,18 +24,18 @@ class VoiceCallView extends ConsumerStatefulWidget {
 }
 
 class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
-  ModalRoute<void>? _route;
+  VoiceCallRoute? _route;
   VoiceCallMorph _morph = const VoiceCallMorph.open();
 
   NavigatorState? _gestureNavigator;
   AnimationStatusListener? _settleListener;
 
-  AnimationController get _controller => _route!.controller!;
+  AnimationController get _controller => _route!.gestureController!;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _route = ModalRoute.of(context) as ModalRoute<void>?;
+    _route = ModalRoute.of(context) as VoiceCallRoute?;
   }
 
   @override
@@ -60,7 +61,7 @@ class _VoiceCallViewState extends ConsumerState<VoiceCallView> {
     final listener = _settleListener;
     if (listener != null) {
       _settleListener = null;
-      _route?.controller?.removeStatusListener(listener);
+      _route?.gestureController?.removeStatusListener(listener);
     }
 
     navigator.didStopUserGesture();

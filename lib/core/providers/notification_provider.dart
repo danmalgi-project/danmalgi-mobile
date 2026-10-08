@@ -1,11 +1,10 @@
 import 'dart:io' show Platform;
 
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
+import 'package:danmalgi_mobile/core/services/notification_service.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:danmalgi_mobile/core/services/notification_service.dart';
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
   return NotificationService(

@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
-import 'package:flutter/services.dart';
-
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/register_state.dart';
+import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_view_model.g.dart';

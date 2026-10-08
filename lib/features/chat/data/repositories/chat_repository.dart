@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:fixnum/fixnum.dart';
-
 import 'package:danmalgi_mobile/core/generated/chat/v1/chat.pbgrpc.dart' as pb;
 import 'package:danmalgi_mobile/features/chat/domain/message.dart';
 import 'package:danmalgi_mobile/features/user/data/repositories/user_repository.dart';
+import 'package:fixnum/fixnum.dart';
 
 class ChatRepository {
   final pb.ChatServiceClient client;

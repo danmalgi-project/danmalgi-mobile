@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
-
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'package:danmalgi_mobile/features/chat/domain/message.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_state.freezed.dart';
 

@@ -1,4 +1,3 @@
-import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_participant_tile.dart';

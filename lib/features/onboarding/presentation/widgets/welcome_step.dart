@@ -1,7 +1,6 @@
+import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_primary_button.dart';
 import 'package:flutter/material.dart';
-
-import 'package:danmalgi_mobile/features/onboarding/presentation/widgets/onboarding_main_layout.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WelcomeForm extends StatelessWidget {
@@ -58,7 +57,7 @@ class WelcomeFooter extends StatelessWidget {
 }
 
 class _WelcomeCardWidget extends StatelessWidget {
-  const _WelcomeCardWidget({super.key});
+  const _WelcomeCardWidget();
 
   @override
   Widget build(BuildContext context) {

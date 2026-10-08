@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class RouterRefreshNotifier extends ChangeNotifier {

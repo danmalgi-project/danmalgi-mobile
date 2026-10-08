@@ -1,14 +1,11 @@
-import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
-import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
+import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class FriendListTile extends ConsumerWidget {
   final Friend friend;
