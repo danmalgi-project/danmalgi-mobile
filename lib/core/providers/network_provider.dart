@@ -8,6 +8,7 @@ import 'package:danmalgi_mobile/core/generated/user/v1/user.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/network/grpc_channel_service.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/auth_interceptor.dart';
 import 'package:danmalgi_mobile/core/network/interceptors/error_interceptor.dart';
+import 'package:danmalgi_mobile/core/network/interceptors/grpc_logging_interceptor.dart';
 import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/core/session/token_store.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -62,11 +63,16 @@ final errorInterceptorProvider = Provider<ErrorInterceptor>(
   ),
 );
 
+final _grpcLogging = GrpcLoggingInterceptor();
+
 final authServiceClientProvider = Provider<AuthServiceClient>((ref) {
   final channel = ref.watch(apiClientProvider).channel;
   final errorInterceptor = ref.watch(errorInterceptorProvider);
 
-  return AuthServiceClient(channel, interceptors: [errorInterceptor]);
+  return AuthServiceClient(
+    channel,
+    interceptors: [errorInterceptor, _grpcLogging],
+  );
 });
 
 /// feature: Chat
@@ -74,7 +80,10 @@ final chatServiceClientProvider = Provider<ChatServiceClient>((ref) {
   final channel = ref.watch(chatClientProvider).channel;
   final authInterceptor = ref.watch(authInterceptorProvider);
 
-  return ChatServiceClient(channel, interceptors: [authInterceptor]);
+  return ChatServiceClient(
+    channel,
+    interceptors: [authInterceptor, _grpcLogging],
+  );
 });
 
 /// feature: DM Channel
@@ -86,7 +95,7 @@ final directMessageServiceClientProvider = Provider<DirectMessageServiceClient>(
 
     return DirectMessageServiceClient(
       channel,
-      interceptors: [authInterceptor, errorInterceptor],
+      interceptors: [authInterceptor, errorInterceptor, _grpcLogging],
       options: CallOptions(timeout: Duration(seconds: 5)),
     );
   },
@@ -100,7 +109,7 @@ final userServiceClientProvider = Provider<UserServiceClient>((ref) {
 
   return UserServiceClient(
     channel,
-    interceptors: [authInterceptor, errorInterceptor],
+    interceptors: [authInterceptor, errorInterceptor, _grpcLogging],
   );
 });
 
@@ -111,7 +120,7 @@ final userAuthServiceClientProvider = Provider<AuthServiceClient>((ref) {
 
   return AuthServiceClient(
     channel,
-    interceptors: [authInterceptor, errorInterceptor],
+    interceptors: [authInterceptor, errorInterceptor, _grpcLogging],
   );
 });
 
@@ -123,7 +132,7 @@ final friendServiceClientProvider = Provider<FriendServiceClient>((ref) {
 
   return FriendServiceClient(
     channel,
-    interceptors: [authInterceptor, errorInterceptor],
+    interceptors: [authInterceptor, errorInterceptor, _grpcLogging],
   );
 });
 
@@ -137,7 +146,7 @@ final relationshipServiceClientProvider = Provider<RelationshipServiceClient>((
 
   return RelationshipServiceClient(
     channel,
-    interceptors: [authInterceptor, errorInterceptor],
+    interceptors: [authInterceptor, errorInterceptor, _grpcLogging],
   );
 });
 
@@ -154,6 +163,6 @@ final signalingServiceClientProvider =
       return SignalingServiceClient(
         channel,
         options: options,
-        interceptors: [authInterceptor],
+        interceptors: [authInterceptor, _grpcLogging],
       );
     });
