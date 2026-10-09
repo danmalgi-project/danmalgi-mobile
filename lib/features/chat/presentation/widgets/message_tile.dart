@@ -269,6 +269,7 @@ class MessageTile extends ConsumerWidget {
                                                   message.id,
                                                 ),
                                               );
+                                          // ignore: use_build_context_synchronously
                                           Navigator.of(context).pop();
                                         },
                                         style: ElevatedButton.styleFrom(

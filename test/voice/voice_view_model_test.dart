@@ -30,7 +30,6 @@ void main() {
       await container.read(voiceViewModelProvider(channelId: 1).future);
 
       expect(mockRepo.joinCalled, isTrue);
-      print('✅ join() 호출 확인');
     });
 
     test('Step B: statusStream 이벤트가 state에 반영되는지 확인', () async {
@@ -46,7 +45,6 @@ void main() {
 
       expect(state.statusMessage, '✅ Peer 연결 완료!');
       expect(state.isConnected, isTrue);
-      print('✅ statusStream → state 반영 확인: ${state.statusMessage}');
     });
 
     test('Step C: usersStream 이벤트가 state에 반영되는지 확인', () async {
@@ -64,7 +62,6 @@ void main() {
 
       expect(state.users.length, 2);
       expect(state.users.first.name, 'Alice');
-      print('✅ usersStream → state 반영 확인: ${state.users.map((u) => u.name)}');
     });
 
     test('Step D: join() 실패 시 error state가 되는지 확인', () async {
@@ -78,7 +75,6 @@ void main() {
       final state = container.read(voiceViewModelProvider(channelId: 1));
 
       expect(state.hasError, isTrue);
-      print('✅ 에러 상태 확인: ${state.error}');
     });
 
     test('Step E: dispose 시 구독이 정리되는지 확인', () async {
@@ -90,7 +86,6 @@ void main() {
       // dispose 후 이벤트를 emit해도 에러가 없어야 함
       // (이미 stream이 닫혔으므로)
       expect(() => mockRepo.emitError('late event'), throwsA(anything));
-      print('✅ dispose 후 stream 정리 확인');
     });
   });
 }

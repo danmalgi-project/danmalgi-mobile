@@ -10,7 +10,7 @@ class SplashView extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('Splash View ${id}')],
+          children: [Text('Splash View $id')],
         ),
       ),
     );

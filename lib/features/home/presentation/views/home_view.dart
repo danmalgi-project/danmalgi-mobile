@@ -68,6 +68,8 @@ class HomeView extends StatelessWidget {
 }
 
 class ScheduleBannerWidget extends StatelessWidget {
+  const ScheduleBannerWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
