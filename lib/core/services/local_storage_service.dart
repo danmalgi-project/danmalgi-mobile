@@ -90,7 +90,7 @@ class LocalStorageService {
   User? get cachedUserOrNull {
     final id = this.id;
     final email = this.email;
-    final oauthType = this.oAuthType;
+    final oauthType = oAuthType;
     final status = this.status;
     final imageUrl = this.imageUrl;
 

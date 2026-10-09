@@ -230,6 +230,7 @@ class MessageTile extends ConsumerWidget {
                                                         .text,
                                               );
                                           modifyTextEditingController.clear();
+                                          if (!context.mounted) return;
                                           Navigator.of(context).pop();
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -269,6 +270,7 @@ class MessageTile extends ConsumerWidget {
                                                   message.id,
                                                 ),
                                               );
+                                          if (!context.mounted) return;
                                           Navigator.of(context).pop();
                                         },
                                         style: ElevatedButton.styleFrom(

@@ -16,10 +16,10 @@ class ChatRepository {
     int? messageId,
     int limit = 10,
   }) async {
-    final Int64? _messageId = (messageId == null) ? null : Int64(messageId);
+    final Int64? messageIdValue = (messageId == null) ? null : Int64(messageId);
     final pb.GetPreviousMessagesRequest request = pb.GetPreviousMessagesRequest(
       channelId: Int64(channelId),
-      messageId: _messageId,
+      messageId: messageIdValue,
       limit: limit,
     );
 

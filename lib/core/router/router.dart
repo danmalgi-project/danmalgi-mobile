@@ -33,7 +33,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     navigatorKey: routerKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: refresh,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: false,
     routes: [
       GoRoute(
         path: RoutePaths.splash,
@@ -130,7 +130,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         authenticated: (_) => onboardingDone ? _Zone.main : _Zone.onboarding,
         blocked: () => _Zone.onboarding,
         withdrawn: () => _Zone.onboarding,
-        error: (_, __) => _Zone.onboarding,
+        error: (_, _) => _Zone.onboarding,
       );
 
       final bool isOutsideMain =

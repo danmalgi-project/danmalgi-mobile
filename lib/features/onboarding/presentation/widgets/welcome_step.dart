@@ -170,9 +170,7 @@ class _WelcomeCardWidget extends StatelessWidget {
                 left: 34.89,
                 top: 139,
                 child: Container(
-                  transform: Matrix4.identity()
-                    ..translate(0.0, 0.0)
-                    ..rotateZ(0.07),
+                  transform: Matrix4.identity()..rotateZ(0.07),
                   width: 158.18,
                   height: 70.14,
                   padding: const EdgeInsets.all(12),

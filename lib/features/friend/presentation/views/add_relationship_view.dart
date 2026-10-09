@@ -107,8 +107,9 @@ class _AddRelationshipViewState extends ConsumerState<AddRelationshipView> {
                   skipLoadingOnRefresh: true,
                   skipLoadingOnReload: true,
                   data: (state) {
-                    if (state.incomingRelationshipList.isEmpty)
+                    if (state.incomingRelationshipList.isEmpty) {
                       return SizedBox();
+                    }
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

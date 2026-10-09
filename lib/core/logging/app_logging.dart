@@ -1,9 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
+const _logProviderLifecycle = bool.fromEnvironment('LOG_PROVIDER_LIFECYCLE');
+
 void setupLogging() {
   hierarchicalLoggingEnabled = true;
   Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
+
+  Logger('provider.lifecycle').level = _logProviderLifecycle
+      ? Level.ALL
+      : Level.OFF;
 
   Logger.root.onRecord.listen(_printRecord);
 }
