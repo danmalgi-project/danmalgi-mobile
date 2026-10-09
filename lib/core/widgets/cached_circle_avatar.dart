@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:danmalgi_mobile/core/extensions/string_extensions.dart';
+import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -8,14 +9,14 @@ class CachedCircleAvatar extends StatelessWidget {
 
   final String? url;
   final double? radius;
-  final Color? backgroundColor;
+  final Color backgroundColor;
   final Widget? child;
 
   const CachedCircleAvatar({
     super.key,
     this.url,
     this.radius,
-    this.backgroundColor,
+    this.backgroundColor = AppColors.surfaceSecondary,
     this.child,
   });
 
