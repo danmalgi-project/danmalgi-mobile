@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if ! command -v dart >/dev/null 2>&1; then
+  echo "dart not found in PATH. Add the Flutter SDK to your shell PATH, then restart your editor."
+  exit 1
+fi
+
 ./scripts/check.sh
 
 if ! git diff --quiet; then
