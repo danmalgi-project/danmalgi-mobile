@@ -5,12 +5,15 @@ import 'package:danmalgi_mobile/core/session/session_notifier.dart';
 import 'package:danmalgi_mobile/features/user/data/providers/user_provider.dart';
 import 'package:danmalgi_mobile/features/user/domain/register_state.dart';
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_view_model.g.dart';
 
 @riverpod
 class RegisterViewModel extends _$RegisterViewModel {
+  static final _log = Logger('user.RegisterViewModel');
+
   final _random = Random();
 
   @override
@@ -58,8 +61,8 @@ class RegisterViewModel extends _$RegisterViewModel {
 
       if (!ref.mounted) return;
       state = state.copyWith(isSubmitting: false);
-    } catch (e) {
-      print(e);
+    } catch (e, st) {
+      _log.warning('Failed to register user', e, st);
       if (!ref.mounted) return;
       state = state.copyWith(isSubmitting: false, error: '가입에 실패했습니다.');
     }

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
+import 'package:danmalgi_mobile/core/logging/app_logging.dart';
+import 'package:danmalgi_mobile/core/logging/provider_logger.dart';
 import 'package:danmalgi_mobile/core/router/router.dart';
 import 'package:danmalgi_mobile/core/services/notification_service.dart';
 import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
@@ -15,13 +17,27 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final providerContainer = ProviderContainer();
 
+final _log = Logger('app');
+
 Future<void> main() async {
+  setupLogging();
   WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    _log.severe('Flutter Error', details.exception, details.stack);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    _log.severe('처리되지 않은 에러', error, stack);
+    return true;
+  };
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   if (!Platform.isWindows) {
@@ -39,6 +55,7 @@ Future<void> main() async {
 
   runApp(
     ProviderScope(
+      observers: [ProviderLogger()],
       overrides: [sharedPreferencesProvider.overrideWith((ref) => prefs)],
       child: MyApp(),
     ),

@@ -9,8 +9,11 @@ import 'package:danmalgi_mobile/features/voice/data/managers/ice_candidate_buffe
 import 'package:danmalgi_mobile/features/voice/domain/voice_manager.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:logging/logging.dart';
 
 class VoiceManagerImpl implements VoiceManager {
+  static final _log = Logger('voice.VoiceManager');
+
   final SignalingServiceClient _client;
   final int channelId;
 
@@ -131,7 +134,7 @@ class VoiceManagerImpl implements VoiceManager {
   void _handleOnTrack(RTCTrackEvent event) {
     final trackId = event.track.id;
     final user = _currentState.trackUserMap[trackId];
-    print('🔊 트랙 수신: $trackId → ${user?.name ?? "알 수 없음"}');
+    _log.fine('트랙 수신: $trackId → ${user?.name ?? "알 수 없음"}');
   }
 
   void _handleConnectionState(RTCPeerConnectionState state) {
@@ -167,8 +170,8 @@ class VoiceManagerImpl implements VoiceManager {
       if (!_setEquals(speakingIds, _currentState.speakingUserIds)) {
         _emit((s) => s.copyWith(speakingUserIds: speakingIds));
       }
-    } catch (e) {
-      print('VAD 오류: $e');
+    } catch (e, st) {
+      _log.warning('VAD error', e, st);
     }
   }
 
@@ -185,7 +188,6 @@ class VoiceManagerImpl implements VoiceManager {
     for (final report in stats) {
       if (report.type == 'media-source') {
         final level = (report.values['audioLevel'] as num?)?.toDouble() ?? 0.0;
-        // print('🎙 내 오디오 레벨: $level');
 
         final isSpeaking = level > _speakingThreshold;
 
@@ -205,8 +207,6 @@ class VoiceManagerImpl implements VoiceManager {
       if (report.type == 'inbound-rtp') {
         final level = (report.values['audioLevel'] as num?)?.toDouble();
         final trackId = report.values['trackIdentifier'] as String?;
-
-        // print('📥 상대방 오디오 레벨: $level, trackId: $trackId');
 
         if (level == null || trackId == null) return;
         if (level <= _speakingThreshold) return;
@@ -259,7 +259,7 @@ class VoiceManagerImpl implements VoiceManager {
         users.add(user);
       }
 
-      print('👥 참여자 업데이트: ${users.length}명');
+      _log.fine('참여자 업데이트: ${users.length}명');
 
       _emit((s) => s.copyWith(trackUserMap: updatedMap, users: users));
     }
@@ -284,8 +284,7 @@ class VoiceManagerImpl implements VoiceManager {
       ),
     );
 
-    print('📤 Answer 전송 완료');
-    // _emit((s) => s.copyWith(statusMessage: '📤 Answer 전송 완료'));
+    _log.fine('Answer 전송 완료');
   }
 
   Future<void> _handleCandidate(Candidate candidateData) async {
@@ -298,11 +297,11 @@ class VoiceManagerImpl implements VoiceManager {
     for (final c in _candidateBuffer.add(candidate)) {
       await _peerConnection!.addCandidate(c);
     }
-    print('📥 ICE Candidate 수신');
+    _log.fine('ICE Candidate 수신');
   }
 
-  void _handleError(dynamic error) {
-    print(error);
+  void _handleError(dynamic error, [StackTrace? st]) {
+    _log.severe('시그널링 에러', error, st);
     _emit((s) => s.copyWith(status: VoiceConnectionStatus.failed));
   }
 

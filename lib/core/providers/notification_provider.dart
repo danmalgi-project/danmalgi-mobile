@@ -22,7 +22,7 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 final notificationInitProvider = FutureProvider<void>((ref) async {
   final service = ref.watch(notificationServiceProvider);
   await service.initialize();
-});
+}, name: 'notificationInitProvider');
 
 // FCM Token provider - reactive to changes
 final fcmTokenProvider = StreamProvider<String?>((ref) {

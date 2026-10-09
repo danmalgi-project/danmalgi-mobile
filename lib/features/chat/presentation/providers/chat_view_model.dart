@@ -7,11 +7,14 @@ import 'package:danmalgi_mobile/features/chat/domain/message_status.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logging/logging.dart';
 
 final chatViewModelProvider = AsyncNotifierProvider.autoDispose
     .family<ChatViewModel, ChatState, int>(ChatViewModel.new);
 
 class ChatViewModel extends AsyncNotifier<ChatState> {
+  static final _log = Logger('chat.ChatViewModel');
+
   final int channelId;
 
   ChatViewModel(this.channelId);
@@ -23,7 +26,6 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
         .receiveMessage(channelId: channelId);
 
     final subscription = stream.listen((newMessage) {
-      print(newMessage);
       final currentState = state.value;
       if (currentState == null) return;
 
@@ -51,10 +53,7 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
       state = AsyncData(currentState.copyWith(messages: newList));
     });
 
-    ref.onDispose(() {
-      subscription.cancel();
-      print("ChatViewModel Disposed");
-    });
+    ref.onDispose(() => subscription.cancel());
 
     final List<Message> initialData = await ref
         .read(chatRepositoryProvider)
@@ -91,9 +90,8 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
           ),
         );
       }
-    } catch (e) {
-      print(e.toString());
-      // state = AsyncError(e, stack);
+    } catch (e, st) {
+      _log.warning('Failed to get messages', e, st);
     }
   }
 
@@ -109,9 +107,8 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             messageId: messageId,
             content: content,
           );
-    } catch (e) {
-      print(e.toString());
-      // state = AsyncError(e, stack);
+    } catch (e, st) {
+      _log.warning('Failed to modify message', e, st);
     }
   }
 
@@ -120,9 +117,8 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
       await ref
           .read(chatRepositoryProvider)
           .deleteMessage(channelId: Int64(channelId), messageId: messageId);
-    } catch (e) {
-      print(e.toString());
-      // state = AsyncError(e, stack);
+    } catch (e, st) {
+      _log.warning('Failed to delete message', e, st);
     }
   }
 
@@ -139,9 +135,8 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             .read(chatRepositoryProvider)
             .sendMessage(channelId: channelId, content: content, file: null);
       }
-    } catch (e) {
-      print(e.toString());
-      // state = AsyncError(e, stack);
+    } catch (e, st) {
+      _log.warning('Failed to send message', e, st);
     }
   }
 }

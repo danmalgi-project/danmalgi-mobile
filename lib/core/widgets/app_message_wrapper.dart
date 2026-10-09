@@ -35,14 +35,6 @@ class AppMessageWrapper extends ConsumerWidget {
       }
     });
 
-    ref.listen(notificationInitProvider, (previous, next) {
-      next.when(
-        error: (err, stack) => print('❌ Notification 초기화 실패: $err'),
-        data: (void data) => print('✅ Notification 초기화 성공'),
-        loading: () {},
-      );
-    });
-
     return child;
   }
 }

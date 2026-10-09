@@ -63,7 +63,6 @@ class RelationshipViewModel extends AsyncNotifier<RelationshipState> {
           .addRelationship(name: name, tag: tag);
     } catch (e, stack) {
       state = AsyncError(e, stack);
-      print(e);
     }
   }
 
@@ -91,7 +90,6 @@ class RelationshipViewModel extends AsyncNotifier<RelationshipState> {
       }
     } catch (e, stack) {
       state = AsyncError(e, stack);
-      print(e);
     }
   }
 
@@ -118,7 +116,6 @@ class RelationshipViewModel extends AsyncNotifier<RelationshipState> {
       }
     } catch (e, stack) {
       state = AsyncError(e, stack);
-      print(e);
     }
   }
 }

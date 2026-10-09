@@ -11,8 +11,6 @@ class DirectMessageChannelRepository {
   Future<DirectMessageChannel> createDirectMessageChannel({
     required List<Int64> friendIds,
   }) async {
-    print('Create DirectMessageChannel');
-    print(friendIds);
     final request = CreateDirectMessageChannelRequest(friendIds: friendIds);
 
     final response = await client.createDirectMessageChannel(request);
@@ -32,14 +30,6 @@ class DirectMessageChannelRepository {
     int offset = 0,
     int limit = 10,
   }) async {
-    print('Fetching All DM Channels');
-
-    // // Infinite Scroll
-    // final request = GetDirectMessageChannelListRequest(
-    //   offset: offset,
-    //   limit: limit,
-    //   refreshTime: DateTime.now(),
-    // ).toProto();
     final response = await client.getDirectMessageChannelList(Empty());
     return _sortedByLastMessage(response.items);
   }
@@ -51,7 +41,7 @@ class DirectMessageChannelRepository {
       (i) => i.hasLastMessage()
           ? i.lastMessage.createdAt.toDateTime()
           : DateTime.fromMillisecondsSinceEpoch(0),
-      (a, b) => b.compareTo(a), // 최신이 위
+      (a, b) => b.compareTo(a),
     );
   }
 

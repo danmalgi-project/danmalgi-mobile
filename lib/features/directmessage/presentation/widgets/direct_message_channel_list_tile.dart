@@ -35,7 +35,6 @@ class DirectMessageChannelListTile extends ConsumerWidget {
             context.push('/chat/${channel.dmId}');
           },
           onLongPress: () async {
-            print("Long! ${channel.users}");
             await showAppBottomSheet(
               context: context,
               child: Column(
