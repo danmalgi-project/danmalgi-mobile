@@ -33,7 +33,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     navigatorKey: routerKey,
     initialLocation: RoutePaths.splash,
     refreshListenable: refresh,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: false,
     routes: [
       GoRoute(
         path: RoutePaths.splash,

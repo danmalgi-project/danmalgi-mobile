@@ -10,6 +10,14 @@
       "type": "dart"
     },
     {
+      "name": "danmalgi_mobile (provider lifecycle logs)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=LOG_PROVIDER_LIFECYCLE=true"
+      ]
+    },
+    {
       "name": "danmalgi_mobile (profile mode)",
       "request": "launch",
       "type": "dart",
