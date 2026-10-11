@@ -9,6 +9,7 @@ import 'package:danmalgi_mobile/core/services/notification_service.dart';
 import 'package:danmalgi_mobile/core/storage/storage_providers.dart';
 import 'package:danmalgi_mobile/core/theme/app_theme.dart';
 import 'package:danmalgi_mobile/core/widgets/app_message_wrapper.dart';
+import 'package:danmalgi_mobile/debug/fake_overrides.dart';
 import 'package:danmalgi_mobile/features/settings/data/providers/device_settings_notifier.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/views/voice_pip_overlay.dart';
 import 'package:danmalgi_mobile/firebase_options.dart';
@@ -56,7 +57,10 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       observers: [ProviderLogger()],
-      overrides: [sharedPreferencesProvider.overrideWith((ref) => prefs)],
+      overrides: [
+        sharedPreferencesProvider.overrideWith((ref) => prefs),
+        if (kUseFakeData) ...fakeOverrides,
+      ],
       child: MyApp(),
     ),
   );
