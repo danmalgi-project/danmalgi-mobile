@@ -4,14 +4,12 @@ import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/friend/data/providers/friend_providers.dart';
 import 'package:danmalgi_mobile/features/friend/domain/friend_state.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final friendViewModelProvider =
-    AsyncNotifierProvider.autoDispose<FriendViewModel, FriendState>(
-      FriendViewModel.new,
-    );
+part 'friend_view_model.g.dart';
 
-class FriendViewModel extends AsyncNotifier<FriendState> {
+@riverpod
+class FriendViewModel extends _$FriendViewModel {
   @override
   FutureOr<FriendState> build() async {
     ref.watch(currentUserProvider); // Bind lifecycle to auth state
