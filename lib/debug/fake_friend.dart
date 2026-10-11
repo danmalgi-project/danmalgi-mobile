@@ -8,7 +8,7 @@ import 'package:danmalgi_mobile/features/friend/domain/relationship_state.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
 import 'package:fixnum/fixnum.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 pb.User _user(int id, String name) =>
     pb.User(id: Int64(-id), name: name, tag: '1111', profileImageUrl: '');
@@ -40,11 +40,14 @@ final _fakeFriends = [
     ),
 ];
 
+final _fakeFriendStore = <Friend>[..._fakeFriends];
+final _fakeRequestStore = <Relationship>[..._fakeRequests];
+
 class FakeFriendViewModel extends FriendViewModel {
   @override
   Future<FriendState> build() async {
     await Future.delayed(const Duration(seconds: 1));
-    return FriendState(friendList: _fakeFriends);
+    return FriendState(friendList: List.of(_fakeFriendStore));
   }
 }
 
@@ -53,7 +56,7 @@ class FakeRelationshipViewModel extends RelationshipViewModel {
   Future<RelationshipState> build() async {
     await Future.delayed(const Duration(seconds: 1));
     return RelationshipState(
-      incomingRelationshipList: _fakeRequests,
+      incomingRelationshipList: List.of(_fakeRequestStore),
       outgoingRelationshipList: const [],
     );
   }
@@ -64,12 +67,24 @@ class FakeRelationshipViewModel extends RelationshipViewModel {
     required bool isAccept,
   }) async {
     await Future.delayed(const Duration(milliseconds: 500)); // 버튼 비활성 상태 확인
-    final current = state.requireValue;
+
+    _fakeRequestStore.removeWhere(
+      (r) => r.relationshipId == relationship.relationshipId,
+    );
+    if (isAccept) {
+      _fakeFriendStore.insert(
+        0,
+        Friend(
+          id: Int64(relationship.relationshipId.toInt() - 1000),
+          user: relationship.user,
+          status: FriendStatus.ACCEPT,
+        ),
+      );
+    }
+
     state = AsyncData(
-      current.copyWith(
-        incomingRelationshipList: current.incomingRelationshipList
-            .where((r) => r.relationshipId != relationship.relationshipId)
-            .toList(),
+      state.requireValue.copyWith(
+        incomingRelationshipList: List.of(_fakeRequestStore),
       ),
     );
   }
