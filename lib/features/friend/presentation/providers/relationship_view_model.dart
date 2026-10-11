@@ -1,11 +1,9 @@
 import 'dart:async';
 
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
-import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/friend/data/providers/friend_providers.dart';
 import 'package:danmalgi_mobile/features/friend/domain/relationship_state.dart';
-import 'package:fixnum/fixnum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final relationshipViewModelProvider =
@@ -25,27 +23,6 @@ class RelationshipViewModel extends AsyncNotifier<RelationshipState> {
     final List<Relationship> outgoing = await ref
         .read(relationshipRepositoryProvider)
         .getOutgoingRelationshipList();
-
-    incoming.addAll([
-      Relationship(
-        relationshipId: Int64(1021),
-        user: User(id: Int64(-1), email: '', name: '[TEST21]', tag: '7797'),
-        relationshipStatus: RelationshipStatus.RELATION_PENDING,
-      ),
-      Relationship(
-        relationshipId: Int64(1022),
-        user: User(id: Int64(-1), email: '', name: '[TEST22]', tag: '7798'),
-        relationshipStatus: RelationshipStatus.RELATION_PENDING,
-      ),
-    ]);
-
-    outgoing.addAll([
-      Relationship(
-        relationshipId: Int64(1023),
-        user: User(id: Int64(-1), email: '', name: '[TEST23]', tag: '7799'),
-        relationshipStatus: RelationshipStatus.RELATION_PENDING,
-      ),
-    ]);
 
     return RelationshipState(
       incomingRelationshipList: incoming,
