@@ -18,6 +18,14 @@
       ]
     },
     {
+      "name": "danmalgi_mobile (fake data)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=FAKE_DATA=true"
+      ]
+    },
+    {
       "name": "danmalgi_mobile (profile mode)",
       "request": "launch",
       "type": "dart",
