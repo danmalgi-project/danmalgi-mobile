@@ -1,9 +1,20 @@
+import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
+import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
+import 'package:danmalgi_mobile/core/theme/app_typography.dart';
+import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
 import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
 import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
+import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_list_tile.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/widgets/name_with_tag.dart';
+import 'package:danmalgi_mobile/features/user/domain/user.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,7 +46,11 @@ class FriendView extends ConsumerWidget {
         ]),
         child: const CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(),
-          slivers: [_FriendSection()],
+          slivers: [
+            SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s20)),
+            _ReceivedRequestSection(),
+            _FriendSection(),
+          ],
         ),
       ),
     );
@@ -50,27 +65,392 @@ class _FriendSection extends ConsumerWidget {
     final friends = ref.watch(friendViewModelProvider);
 
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.s16,
-        AppSpacing.s20,
-        AppSpacing.s16,
-        AppSpacing.s24,
+      padding: const EdgeInsets.only(
+        left: AppSpacing.s16,
+        right: AppSpacing.s16,
+        bottom: AppSpacing.s24,
       ),
       sliver: friends.when(
-        data: (state) => SliverList.builder(
-          itemCount: state.friendList.length,
-          itemBuilder: (context, index) =>
-              Text(state.friendList[index].user.name),
-        ),
-        loading: () => const SliverFillRemaining(
-          hasScrollBody: false,
-          child: Center(child: CircularProgressIndicator()),
-        ),
+        data: (state) => state.friendList.isEmpty
+            ? const SliverFillRemaining(
+                hasScrollBody: false,
+                child: _EmptyFriends(),
+              )
+            : SliverMainAxisGroup(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: _SectionHeader(
+                      title: '친구 목록',
+                      count: state.friendList.length,
+                    ),
+                  ),
+                  SliverList.builder(
+                    itemCount: state.friendList.length,
+                    itemBuilder: (context, index) {
+                      final friend = state.friendList[index];
+                      return FriendListTile(
+                        friend: friend,
+                        onTap: () => _openDirectMessage(context, ref, friend),
+                      );
+                    },
+                  ),
+                ],
+              ),
+        loading: () => _FriendListSkeleton(),
         error: (_, _) => const SliverFillRemaining(
           hasScrollBody: false,
           child: Center(child: Text('불러오지 못했습니다')),
         ),
       ),
     );
+  }
+
+  Future<void> _openDirectMessage(
+    BuildContext context,
+    WidgetRef ref,
+    Friend friend,
+  ) async {
+    final channel = await ref
+        .read(directMessageChannelListViewModelProvider.notifier)
+        .createDirectMessageChannel(friendIds: [friend.user.id]);
+
+    if (channel == null || !context.mounted) return;
+    context.push(RoutePaths.chat(channel.dmId));
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final int count;
+  final Widget? trailing;
+
+  const _SectionHeader({
+    required this.title,
+    required this.count,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: AppSpacing.s8,
+      children: [
+        Text(title, style: AppTypography.title),
+        Text(
+          '$count',
+          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+        ),
+        const Spacer(),
+        ?trailing,
+      ],
+    );
+  }
+}
+
+class _EmptyFriends extends StatelessWidget {
+  const _EmptyFriends();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('아직 친구가 없어요', style: AppTypography.titleSm),
+          const SizedBox(height: AppSpacing.s8),
+          Text(
+            '친구를 추가하고 대화를 시작해 보세요.',
+            style: AppTypography.caption.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppSpacing.s28),
+          ElevatedButton(
+            onPressed: () => context.push(RoutePaths.addFriend),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(220, 44),
+              padding: EdgeInsets.zero,
+              textStyle: AppTypography.body,
+            ),
+            child: const Text("친구 추가하기"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FriendListSkeleton extends StatefulWidget {
+  const _FriendListSkeleton();
+
+  @override
+  State<_FriendListSkeleton> createState() => __FriendListSkeletonState();
+}
+
+class __FriendListSkeletonState extends State<_FriendListSkeleton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..repeat(reverse: true);
+
+  late final Animation<double> _opacity = Tween(
+    begin: 0.4,
+    end: 1.0,
+  ).chain(CurveTween(curve: Curves.easeInOut)).animate(_controller);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final list = SliverList.builder(
+      itemCount: 8,
+      itemBuilder: (_, _) => const _FriendTileSkeleton(),
+    );
+
+    if (MediaQuery.disableAnimationsOf(context)) return list;
+    return SliverFadeTransition(opacity: _opacity, sliver: list);
+  }
+}
+
+class _FriendTileSkeleton extends StatelessWidget {
+  const _FriendTileSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(AppSpacing.s12),
+      child: Row(
+        spacing: AppSpacing.s12,
+        children: [
+          CircleAvatar(radius: 24, backgroundColor: AppColors.surfaceSecondary),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: AppSpacing.s8,
+            children: [
+              _SkeletonBar(width: 104, height: 14),
+              _SkeletonBar(width: 176, height: 12),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SkeletonBar extends StatelessWidget {
+  final double width;
+  final double height;
+
+  const _SkeletonBar({required this.width, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceSecondary,
+        borderRadius: AppRadius.brPill,
+      ),
+    );
+  }
+}
+
+class _RequestRow extends StatelessWidget {
+  final Relationship relationship;
+  final VoidCallback? onAccept;
+  final VoidCallback onMore;
+
+  const _RequestRow({
+    required this.relationship,
+    required this.onAccept,
+    required this.onMore,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final user = User.fromProto(relationship.user);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.s16,
+        vertical: AppSpacing.s16,
+      ),
+      child: Row(
+        spacing: AppSpacing.s12,
+        children: [
+          CachedCircleAvatar(radius: 24, url: user.imageUrl),
+          Expanded(child: NameWithTag(user: user)),
+          Row(
+            spacing: AppSpacing.s8,
+            children: [
+              ElevatedButton(
+                onPressed: onAccept,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(60, 36),
+                  padding: EdgeInsets.zero,
+                  textStyle: AppTypography.caption,
+                ),
+                child: const Text('수락'),
+              ),
+              Tooltip(
+                message: '더보기',
+                child: SizedBox.square(
+                  dimension: 44,
+                  child: Material(
+                    color: AppColors.surfaceSecondary,
+                    shape: const CircleBorder(),
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      onTap: onMore,
+                      child: const Center(
+                        child: AppIcon(AppIconType.more, size: 20),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReceivedRequestSection extends ConsumerStatefulWidget {
+  const _ReceivedRequestSection();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ReceivedRequestSectionState();
+}
+
+class _ReceivedRequestSectionState
+    extends ConsumerState<_ReceivedRequestSection> {
+  final _pending = <Int64>{};
+
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final requests = ref.watch(
+      relationshipViewModelProvider.select(
+        (s) => s.value?.incomingRelationshipList ?? const <Relationship>[],
+      ),
+    );
+
+    if (requests.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    const maxCollapsed = 3;
+    final canExpand = requests.length > maxCollapsed;
+    final visible = (_expanded || !canExpand)
+        ? requests
+        : requests.take(maxCollapsed);
+
+    return SliverPadding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.s16,
+        0,
+        AppSpacing.s16,
+        AppSpacing.s24,
+      ),
+      sliver: SliverToBoxAdapter(
+        child: Material(
+          color: AppColors.surfacePrimary,
+          borderRadius: AppRadius.brLg,
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: AppSpacing.s12,
+              bottom: AppSpacing.s4,
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.s16,
+                    vertical: AppSpacing.s6,
+                  ),
+                  child: _SectionHeader(
+                    title: '친구 요청',
+                    count: requests.length,
+                    trailing: canExpand
+                        ? InkWell(
+                            onTap: () => setState(() => _expanded = !_expanded),
+                            borderRadius: AppRadius.brSm,
+                            child: Padding(
+                              padding: const EdgeInsets.all(AppSpacing.s4),
+                              child: Text(
+                                _expanded ? '접기' : '모두 보기',
+                                style: AppTypography.caption.copyWith(
+                                  color: AppColors.accent,
+                                ),
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+                for (final r in visible)
+                  _RequestRow(
+                    relationship: r,
+                    onAccept: _pending.contains(r.relationshipId)
+                        ? null
+                        : () => _accept(r),
+                    onMore: () => _showMenu(r),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showMenu(Relationship r) {
+    showAppBottomSheet(
+      context: context,
+      child: ListTile(
+        leading: const AppIcon(AppIconType.close, color: AppColors.danger),
+        title: Text(
+          '요청 거절',
+          style: AppTypography.subhead.copyWith(color: AppColors.danger),
+        ),
+        onTap: () {
+          Navigator.of(context).pop();
+          _reject(r);
+        },
+      ),
+    );
+  }
+
+  Future<void> _accept(Relationship r) async {
+    setState(() => _pending.add(r.relationshipId));
+
+    await ref
+        .read(relationshipViewModelProvider.notifier)
+        .updateIncomingRelationshipStatus(relationship: r, isAccept: true);
+    ref.invalidate(friendViewModelProvider);
+
+    if (mounted) setState(() => _pending.remove(r.relationshipId));
+  }
+
+  Future<void> _reject(Relationship r) async {
+    setState(() => _pending.add(r.relationshipId));
+
+    await ref
+        .read(relationshipViewModelProvider.notifier)
+        .updateIncomingRelationshipStatus(relationship: r, isAccept: false);
+
+    if (mounted) setState(() => _pending.remove(r.relationshipId));
   }
 }
