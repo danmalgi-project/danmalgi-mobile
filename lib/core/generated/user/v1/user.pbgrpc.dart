@@ -58,6 +58,16 @@ class UserServiceClient extends $grpc.Client {
     return $createUnaryCall(_$uploadProfile, request, options: options);
   }
 
+  /// SearchUser looks up users by exact name+tag match.
+  /// 지금은 완전 일치라 결과가 0건 또는 1건이지만, 이름만으로 찾는 확장을 염두에 두고
+  /// 응답은 처음부터 list 로 둔다. 없으면 빈 list 다.
+  $grpc.ResponseFuture<$1.SearchUserResponse> searchUser(
+    $1.SearchUserRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$searchUser, request, options: options);
+  }
+
   // method descriptors
 
   static final _$getUserByToken =
@@ -75,6 +85,11 @@ class UserServiceClient extends $grpc.Client {
           '/user.v1.UserService/UploadProfile',
           ($1.UploadProfileRequest value) => value.writeToBuffer(),
           $1.UploadProfileResponse.fromBuffer);
+  static final _$searchUser =
+      $grpc.ClientMethod<$1.SearchUserRequest, $1.SearchUserResponse>(
+          '/user.v1.UserService/SearchUser',
+          ($1.SearchUserRequest value) => value.writeToBuffer(),
+          $1.SearchUserResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('user.v1.UserService')
@@ -106,6 +121,13 @@ abstract class UserServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $1.UploadProfileRequest.fromBuffer(value),
             ($1.UploadProfileResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SearchUserRequest, $1.SearchUserResponse>(
+        'SearchUser',
+        searchUser_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.SearchUserRequest.fromBuffer(value),
+        ($1.SearchUserResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$1.GetUserByTokenResponse> getUserByToken_Pre(
@@ -132,4 +154,12 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$1.UploadProfileResponse> uploadProfile(
       $grpc.ServiceCall call, $1.UploadProfileRequest request);
+
+  $async.Future<$1.SearchUserResponse> searchUser_Pre($grpc.ServiceCall $call,
+      $async.Future<$1.SearchUserRequest> $request) async {
+    return searchUser($call, await $request);
+  }
+
+  $async.Future<$1.SearchUserResponse> searchUser(
+      $grpc.ServiceCall call, $1.SearchUserRequest request);
 }

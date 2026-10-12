@@ -217,6 +217,14 @@ const Relationship$json = {
       '6': '.relationship.v1.RelationshipStatus',
       '10': 'relationshipStatus'
     },
+    {
+      '1': 'requested_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'requestedAt'
+    },
   ],
 };
 
@@ -225,4 +233,5 @@ final $typed_data.Uint8List relationshipDescriptor = $convert.base64Decode(
     'CgxSZWxhdGlvbnNoaXASJwoPcmVsYXRpb25zaGlwX2lkGAEgASgDUg5yZWxhdGlvbnNoaXBJZB'
     'IhCgR1c2VyGAIgASgLMg0udXNlci52MS5Vc2VyUgR1c2VyElQKE3JlbGF0aW9uc2hpcF9zdGF0'
     'dXMYAyABKA4yIy5yZWxhdGlvbnNoaXAudjEuUmVsYXRpb25zaGlwU3RhdHVzUhJyZWxhdGlvbn'
-    'NoaXBTdGF0dXM=');
+    'NoaXBTdGF0dXMSPQoMcmVxdWVzdGVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz'
+    'dGFtcFILcmVxdWVzdGVkQXQ=');

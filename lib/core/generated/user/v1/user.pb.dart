@@ -272,13 +272,219 @@ class UploadProfileResponse extends $pb.GeneratedMessage {
   User ensureUser() => $_ensure(0);
 }
 
+/// SearchUser
+class SearchUserRequest extends $pb.GeneratedMessage {
+  factory SearchUserRequest({
+    $core.String? name,
+    $core.String? tag,
+  }) {
+    final result = create();
+    if (name != null) result.name = name;
+    if (tag != null) result.tag = tag;
+    return result;
+  }
+
+  SearchUserRequest._();
+
+  factory SearchUserRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SearchUserRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SearchUserRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'user.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'tag')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SearchUserRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SearchUserRequest copyWith(void Function(SearchUserRequest) updates) =>
+      super.copyWith((message) => updates(message as SearchUserRequest))
+          as SearchUserRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SearchUserRequest create() => SearchUserRequest._();
+  @$core.override
+  SearchUserRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SearchUserRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SearchUserRequest>(create);
+  static SearchUserRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get tag => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set tag($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTag() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTag() => $_clearField(2);
+}
+
+class SearchUserResponse extends $pb.GeneratedMessage {
+  factory SearchUserResponse({
+    $core.Iterable<SearchedUser>? users,
+  }) {
+    final result = create();
+    if (users != null) result.users.addAll(users);
+    return result;
+  }
+
+  SearchUserResponse._();
+
+  factory SearchUserResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SearchUserResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SearchUserResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'user.v1'),
+      createEmptyInstance: create)
+    ..pPM<SearchedUser>(1, _omitFieldNames ? '' : 'users',
+        subBuilder: SearchedUser.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SearchUserResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SearchUserResponse copyWith(void Function(SearchUserResponse) updates) =>
+      super.copyWith((message) => updates(message as SearchUserResponse))
+          as SearchUserResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SearchUserResponse create() => SearchUserResponse._();
+  @$core.override
+  SearchUserResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SearchUserResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SearchUserResponse>(create);
+  static SearchUserResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<SearchedUser> get users => $_getList(0);
+}
+
+/// 타인에게 보여주는 공개 프로필. email 같은 개인정보를 담지 않으려고 User 와 분리했다.
+class SearchedUser extends $pb.GeneratedMessage {
+  factory SearchedUser({
+    $fixnum.Int64? id,
+    $core.String? name,
+    $core.String? tag,
+    $core.String? profileImageUrl,
+  }) {
+    final result = create();
+    if (id != null) result.id = id;
+    if (name != null) result.name = name;
+    if (tag != null) result.tag = tag;
+    if (profileImageUrl != null) result.profileImageUrl = profileImageUrl;
+    return result;
+  }
+
+  SearchedUser._();
+
+  factory SearchedUser.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SearchedUser.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SearchedUser',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'user.v1'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'id')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'tag')
+    ..aOS(4, _omitFieldNames ? '' : 'profileImageUrl')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SearchedUser clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SearchedUser copyWith(void Function(SearchedUser) updates) =>
+      super.copyWith((message) => updates(message as SearchedUser))
+          as SearchedUser;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SearchedUser create() => SearchedUser._();
+  @$core.override
+  SearchedUser createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static SearchedUser getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SearchedUser>(create);
+  static SearchedUser? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get id => $_getI64(0);
+  @$pb.TagNumber(1)
+  set id($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get tag => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set tag($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTag() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTag() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get profileImageUrl => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set profileImageUrl($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasProfileImageUrl() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearProfileImageUrl() => $_clearField(4);
+}
+
 class User extends $pb.GeneratedMessage {
   factory User({
     $fixnum.Int64? id,
     $core.String? email,
     $core.String? name,
     $core.String? tag,
-    OauthType? oauthType,
     UserStatus? status,
     $core.String? profileImageUrl,
   }) {
@@ -287,7 +493,6 @@ class User extends $pb.GeneratedMessage {
     if (email != null) result.email = email;
     if (name != null) result.name = name;
     if (tag != null) result.tag = tag;
-    if (oauthType != null) result.oauthType = oauthType;
     if (status != null) result.status = status;
     if (profileImageUrl != null) result.profileImageUrl = profileImageUrl;
     return result;
@@ -310,8 +515,6 @@ class User extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'email')
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'tag')
-    ..aE<OauthType>(5, _omitFieldNames ? '' : 'oauthType',
-        enumValues: OauthType.values)
     ..aE<UserStatus>(6, _omitFieldNames ? '' : 'status',
         enumValues: UserStatus.values)
     ..aOS(7, _omitFieldNames ? '' : 'profileImageUrl')
@@ -371,30 +574,21 @@ class User extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearTag() => $_clearField(4);
 
-  @$pb.TagNumber(5)
-  OauthType get oauthType => $_getN(4);
-  @$pb.TagNumber(5)
-  set oauthType(OauthType value) => $_setField(5, value);
-  @$pb.TagNumber(5)
-  $core.bool hasOauthType() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearOauthType() => $_clearField(5);
-
   @$pb.TagNumber(6)
-  UserStatus get status => $_getN(5);
+  UserStatus get status => $_getN(4);
   @$pb.TagNumber(6)
   set status(UserStatus value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasStatus() => $_has(5);
+  $core.bool hasStatus() => $_has(4);
   @$pb.TagNumber(6)
   void clearStatus() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get profileImageUrl => $_getSZ(6);
+  $core.String get profileImageUrl => $_getSZ(5);
   @$pb.TagNumber(7)
-  set profileImageUrl($core.String value) => $_setString(6, value);
+  set profileImageUrl($core.String value) => $_setString(5, value);
   @$pb.TagNumber(7)
-  $core.bool hasProfileImageUrl() => $_has(6);
+  $core.bool hasProfileImageUrl() => $_has(5);
   @$pb.TagNumber(7)
   void clearProfileImageUrl() => $_clearField(7);
 }

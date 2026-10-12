@@ -39,6 +39,7 @@ class UserStatus extends $pb.ProtobufEnum {
   const UserStatus._(super.value, super.name);
 }
 
+/// Used only by auth.v1.AuthorizationRequest.oauth_type.
 class OauthType extends $pb.ProtobufEnum {
   static const OauthType GOOGLE =
       OauthType._(0, _omitEnumNames ? '' : 'GOOGLE');

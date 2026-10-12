@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
+    as $3;
 
 import '../../user/v1/user.pb.dart' as $2;
 import 'relationship.pbenum.dart';
@@ -520,12 +522,14 @@ class Relationship extends $pb.GeneratedMessage {
     $fixnum.Int64? relationshipId,
     $2.User? user,
     RelationshipStatus? relationshipStatus,
+    $3.Timestamp? requestedAt,
   }) {
     final result = create();
     if (relationshipId != null) result.relationshipId = relationshipId;
     if (user != null) result.user = user;
     if (relationshipStatus != null)
       result.relationshipStatus = relationshipStatus;
+    if (requestedAt != null) result.requestedAt = requestedAt;
     return result;
   }
 
@@ -547,6 +551,8 @@ class Relationship extends $pb.GeneratedMessage {
     ..aOM<$2.User>(2, _omitFieldNames ? '' : 'user', subBuilder: $2.User.create)
     ..aE<RelationshipStatus>(3, _omitFieldNames ? '' : 'relationshipStatus',
         enumValues: RelationshipStatus.values)
+    ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'requestedAt',
+        subBuilder: $3.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -596,6 +602,17 @@ class Relationship extends $pb.GeneratedMessage {
   $core.bool hasRelationshipStatus() => $_has(2);
   @$pb.TagNumber(3)
   void clearRelationshipStatus() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $3.Timestamp get requestedAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set requestedAt($3.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRequestedAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRequestedAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $3.Timestamp ensureRequestedAt() => $_ensure(3);
 }
 
 const $core.bool _omitFieldNames =
