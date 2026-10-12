@@ -14,8 +14,10 @@ class AuthRepository {
     required String deviceId,
   }) async {
     final request = AuthorizationRequest(
-      idToken: credential.idToken,
       oauthType: credential.type.toProto(),
+      idToken: credential.idToken,
+      authorizationCode: credential.authorizationCode,
+      rawNonce: credential.rawNonce,
       deviceId: deviceId,
     );
 
