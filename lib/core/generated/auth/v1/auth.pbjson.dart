@@ -29,6 +29,14 @@ const AuthorizationRequest$json = {
       '6': '.user.v1.OauthType',
       '10': 'oauthType'
     },
+    {
+      '1': 'authorization_code',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '10': 'authorizationCode'
+    },
+    {'1': 'raw_nonce', '3': 5, '4': 1, '5': 9, '10': 'rawNonce'},
   ],
 };
 
@@ -36,7 +44,8 @@ const AuthorizationRequest$json = {
 final $typed_data.Uint8List authorizationRequestDescriptor = $convert.base64Decode(
     'ChRBdXRob3JpemF0aW9uUmVxdWVzdBIZCghpZF90b2tlbhgBIAEoCVIHaWRUb2tlbhIbCglkZX'
     'ZpY2VfaWQYAiABKAlSCGRldmljZUlkEjEKCm9hdXRoX3R5cGUYAyABKA4yEi51c2VyLnYxLk9h'
-    'dXRoVHlwZVIJb2F1dGhUeXBl');
+    'dXRoVHlwZVIJb2F1dGhUeXBlEi0KEmF1dGhvcml6YXRpb25fY29kZRgEIAEoCVIRYXV0aG9yaX'
+    'phdGlvbkNvZGUSGwoJcmF3X25vbmNlGAUgASgJUghyYXdOb25jZQ==');
 
 @$core.Deprecated('Use authorizationResponseDescriptor instead')
 const AuthorizationResponse$json = {

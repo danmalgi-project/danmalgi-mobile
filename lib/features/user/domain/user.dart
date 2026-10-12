@@ -1,7 +1,5 @@
 import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart' as pb;
-import 'package:danmalgi_mobile/features/user/data/extensions/oauth_type_mapper.dart';
 import 'package:danmalgi_mobile/features/user/data/extensions/user_status_mapper.dart';
-import 'package:danmalgi_mobile/features/user/domain/oauth_type.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_status.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -23,7 +21,6 @@ sealed class User with _$User {
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTum_J6gEMzt30wsdGbhC58x78n51GyV0wz0s0Qr51DOkluLSGcY7B0DIo&s=10",
     )
     String? imageUrl,
-    OAuthType? oauthType,
     UserStatus? status,
     DateTime? lastLoginTime,
   }) = _User;
@@ -35,7 +32,6 @@ sealed class User with _$User {
       name: proto.name,
       tag: proto.tag,
       imageUrl: proto.profileImageUrl,
-      oauthType: proto.oauthType.fromProto(),
       status: proto.status.fromProto(),
       lastLoginTime: null,
     );

@@ -24,11 +24,15 @@ class AuthorizationRequest extends $pb.GeneratedMessage {
     $core.String? idToken,
     $core.String? deviceId,
     $2.OauthType? oauthType,
+    $core.String? authorizationCode,
+    $core.String? rawNonce,
   }) {
     final result = create();
     if (idToken != null) result.idToken = idToken;
     if (deviceId != null) result.deviceId = deviceId;
     if (oauthType != null) result.oauthType = oauthType;
+    if (authorizationCode != null) result.authorizationCode = authorizationCode;
+    if (rawNonce != null) result.rawNonce = rawNonce;
     return result;
   }
 
@@ -49,6 +53,8 @@ class AuthorizationRequest extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'deviceId')
     ..aE<$2.OauthType>(3, _omitFieldNames ? '' : 'oauthType',
         enumValues: $2.OauthType.values)
+    ..aOS(4, _omitFieldNames ? '' : 'authorizationCode')
+    ..aOS(5, _omitFieldNames ? '' : 'rawNonce')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -96,6 +102,27 @@ class AuthorizationRequest extends $pb.GeneratedMessage {
   $core.bool hasOauthType() => $_has(2);
   @$pb.TagNumber(3)
   void clearOauthType() => $_clearField(3);
+
+  /// Apple only. Authorization code issued with the id_token. Leave empty for Google.
+  @$pb.TagNumber(4)
+  $core.String get authorizationCode => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set authorizationCode($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAuthorizationCode() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAuthorizationCode() => $_clearField(4);
+
+  /// Apple only. Original nonce before hashing; the client passes sha256(raw_nonce)
+  /// (lowercase hex) to Apple and sends this raw value here. Leave empty for Google.
+  @$pb.TagNumber(5)
+  $core.String get rawNonce => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set rawNonce($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRawNonce() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRawNonce() => $_clearField(5);
 }
 
 class AuthorizationResponse extends $pb.GeneratedMessage {

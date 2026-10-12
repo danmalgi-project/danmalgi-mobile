@@ -100,6 +100,57 @@ final $typed_data.Uint8List uploadProfileResponseDescriptor = $convert.base64Dec
     'ChVVcGxvYWRQcm9maWxlUmVzcG9uc2USIQoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlclIEdX'
     'Nlcg==');
 
+@$core.Deprecated('Use searchUserRequestDescriptor instead')
+const SearchUserRequest$json = {
+  '1': 'SearchUserRequest',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'tag', '3': 2, '4': 1, '5': 9, '10': 'tag'},
+  ],
+};
+
+/// Descriptor for `SearchUserRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List searchUserRequestDescriptor = $convert.base64Decode(
+    'ChFTZWFyY2hVc2VyUmVxdWVzdBISCgRuYW1lGAEgASgJUgRuYW1lEhAKA3RhZxgCIAEoCVIDdG'
+    'Fn');
+
+@$core.Deprecated('Use searchUserResponseDescriptor instead')
+const SearchUserResponse$json = {
+  '1': 'SearchUserResponse',
+  '2': [
+    {
+      '1': 'users',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.user.v1.SearchedUser',
+      '10': 'users'
+    },
+  ],
+};
+
+/// Descriptor for `SearchUserResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List searchUserResponseDescriptor = $convert.base64Decode(
+    'ChJTZWFyY2hVc2VyUmVzcG9uc2USKwoFdXNlcnMYASADKAsyFS51c2VyLnYxLlNlYXJjaGVkVX'
+    'NlclIFdXNlcnM=');
+
+@$core.Deprecated('Use searchedUserDescriptor instead')
+const SearchedUser$json = {
+  '1': 'SearchedUser',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 3, '10': 'id'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'tag', '3': 3, '4': 1, '5': 9, '10': 'tag'},
+    {'1': 'profile_image_url', '3': 4, '4': 1, '5': 9, '10': 'profileImageUrl'},
+  ],
+};
+
+/// Descriptor for `SearchedUser`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List searchedUserDescriptor = $convert.base64Decode(
+    'CgxTZWFyY2hlZFVzZXISDgoCaWQYASABKANSAmlkEhIKBG5hbWUYAiABKAlSBG5hbWUSEAoDdG'
+    'FnGAMgASgJUgN0YWcSKgoRcHJvZmlsZV9pbWFnZV91cmwYBCABKAlSD3Byb2ZpbGVJbWFnZVVy'
+    'bA==');
+
 @$core.Deprecated('Use userDescriptor instead')
 const User$json = {
   '1': 'User',
@@ -108,14 +159,6 @@ const User$json = {
     {'1': 'email', '3': 2, '4': 1, '5': 9, '10': 'email'},
     {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
     {'1': 'tag', '3': 4, '4': 1, '5': 9, '10': 'tag'},
-    {
-      '1': 'oauth_type',
-      '3': 5,
-      '4': 1,
-      '5': 14,
-      '6': '.user.v1.OauthType',
-      '10': 'oauthType'
-    },
     {
       '1': 'status',
       '3': 6,
@@ -126,11 +169,15 @@ const User$json = {
     },
     {'1': 'profile_image_url', '3': 7, '4': 1, '5': 9, '10': 'profileImageUrl'},
   ],
+  '9': [
+    {'1': 5, '2': 6},
+  ],
+  '10': ['oauth_type'],
 };
 
 /// Descriptor for `User`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userDescriptor = $convert.base64Decode(
     'CgRVc2VyEg4KAmlkGAEgASgDUgJpZBIUCgVlbWFpbBgCIAEoCVIFZW1haWwSEgoEbmFtZRgDIA'
-    'EoCVIEbmFtZRIQCgN0YWcYBCABKAlSA3RhZxIxCgpvYXV0aF90eXBlGAUgASgOMhIudXNlci52'
-    'MS5PYXV0aFR5cGVSCW9hdXRoVHlwZRIrCgZzdGF0dXMYBiABKA4yEy51c2VyLnYxLlVzZXJTdG'
-    'F0dXNSBnN0YXR1cxIqChFwcm9maWxlX2ltYWdlX3VybBgHIAEoCVIPcHJvZmlsZUltYWdlVXJs');
+    'EoCVIEbmFtZRIQCgN0YWcYBCABKAlSA3RhZxIrCgZzdGF0dXMYBiABKA4yEy51c2VyLnYxLlVz'
+    'ZXJTdGF0dXNSBnN0YXR1cxIqChFwcm9maWxlX2ltYWdlX3VybBgHIAEoCVIPcHJvZmlsZUltYW'
+    'dlVXJsSgQIBRAGUgpvYXV0aF90eXBl');
