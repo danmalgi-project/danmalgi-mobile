@@ -14,6 +14,7 @@ import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_section_header.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/widgets/name_with_tag.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class _FriendSection extends ConsumerWidget {
             : SliverMainAxisGroup(
                 slivers: [
                   SliverToBoxAdapter(
-                    child: _SectionHeader(
+                    child: FriendSectionHeader(
                       title: '친구 목록',
                       count: state.friendList.length,
                     ),
@@ -139,34 +140,6 @@ class _FriendSection extends ConsumerWidget {
 
     if (channel == null || !context.mounted) return;
     context.push(RoutePaths.chat(channel.dmId));
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  final int count;
-  final Widget? trailing;
-
-  const _SectionHeader({
-    required this.title,
-    required this.count,
-    this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: AppSpacing.s8,
-      children: [
-        Text(title, style: AppTypography.title),
-        Text(
-          '$count',
-          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-        ),
-        const Spacer(),
-        ?trailing,
-      ],
-    );
   }
 }
 
@@ -307,7 +280,7 @@ class _ReceivedRequestSectionState
                     horizontal: AppSpacing.s16,
                     vertical: AppSpacing.s6,
                   ),
-                  child: _SectionHeader(
+                  child: FriendSectionHeader(
                     title: '친구 요청',
                     count: requests.length,
                     trailing: canExpand

@@ -13,6 +13,7 @@ import 'package:danmalgi_mobile/features/friend/presentation/providers/add_frien
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_relation_provider.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_section_header.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/widgets/name_with_tag.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class _SearchResultSection extends ConsumerWidget {
           return SliverMainAxisGroup(
             slivers: [
               SliverToBoxAdapter(
-                child: _SectionHeader(title: '검색 결과', count: users.length),
+                child: FriendSectionHeader(title: '검색 결과', count: users.length),
               ),
               if (users.isEmpty)
                 const SliverFillRemaining(
@@ -136,27 +137,6 @@ String _errorMessage(Object e) {
     AppException(:final message) => message,
     _ => '잠시 후 다시 시도해주세요.',
   };
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  final int count;
-
-  const _SectionHeader({required this.title, required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: AppSpacing.s8,
-      children: [
-        Text(title, style: AppTypography.title),
-        Text(
-          '$count',
-          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-        ),
-      ],
-    );
-  }
 }
 
 class _RelationButton extends ConsumerStatefulWidget {
