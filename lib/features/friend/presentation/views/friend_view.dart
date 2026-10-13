@@ -5,6 +5,7 @@ import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
 import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
+import 'package:danmalgi_mobile/core/widgets/app_empty_state.dart';
 import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
 import 'package:danmalgi_mobile/core/widgets/app_list_item.dart';
 import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
@@ -71,9 +72,23 @@ class _FriendSection extends ConsumerWidget {
       ),
       sliver: friends.when(
         data: (state) => state.friendList.isEmpty
-            ? const SliverFillRemaining(
+            ? SliverFillRemaining(
                 hasScrollBody: false,
-                child: _EmptyFriends(),
+                child: AppEmptyState(
+                  title: '아직 친구가 없어요',
+                  message: '친구를 추가하고 대화를 시작해 보세요.',
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () => context.push(RoutePaths.addFriend),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(220, 44),
+                        padding: EdgeInsets.zero,
+                        textStyle: AppTypography.body,
+                      ),
+                      child: const Text("친구 추가하기"),
+                    ),
+                  ],
+                ),
               )
             : SliverMainAxisGroup(
                 slivers: [
@@ -106,7 +121,7 @@ class _FriendSection extends ConsumerWidget {
         loading: () => _FriendListSkeleton(),
         error: (_, _) => const SliverFillRemaining(
           hasScrollBody: false,
-          child: Center(child: Text('불러오지 못했습니다')),
+          child: AppEmptyState(title: '불러오지 못했어요', message: '잠시 후 다시 시도해주세요.'),
         ),
       ),
     );
@@ -150,40 +165,6 @@ class _SectionHeader extends StatelessWidget {
         const Spacer(),
         ?trailing,
       ],
-    );
-  }
-}
-
-class _EmptyFriends extends StatelessWidget {
-  const _EmptyFriends();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('아직 친구가 없어요', style: AppTypography.titleSm),
-          const SizedBox(height: AppSpacing.s8),
-          Text(
-            '친구를 추가하고 대화를 시작해 보세요.',
-            style: AppTypography.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.s28),
-          ElevatedButton(
-            onPressed: () => context.push(RoutePaths.addFriend),
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(220, 44),
-              padding: EdgeInsets.zero,
-              textStyle: AppTypography.body,
-            ),
-            child: const Text("친구 추가하기"),
-          ),
-        ],
-      ),
     );
   }
 }

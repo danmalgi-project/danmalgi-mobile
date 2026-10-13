@@ -1,7 +1,9 @@
+import 'package:danmalgi_mobile/core/error/app_exception.dart';
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
+import 'package:danmalgi_mobile/core/widgets/app_empty_state.dart';
 import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
 import 'package:danmalgi_mobile/core/widgets/app_list_item.dart';
 import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
@@ -16,25 +18,11 @@ import 'package:danmalgi_mobile/features/user/domain/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddFriendView extends ConsumerStatefulWidget {
+class AddFriendView extends ConsumerWidget {
   const AddFriendView({super.key});
 
   @override
-  ConsumerState<AddFriendView> createState() => _AddFriendViewState();
-}
-
-class _AddFriendViewState extends ConsumerState<AddFriendView> {
-  final TextEditingController friendTextFieldController =
-      TextEditingController();
-
-  @override
-  void dispose() {
-    friendTextFieldController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AppScaffold(
       title: '친구 추가',
       padded: true,
@@ -61,13 +49,12 @@ class _AddFriendViewState extends ConsumerState<AddFriendView> {
                   ),
                 ),
                 textInputAction: TextInputAction.search,
-                onSubmitted: (value) async => await ref
-                    .read(addFriendViewModelProvider.notifier)
-                    .search(value),
+                onSubmitted: (value) =>
+                    ref.read(addFriendViewModelProvider.notifier).search(value),
               ),
             ),
           ),
-          _SearchResultSection(),
+          const _SearchResultSection(),
         ],
       ),
     );
@@ -79,61 +66,76 @@ class _SearchResultSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final friends = ref.watch(addFriendViewModelProvider);
+    final results = ref.watch(addFriendViewModelProvider);
 
     return SliverPadding(
       padding: EdgeInsets.only(top: AppSpacing.s28),
-      sliver: friends.when(
-        data: (state) {
-          if (state == null) {
-            return SliverFillRemaining(
+      sliver: results.when(
+        data: (users) {
+          if (users == null) {
+            return const SliverFillRemaining(
               hasScrollBody: false,
-              child: _EmptyFriends(),
+              child: AppEmptyState(
+                title: '친구를 찾아보세요',
+                message: '닉네임과 태그를 함께 입력해주세요.\n예: 단말기#1111',
+              ),
             );
           }
 
           return SliverMainAxisGroup(
             slivers: [
               SliverToBoxAdapter(
-                child: _SectionHeader(title: '검색 결과', count: state.length),
+                child: _SectionHeader(title: '검색 결과', count: users.length),
               ),
-              (state.isEmpty)
-                  ? SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(child: Text('해당 유저를 찾을 수 없습니다')),
-                    )
-                  : SliverList.builder(
-                      itemCount: state.length,
-                      itemBuilder: (context, index) {
-                        final user = state[index];
-                        return AppListItem(
-                          leading: CachedCircleAvatar(
-                            url: user.imageUrl,
-                            radius: AppAvatarSize.md,
-                            seed: user.id,
-                          ),
-                          title: NameWithTag.stacked(
-                            name: user.name,
-                            tag: user.tag,
-                          ),
-                          trailing: _RelationButton(user: user),
-                        );
-                      },
-                    ),
+              if (users.isEmpty)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: AppEmptyState(
+                    title: '검색 결과가 없어요',
+                    message: '닉네임과 태그를 다시 확인해주세요.',
+                  ),
+                )
+              else
+                SliverList.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+                    return AppListItem(
+                      leading: CachedCircleAvatar(
+                        url: user.imageUrl,
+                        radius: AppAvatarSize.md,
+                        seed: user.id,
+                      ),
+                      title: NameWithTag.stacked(
+                        name: user.name,
+                        tag: user.tag,
+                      ),
+                      trailing: _RelationButton(user: user),
+                    );
+                  },
+                ),
             ],
           );
         },
         error: (e, _) => SliverFillRemaining(
           hasScrollBody: false,
-          child: Center(child: Text('에러')),
+          child: AppEmptyState(title: '검색하지 못했어요', message: _errorMessage(e)),
         ),
-        loading: () => SliverFillRemaining(
+        loading: () => const SliverFillRemaining(
           hasScrollBody: false,
-          child: const Center(child: CircularProgressIndicator()),
+          child: Center(child: CircularProgressIndicator()),
         ),
       ),
     );
   }
+}
+
+String _errorMessage(Object e) {
+  return switch (e) {
+    FormatException(:final message) => message,
+    AppException(:final message) => message,
+    _ => '잠시 후 다시 시도해주세요.',
+  };
 }
 
 class _SectionHeader extends StatelessWidget {
@@ -153,30 +155,6 @@ class _SectionHeader extends StatelessWidget {
           style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
         ),
       ],
-    );
-  }
-}
-
-class _EmptyFriends extends StatelessWidget {
-  const _EmptyFriends();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('친구를 찾아보세요', style: AppTypography.titleSm),
-          const SizedBox(height: AppSpacing.s8),
-          Text(
-            '닉네임과 태그를 함께 입력해주세요.\n예: 단말기#1111',
-            style: AppTypography.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
   }
 }
@@ -242,7 +220,7 @@ class _RelationButtonState extends ConsumerState<_RelationButton> {
         FriendRelationNone() || FriendRelationOutgoing() => _button(
           '요청됨',
           disabledBackgroundColor: AppColors.surfaceSecondary,
-          disabledForegroundColor: AppColors.surfaceInverse,
+          disabledForegroundColor: AppColors.textPrimary,
         ),
         FriendRelationIncoming(:final relationship) => _button(
           '수락',
