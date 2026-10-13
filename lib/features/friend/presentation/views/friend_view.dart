@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/extensions/date_time_extensions.dart';
 import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
@@ -334,6 +335,13 @@ class _ReceivedRequestSectionState
                       seed: r.user.id.toInt(),
                     ),
                     title: NameWithTag(name: r.user.name, tag: r.user.tag),
+                    subtitle: Text(
+                      '${r.requestedAt.toDateTime(toLocal: true).relativeLabel()} 요청',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Color(0xFF8E8E93),
+                      ),
+                    ),
                     trailing: Row(
                       spacing: AppSpacing.s8,
                       children: [

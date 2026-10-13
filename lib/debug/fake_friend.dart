@@ -12,6 +12,7 @@ import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_vi
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
 import 'package:danmalgi_mobile/features/user/domain/user_profile.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 pb.User _user(int id, String name) => pb.User(
@@ -27,6 +28,13 @@ final _incomingUsers = [
   _user(3, '한예린'),
   _user(4, '최유나'),
 ];
+const _incomingAges = [
+  Duration(minutes: 10), // 10분 전
+  Duration(hours: 1), // 1시간 전
+  Duration(days: 1), // 어제
+  Duration(days: 10), // 1주일 전
+];
+
 final _friendUsers = [
   for (final (i, name) in [
     '강민서',
@@ -58,12 +66,15 @@ final _fakeFriendStore = <Friend>[
       status: FriendStatus.ACCEPT,
     ),
 ];
-final _fakeRequestStore = <Relationship>[
+final _fakeIncomingStore = <Relationship>[
   for (final (i, u) in _incomingUsers.indexed)
     Relationship(
       relationshipId: Int64(-(i + 1)),
       user: u,
       relationshipStatus: RelationshipStatus.RELATION_PENDING,
+      requestedAt: Timestamp.fromDateTime(
+        DateTime.now().subtract(_incomingAges[i]),
+      ),
     ),
 ];
 final _fakeOutgoingStore = <Relationship>[
@@ -88,7 +99,7 @@ class FakeRelationshipViewModel extends RelationshipViewModel {
   Future<RelationshipState> build() async {
     await Future.delayed(const Duration(seconds: 1));
     return RelationshipState(
-      incomingRelationshipList: List.of(_fakeRequestStore),
+      incomingRelationshipList: List.of(_fakeIncomingStore),
       outgoingRelationshipList: List.of(_fakeOutgoingStore),
     );
   }
@@ -116,7 +127,7 @@ class FakeRelationshipViewModel extends RelationshipViewModel {
   }) async {
     await Future.delayed(const Duration(milliseconds: 500)); // 버튼 비활성 상태 확인
 
-    _fakeRequestStore.removeWhere(
+    _fakeIncomingStore.removeWhere(
       (r) => r.relationshipId == relationship.relationshipId,
     );
     if (isAccept) {
@@ -132,7 +143,7 @@ class FakeRelationshipViewModel extends RelationshipViewModel {
 
     state = AsyncData(
       state.requireValue.copyWith(
-        incomingRelationshipList: List.of(_fakeRequestStore),
+        incomingRelationshipList: List.of(_fakeIncomingStore),
       ),
     );
   }

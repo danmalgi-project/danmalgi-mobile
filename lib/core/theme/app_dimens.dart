@@ -10,6 +10,7 @@ abstract final class AppSpacing {
   static const s20 = 20.0;
   static const s24 = 24.0;
   static const s28 = 28.0;
+  static const s32 = 32.0;
   static const s36 = 36.0;
   static const s48 = 48.0;
 }
