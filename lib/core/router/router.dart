@@ -6,7 +6,7 @@ import 'package:danmalgi_mobile/core/session/app_auth_status_provider.dart';
 import 'package:danmalgi_mobile/core/widgets/splash_view.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/views/chat_view.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/views/direct_message_channel_list_view.dart';
-import 'package:danmalgi_mobile/features/friend/presentation/views/add_relationship_view.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/views/add_friend_view.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/views/friend_view.dart';
 import 'package:danmalgi_mobile/features/home/presentation/widgets/scaffold_with_nav_bar.dart';
 import 'package:danmalgi_mobile/features/onboarding/presentation/providers/onboarding_controller.dart';
@@ -56,7 +56,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RoutePaths.addFriend,
         name: RouteNames.addFriend,
-        builder: (context, state) => AddRelationshipView(),
+        builder: (context, state) => AddFriendView(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>

@@ -1,0 +1,256 @@
+import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
+import 'package:danmalgi_mobile/core/theme/app_colors.dart';
+import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
+import 'package:danmalgi_mobile/core/theme/app_typography.dart';
+import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
+import 'package:danmalgi_mobile/core/widgets/app_list_item.dart';
+import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
+import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
+import 'package:danmalgi_mobile/features/friend/domain/friend_relation.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/providers/add_friend_view_model.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_relation_provider.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/widgets/name_with_tag.dart';
+import 'package:danmalgi_mobile/features/user/domain/user_profile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class AddFriendView extends ConsumerStatefulWidget {
+  const AddFriendView({super.key});
+
+  @override
+  ConsumerState<AddFriendView> createState() => _AddFriendViewState();
+}
+
+class _AddFriendViewState extends ConsumerState<AddFriendView> {
+  final TextEditingController friendTextFieldController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    friendTextFieldController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      title: '친구 추가',
+      padded: true,
+      body: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.s12),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: '닉네임#태그 입력',
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(
+                      left: AppSpacing.s16,
+                      right: AppSpacing.s16,
+                    ),
+                    child: AppIcon(AppIconType.search, size: 24),
+                  ),
+                  fillColor: AppColors.surfaceSecondary,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.s24,
+                    vertical: AppSpacing.s12,
+                  ),
+                ),
+                textInputAction: TextInputAction.search,
+                onSubmitted: (value) async => await ref
+                    .read(addFriendViewModelProvider.notifier)
+                    .search(value),
+              ),
+            ),
+          ),
+          _SearchResultSection(),
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchResultSection extends ConsumerWidget {
+  const _SearchResultSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final friends = ref.watch(addFriendViewModelProvider);
+
+    return SliverPadding(
+      padding: EdgeInsets.only(top: AppSpacing.s28),
+      sliver: friends.when(
+        data: (state) {
+          if (state == null) {
+            return SliverFillRemaining(
+              hasScrollBody: false,
+              child: _EmptyFriends(),
+            );
+          }
+
+          return SliverMainAxisGroup(
+            slivers: [
+              SliverToBoxAdapter(
+                child: _SectionHeader(title: '검색 결과', count: state.length),
+              ),
+              (state.isEmpty)
+                  ? SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(child: Text('해당 유저를 찾을 수 없습니다')),
+                    )
+                  : SliverList.builder(
+                      itemCount: state.length,
+                      itemBuilder: (context, index) {
+                        final user = state[index];
+                        return AppListItem(
+                          leading: CachedCircleAvatar(
+                            url: user.imageUrl,
+                            radius: AppAvatarSize.md,
+                            seed: user.id,
+                          ),
+                          title: NameWithTag.stacked(
+                            name: user.name,
+                            tag: user.tag,
+                          ),
+                          trailing: _RelationButton(user: user),
+                        );
+                      },
+                    ),
+            ],
+          );
+        },
+        error: (e, _) => SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(child: Text('에러')),
+        ),
+        loading: () => SliverFillRemaining(
+          hasScrollBody: false,
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final int count;
+
+  const _SectionHeader({required this.title, required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: AppSpacing.s8,
+      children: [
+        Text(title, style: AppTypography.title),
+        Text(
+          '$count',
+          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyFriends extends StatelessWidget {
+  const _EmptyFriends();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('친구를 찾아보세요', style: AppTypography.titleSm),
+          const SizedBox(height: AppSpacing.s8),
+          Text(
+            '닉네임과 태그를 함께 입력해주세요.\n예: 단말기#1111',
+            style: AppTypography.caption.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RelationButton extends ConsumerStatefulWidget {
+  final UserProfile user;
+  const _RelationButton({required this.user});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _RelationButtonState();
+}
+
+class _RelationButtonState extends ConsumerState<_RelationButton> {
+  bool _sending = false;
+
+  Future<void> _add() async {
+    setState(() => _sending = true);
+
+    await ref
+        .read(relationshipViewModelProvider.notifier)
+        .addRelationship(name: widget.user.name, tag: widget.user.tag);
+    ref.invalidate(relationshipViewModelProvider);
+
+    if (mounted) setState(() => _sending = false);
+  }
+
+  Future<void> _accept(Relationship r) async {
+    setState(() => _sending = true);
+
+    await ref
+        .read(relationshipViewModelProvider.notifier)
+        .updateIncomingRelationshipStatus(relationship: r, isAccept: true);
+    ref.invalidate(friendViewModelProvider);
+
+    if (mounted) setState(() => _sending = false);
+  }
+
+  Widget _button(
+    String text, {
+    Color disabledBackgroundColor = AppColors.surfaceInput,
+    Color disabledForegroundColor = AppColors.textSecondary,
+    VoidCallback? onPressed,
+  }) => ElevatedButton(
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      minimumSize: const Size(104, 36),
+      padding: EdgeInsets.zero,
+      textStyle: AppTypography.caption,
+      disabledBackgroundColor: disabledBackgroundColor,
+      disabledForegroundColor: disabledForegroundColor,
+    ),
+    child: Text(text),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final relation = ref.watch(friendRelationProvider(widget.user.id));
+
+    return SizedBox(
+      width: 104,
+      child: switch (relation) {
+        FriendRelationNone() when !_sending => _button('추가', onPressed: _add),
+        FriendRelationNone() || FriendRelationOutgoing() => _button(
+          '요청됨',
+          disabledBackgroundColor: AppColors.surfaceSecondary,
+          disabledForegroundColor: AppColors.surfaceInverse,
+        ),
+        FriendRelationIncoming(:final relationship) => _button(
+          '수락',
+          onPressed: _sending ? null : () => _accept(relationship),
+        ),
+        FriendRelationFriend() => _button('친구'),
+        FriendRelationMe() => const SizedBox.shrink(),
+      },
+    );
+  }
+}

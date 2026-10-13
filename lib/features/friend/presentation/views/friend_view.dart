@@ -6,14 +6,13 @@ import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
 import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
 import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
+import 'package:danmalgi_mobile/core/widgets/app_list_item.dart';
 import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
-import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_list_tile.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/widgets/name_with_tag.dart';
-import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,8 +87,16 @@ class _FriendSection extends ConsumerWidget {
                     itemCount: state.friendList.length,
                     itemBuilder: (context, index) {
                       final friend = state.friendList[index];
-                      return FriendListTile(
-                        friend: friend,
+                      return AppListItem(
+                        leading: CachedCircleAvatar(
+                          url: friend.user.profileImageUrl,
+                          radius: AppAvatarSize.md,
+                          seed: friend.user.id.toInt(),
+                        ),
+                        title: NameWithTag(
+                          name: friend.user.name,
+                          tag: friend.user.tag,
+                        ),
                         onTap: () => _openDirectMessage(context, ref, friend),
                       );
                     },
@@ -262,68 +269,6 @@ class _SkeletonBar extends StatelessWidget {
   }
 }
 
-class _RequestRow extends StatelessWidget {
-  final Relationship relationship;
-  final VoidCallback? onAccept;
-  final VoidCallback onMore;
-
-  const _RequestRow({
-    required this.relationship,
-    required this.onAccept,
-    required this.onMore,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final user = User.fromProto(relationship.user);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.s16,
-        vertical: AppSpacing.s16,
-      ),
-      child: Row(
-        spacing: AppSpacing.s12,
-        children: [
-          CachedCircleAvatar(radius: 24, url: user.imageUrl),
-          Expanded(child: NameWithTag(user: user)),
-          Row(
-            spacing: AppSpacing.s8,
-            children: [
-              ElevatedButton(
-                onPressed: onAccept,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(60, 36),
-                  padding: EdgeInsets.zero,
-                  textStyle: AppTypography.caption,
-                ),
-                child: const Text('수락'),
-              ),
-              Tooltip(
-                message: '더보기',
-                child: SizedBox.square(
-                  dimension: 44,
-                  child: Material(
-                    color: AppColors.surfaceSecondary,
-                    shape: const CircleBorder(),
-                    clipBehavior: Clip.antiAlias,
-                    child: InkWell(
-                      onTap: onMore,
-                      child: const Center(
-                        child: AppIcon(AppIconType.more, size: 20),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _ReceivedRequestSection extends ConsumerStatefulWidget {
   const _ReceivedRequestSection();
 
@@ -401,12 +346,46 @@ class _ReceivedRequestSectionState
                   ),
                 ),
                 for (final r in visible)
-                  _RequestRow(
-                    relationship: r,
-                    onAccept: _pending.contains(r.relationshipId)
-                        ? null
-                        : () => _accept(r),
-                    onMore: () => _showMenu(r),
+                  AppListItem(
+                    leading: CachedCircleAvatar(
+                      url: r.user.profileImageUrl,
+                      radius: AppAvatarSize.md,
+                      seed: r.user.id.toInt(),
+                    ),
+                    title: NameWithTag(name: r.user.name, tag: r.user.tag),
+                    trailing: Row(
+                      spacing: AppSpacing.s8,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _pending.contains(r.relationshipId)
+                              ? null
+                              : () => _accept(r),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(60, 36),
+                            padding: EdgeInsets.zero,
+                            textStyle: AppTypography.caption,
+                          ),
+                          child: const Text('수락'),
+                        ),
+                        Tooltip(
+                          message: '더보기',
+                          child: SizedBox.square(
+                            dimension: 44,
+                            child: Material(
+                              color: AppColors.surfaceSecondary,
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => _showMenu(r),
+                                child: const Center(
+                                  child: AppIcon(AppIconType.more, size: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
               ],
             ),
