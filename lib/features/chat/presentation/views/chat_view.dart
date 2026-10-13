@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
+import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/widgets/message_tile.dart';
@@ -119,12 +120,13 @@ class ChatViewState extends ConsumerState<ChatView> {
                 if (channelState.isGroup)
                   CachedCircleAvatar(
                     url: channelState.channelImageUrl,
-                    radius: 16,
+                    radius: AppAvatarSize.sm,
                   )
                 else
                   CachedCircleAvatar(
                     url: otherUser?.profileImageUrl,
-                    radius: 16,
+                    radius: AppAvatarSize.sm,
+                    seed: otherUser?.id.toInt(),
                   ),
                 SizedBox(width: 8),
                 Text(

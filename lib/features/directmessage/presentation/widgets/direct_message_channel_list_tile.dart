@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
+import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
@@ -130,12 +131,16 @@ class DirectMessageChannelListTile extends ConsumerWidget {
 
               children: [
                 if (channel.isGroup)
-                  CachedCircleAvatar(radius: 22, url: channel.channelImageUrl)
+                  CachedCircleAvatar(
+                    radius: AppAvatarSize.md,
+                    url: channel.channelImageUrl,
+                  )
                 else if (channel.users.isNotEmpty)
                   CachedCircleAvatar(
-                    radius: 22,
+                    radius: AppAvatarSize.md,
                     backgroundColor: Colors.amber,
                     url: otherUser?.profileImageUrl,
+                    seed: otherUser?.id.toInt(),
                   )
                 else
                   // TODO: 삭제 예정 - 목업 데이터 예외처리용

@@ -30,6 +30,12 @@ abstract final class AppRadius {
   static const brPill = BorderRadius.all(Radius.circular(pill));
 }
 
+abstract final class AppAvatarSize {
+  static const sm = 16.0; // 채팅방
+  static const md = 24.0; // 목록
+  static const lg = 55.0; // 프로필
+}
+
 abstract final class AppStroke {
   static const divider = 1.0; // 구분선, 비활성 입력 필드
   static const ring = 1.5; // 아바타 링, 체크박스, 활성 입력 필드

@@ -117,6 +117,8 @@ flutter:
 
     - assets/images/Login/shape1.png
     - assets/images/Login/shape2.png
+
+    - assets/avatars/
     
     - assets/Icons/Google.svg
     - assets/Icons/Apple.svg

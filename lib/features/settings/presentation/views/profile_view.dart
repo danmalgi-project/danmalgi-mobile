@@ -43,7 +43,11 @@ class ProfileView extends ConsumerWidget {
                   GestureDetector(
                     child: Stack(
                       children: [
-                        CachedCircleAvatar(url: user.imageUrl, radius: 55.0),
+                        CachedCircleAvatar(
+                          url: user.imageUrl,
+                          radius: AppAvatarSize.lg,
+                          seed: user.id,
+                        ),
                         Positioned(
                           bottom: 0,
                           right: 0,
