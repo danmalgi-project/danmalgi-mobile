@@ -29,11 +29,14 @@ class AddFriendView extends ConsumerWidget {
       padded: true,
       body: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(top: AppSpacing.s12),
               child: TextField(
+                autocorrect: false,
+                enableSuggestions: false,
                 decoration: InputDecoration(
                   hintText: '닉네임#태그 입력',
                   prefixIcon: const Padding(
