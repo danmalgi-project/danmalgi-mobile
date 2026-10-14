@@ -121,9 +121,18 @@ class _FriendSection extends ConsumerWidget {
                 ],
               ),
         loading: () => _FriendListSkeleton(),
-        error: (_, _) => const SliverFillRemaining(
+        error: (_, _) => SliverFillRemaining(
           hasScrollBody: false,
-          child: AppEmptyState(title: '불러오지 못했어요', message: '잠시 후 다시 시도해주세요.'),
+          child: AppEmptyState(
+            title: '불러오지 못했어요',
+            message: '잠시 후 다시 시도해주세요.',
+            actions: [
+              TextButton(
+                onPressed: () => ref.invalidate(friendViewModelProvider),
+                child: const Text('다시 시도'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -308,13 +317,15 @@ class _ReceivedRequestSectionState
                       seed: r.user.id.toInt(),
                     ),
                     title: NameWithTag(name: r.user.name, tag: r.user.tag),
-                    subtitle: Text(
-                      '${r.requestedAt.toDateTime(toLocal: true).relativeLabel()} 요청',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: Color(0xFF8E8E93),
-                      ),
-                    ),
+                    subtitle: r.hasRequestedAt()
+                        ? Text(
+                            '${r.requestedAt.toDateTime(toLocal: true).relativeLabel()} 요청',
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Color(0xFF8E8E93),
+                            ),
+                          )
+                        : null,
                     trailing: Row(
                       spacing: AppSpacing.s8,
                       children: [
