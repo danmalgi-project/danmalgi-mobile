@@ -36,6 +36,7 @@ class VoiceParticipantTile extends StatelessWidget {
                     url: user.imageUrl,
                     radius: unit * _avatarRatio,
                     backgroundColor: Colors.transparent,
+                    seed: user.id,
                   ),
                   if (isMuted)
                     Positioned(

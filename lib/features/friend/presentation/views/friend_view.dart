@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/extensions/date_time_extensions.dart';
 import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/router/route_paths.dart';
@@ -5,15 +6,16 @@ import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
 import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
+import 'package:danmalgi_mobile/core/widgets/app_empty_state.dart';
 import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
+import 'package:danmalgi_mobile/core/widgets/app_list_item.dart';
 import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/relationship_view_model.dart';
-import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_list_tile.dart';
+import 'package:danmalgi_mobile/features/friend/presentation/widgets/friend_section_header.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/widgets/name_with_tag.dart';
-import 'package:danmalgi_mobile/features/user/domain/user.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,14 +74,28 @@ class _FriendSection extends ConsumerWidget {
       ),
       sliver: friends.when(
         data: (state) => state.friendList.isEmpty
-            ? const SliverFillRemaining(
+            ? SliverFillRemaining(
                 hasScrollBody: false,
-                child: _EmptyFriends(),
+                child: AppEmptyState(
+                  title: '아직 친구가 없어요',
+                  message: '친구를 추가하고 대화를 시작해 보세요.',
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () => context.push(RoutePaths.addFriend),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(220, 44),
+                        padding: EdgeInsets.zero,
+                        textStyle: AppTypography.body,
+                      ),
+                      child: const Text("친구 추가하기"),
+                    ),
+                  ],
+                ),
               )
             : SliverMainAxisGroup(
                 slivers: [
                   SliverToBoxAdapter(
-                    child: _SectionHeader(
+                    child: FriendSectionHeader(
                       title: '친구 목록',
                       count: state.friendList.length,
                     ),
@@ -88,8 +104,16 @@ class _FriendSection extends ConsumerWidget {
                     itemCount: state.friendList.length,
                     itemBuilder: (context, index) {
                       final friend = state.friendList[index];
-                      return FriendListTile(
-                        friend: friend,
+                      return AppListItem(
+                        leading: CachedCircleAvatar(
+                          url: friend.user.profileImageUrl,
+                          radius: AppAvatarSize.md,
+                          seed: friend.user.id.toInt(),
+                        ),
+                        title: NameWithTag(
+                          name: friend.user.name,
+                          tag: friend.user.tag,
+                        ),
                         onTap: () => _openDirectMessage(context, ref, friend),
                       );
                     },
@@ -97,9 +121,18 @@ class _FriendSection extends ConsumerWidget {
                 ],
               ),
         loading: () => _FriendListSkeleton(),
-        error: (_, _) => const SliverFillRemaining(
+        error: (_, _) => SliverFillRemaining(
           hasScrollBody: false,
-          child: Center(child: Text('불러오지 못했습니다')),
+          child: AppEmptyState(
+            title: '불러오지 못했어요',
+            message: '잠시 후 다시 시도해주세요.',
+            actions: [
+              TextButton(
+                onPressed: () => ref.invalidate(friendViewModelProvider),
+                child: const Text('다시 시도'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -116,68 +149,6 @@ class _FriendSection extends ConsumerWidget {
 
     if (channel == null || !context.mounted) return;
     context.push(RoutePaths.chat(channel.dmId));
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  final int count;
-  final Widget? trailing;
-
-  const _SectionHeader({
-    required this.title,
-    required this.count,
-    this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: AppSpacing.s8,
-      children: [
-        Text(title, style: AppTypography.title),
-        Text(
-          '$count',
-          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-        ),
-        const Spacer(),
-        ?trailing,
-      ],
-    );
-  }
-}
-
-class _EmptyFriends extends StatelessWidget {
-  const _EmptyFriends();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('아직 친구가 없어요', style: AppTypography.titleSm),
-          const SizedBox(height: AppSpacing.s8),
-          Text(
-            '친구를 추가하고 대화를 시작해 보세요.',
-            style: AppTypography.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.s28),
-          ElevatedButton(
-            onPressed: () => context.push(RoutePaths.addFriend),
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(220, 44),
-              padding: EdgeInsets.zero,
-              textStyle: AppTypography.body,
-            ),
-            child: const Text("친구 추가하기"),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -262,68 +233,6 @@ class _SkeletonBar extends StatelessWidget {
   }
 }
 
-class _RequestRow extends StatelessWidget {
-  final Relationship relationship;
-  final VoidCallback? onAccept;
-  final VoidCallback onMore;
-
-  const _RequestRow({
-    required this.relationship,
-    required this.onAccept,
-    required this.onMore,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final user = User.fromProto(relationship.user);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.s16,
-        vertical: AppSpacing.s16,
-      ),
-      child: Row(
-        spacing: AppSpacing.s12,
-        children: [
-          CachedCircleAvatar(radius: 24, url: user.imageUrl),
-          Expanded(child: NameWithTag(user: user)),
-          Row(
-            spacing: AppSpacing.s8,
-            children: [
-              ElevatedButton(
-                onPressed: onAccept,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(60, 36),
-                  padding: EdgeInsets.zero,
-                  textStyle: AppTypography.caption,
-                ),
-                child: const Text('수락'),
-              ),
-              Tooltip(
-                message: '더보기',
-                child: SizedBox.square(
-                  dimension: 44,
-                  child: Material(
-                    color: AppColors.surfaceSecondary,
-                    shape: const CircleBorder(),
-                    clipBehavior: Clip.antiAlias,
-                    child: InkWell(
-                      onTap: onMore,
-                      child: const Center(
-                        child: AppIcon(AppIconType.more, size: 20),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _ReceivedRequestSection extends ConsumerStatefulWidget {
   const _ReceivedRequestSection();
 
@@ -380,7 +289,7 @@ class _ReceivedRequestSectionState
                     horizontal: AppSpacing.s16,
                     vertical: AppSpacing.s6,
                   ),
-                  child: _SectionHeader(
+                  child: FriendSectionHeader(
                     title: '친구 요청',
                     count: requests.length,
                     trailing: canExpand
@@ -401,12 +310,54 @@ class _ReceivedRequestSectionState
                   ),
                 ),
                 for (final r in visible)
-                  _RequestRow(
-                    relationship: r,
-                    onAccept: _pending.contains(r.relationshipId)
-                        ? null
-                        : () => _accept(r),
-                    onMore: () => _showMenu(r),
+                  AppListItem(
+                    leading: CachedCircleAvatar(
+                      url: r.user.profileImageUrl,
+                      radius: AppAvatarSize.md,
+                      seed: r.user.id.toInt(),
+                    ),
+                    title: NameWithTag(name: r.user.name, tag: r.user.tag),
+                    subtitle: r.hasRequestedAt()
+                        ? Text(
+                            '${r.requestedAt.toDateTime(toLocal: true).relativeLabel()} 요청',
+                            style: AppTypography.caption.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          )
+                        : null,
+                    trailing: Row(
+                      spacing: AppSpacing.s8,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _pending.contains(r.relationshipId)
+                              ? null
+                              : () => _accept(r),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(60, 36),
+                            padding: EdgeInsets.zero,
+                            textStyle: AppTypography.caption,
+                          ),
+                          child: const Text('수락'),
+                        ),
+                        Tooltip(
+                          message: '더보기',
+                          child: SizedBox.square(
+                            dimension: 44,
+                            child: Material(
+                              color: AppColors.surfaceSecondary,
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => _showMenu(r),
+                                child: const Center(
+                                  child: AppIcon(AppIconType.more, size: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
               ],
             ),

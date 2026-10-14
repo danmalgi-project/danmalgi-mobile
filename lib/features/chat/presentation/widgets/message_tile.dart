@@ -1,3 +1,4 @@
+import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
 import 'package:fixnum/fixnum.dart';
@@ -116,7 +117,8 @@ class MessageTile extends ConsumerWidget {
           CachedCircleAvatar(
             url: message.user.imageUrl,
             backgroundColor: Colors.amber,
-            radius: 16,
+            radius: AppAvatarSize.sm,
+            seed: message.user.id,
           ),
           SizedBox(width: 8),
         ] else

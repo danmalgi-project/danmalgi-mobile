@@ -16,6 +16,7 @@ class VoicePipBubble extends ConsumerWidget {
           url: currentUser?.imageUrl,
           radius: 36.0,
           backgroundColor: Colors.transparent,
+          seed: currentUser?.id,
         ),
       ),
     );

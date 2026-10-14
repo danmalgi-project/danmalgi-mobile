@@ -10,6 +10,7 @@ abstract final class AppSpacing {
   static const s20 = 20.0;
   static const s24 = 24.0;
   static const s28 = 28.0;
+  static const s32 = 32.0;
   static const s36 = 36.0;
   static const s48 = 48.0;
 }
@@ -28,6 +29,12 @@ abstract final class AppRadius {
   static const brMd = BorderRadius.all(Radius.circular(md));
   static const brLg = BorderRadius.all(Radius.circular(lg));
   static const brPill = BorderRadius.all(Radius.circular(pill));
+}
+
+abstract final class AppAvatarSize {
+  static const sm = 16.0; // 채팅방
+  static const md = 24.0; // 목록
+  static const lg = 55.0; // 프로필
 }
 
 abstract final class AppStroke {
