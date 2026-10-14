@@ -22,7 +22,8 @@ class AddFriendViewModel extends _$AddFriendViewModel {
   }
 
   (String, String) parseNameTag(String input) {
-    final i = input.trim().lastIndexOf('#');
+    final s = input.trim();
+    final i = s.lastIndexOf('#');
     final name = i < 0 ? '' : input.substring(0, i).trim();
     final tag = i < 0 ? '' : input.substring(i + 1).trim();
     if (name.isEmpty || tag.isEmpty) {
