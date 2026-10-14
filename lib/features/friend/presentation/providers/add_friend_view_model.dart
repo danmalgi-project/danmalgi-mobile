@@ -24,8 +24,8 @@ class AddFriendViewModel extends _$AddFriendViewModel {
   (String, String) parseNameTag(String input) {
     final s = input.trim();
     final i = s.lastIndexOf('#');
-    final name = i < 0 ? '' : input.substring(0, i).trim();
-    final tag = i < 0 ? '' : input.substring(i + 1).trim();
+    final name = i < 0 ? '' : s.substring(0, i).trim();
+    final tag = i < 0 ? '' : s.substring(i + 1).trim();
     if (name.isEmpty || tag.isEmpty) {
       throw const FormatException('이름#태그 형식으로 입력해주세요.');
     }

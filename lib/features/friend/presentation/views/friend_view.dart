@@ -320,9 +320,8 @@ class _ReceivedRequestSectionState
                     subtitle: r.hasRequestedAt()
                         ? Text(
                             '${r.requestedAt.toDateTime(toLocal: true).relativeLabel()} 요청',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              color: Color(0xFF8E8E93),
+                            style: AppTypography.caption.copyWith(
+                              color: AppColors.textSecondary,
                             ),
                           )
                         : null,
