@@ -81,7 +81,6 @@ dependencies:
   async: ^2.13.1
   collection: ^1.19.1
   intl: ^0.20.3
-  timeago: ^3.7.1
   uuid: ^4.5.3
   crypto: ^3.0.7
 
@@ -116,22 +115,9 @@ flutter:
   assets:
     - .env
 
-    - assets/images/Login/shape1.png
-    - assets/images/Login/shape2.png
-
+    - assets/images/Login/
     - assets/avatars/
-    
-    - assets/Icons/Google.svg
-    - assets/Icons/Apple.svg
-    - assets/Icons/Icon-home.svg
-    - assets/Icons/Icon-message.svg
-    - assets/Icons/Icon-search.svg
-    - assets/Icons/Icon-server.svg
-    - assets/Icons/Icon-user.svg
-    - assets/Icons/Icon-call_end.svg
-    - assets/Icons/Icon-phone.svg
-    - assets/Icons/Icon-video.svg
-    - assets/Icons/Icon-left.svg
+    - assets/Icons/
 
   fonts:
     - family: Pretendard
