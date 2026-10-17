@@ -5,7 +5,6 @@ import 'package:danmalgi_mobile/core/generated/friend/v1/friend.pb.dart';
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pbgrpc.dart';
 import 'package:danmalgi_mobile/core/generated/user/v1/user.pb.dart' as pb;
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
-import 'package:danmalgi_mobile/features/friend/domain/friend_state.dart';
 import 'package:danmalgi_mobile/features/friend/domain/relationship_state.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/add_friend_view_model.dart';
 import 'package:danmalgi_mobile/features/friend/presentation/providers/friend_view_model.dart';
@@ -88,9 +87,9 @@ final _fakeOutgoingStore = <Relationship>[
 
 class FakeFriendViewModel extends FriendViewModel {
   @override
-  Future<FriendState> build() async {
+  Future<List<Friend>> build() async {
     await Future.delayed(const Duration(seconds: 1));
-    return FriendState(friendList: List.of(_fakeFriendStore));
+    return List.of(_fakeFriendStore);
   }
 }
 

@@ -5,10 +5,10 @@ import 'package:danmalgi_mobile/core/router/route_paths.dart';
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
-import 'package:danmalgi_mobile/core/widgets/app_bottom_sheet.dart';
 import 'package:danmalgi_mobile/core/widgets/app_empty_state.dart';
 import 'package:danmalgi_mobile/core/widgets/app_icon.dart';
 import 'package:danmalgi_mobile/core/widgets/app_list_item.dart';
+import 'package:danmalgi_mobile/core/widgets/app_list_skeleton.dart';
 import 'package:danmalgi_mobile/core/widgets/app_scaffold.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
@@ -73,7 +73,7 @@ class _FriendSection extends ConsumerWidget {
         bottom: AppSpacing.s24,
       ),
       sliver: friends.when(
-        data: (state) => state.friendList.isEmpty
+        data: (state) => state.isEmpty
             ? SliverFillRemaining(
                 hasScrollBody: false,
                 child: AppEmptyState(
@@ -97,13 +97,13 @@ class _FriendSection extends ConsumerWidget {
                   SliverToBoxAdapter(
                     child: FriendSectionHeader(
                       title: '친구 목록',
-                      count: state.friendList.length,
+                      count: state.length,
                     ),
                   ),
                   SliverList.builder(
-                    itemCount: state.friendList.length,
+                    itemCount: state.length,
                     itemBuilder: (context, index) {
-                      final friend = state.friendList[index];
+                      final friend = state[index];
                       return AppListItem(
                         leading: CachedCircleAvatar(
                           url: friend.user.profileImageUrl,
@@ -120,7 +120,7 @@ class _FriendSection extends ConsumerWidget {
                   ),
                 ],
               ),
-        loading: () => _FriendListSkeleton(),
+        loading: () => const AppListSkeleton(),
         error: (_, _) => SliverFillRemaining(
           hasScrollBody: false,
           child: AppEmptyState(
@@ -149,87 +149,6 @@ class _FriendSection extends ConsumerWidget {
 
     if (channel == null || !context.mounted) return;
     context.push(RoutePaths.chat(channel.dmId));
-  }
-}
-
-class _FriendListSkeleton extends StatefulWidget {
-  const _FriendListSkeleton();
-
-  @override
-  State<_FriendListSkeleton> createState() => __FriendListSkeletonState();
-}
-
-class __FriendListSkeletonState extends State<_FriendListSkeleton>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 900),
-  )..repeat(reverse: true);
-
-  late final Animation<double> _opacity = Tween(
-    begin: 0.4,
-    end: 1.0,
-  ).chain(CurveTween(curve: Curves.easeInOut)).animate(_controller);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final list = SliverList.builder(
-      itemCount: 8,
-      itemBuilder: (_, _) => const _FriendTileSkeleton(),
-    );
-
-    if (MediaQuery.disableAnimationsOf(context)) return list;
-    return SliverFadeTransition(opacity: _opacity, sliver: list);
-  }
-}
-
-class _FriendTileSkeleton extends StatelessWidget {
-  const _FriendTileSkeleton();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(AppSpacing.s12),
-      child: Row(
-        spacing: AppSpacing.s12,
-        children: [
-          CircleAvatar(radius: 24, backgroundColor: AppColors.surfaceSecondary),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: AppSpacing.s8,
-            children: [
-              _SkeletonBar(width: 104, height: 14),
-              _SkeletonBar(width: 176, height: 12),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SkeletonBar extends StatelessWidget {
-  final double width;
-  final double height;
-
-  const _SkeletonBar({required this.width, required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: const BoxDecoration(
-        color: AppColors.surfaceSecondary,
-        borderRadius: AppRadius.brPill,
-      ),
-    );
   }
 }
 
@@ -339,22 +258,16 @@ class _ReceivedRequestSectionState
                           ),
                           child: const Text('수락'),
                         ),
-                        Tooltip(
-                          message: '더보기',
-                          child: SizedBox.square(
-                            dimension: 44,
-                            child: Material(
-                              color: AppColors.surfaceSecondary,
-                              shape: const CircleBorder(),
-                              clipBehavior: Clip.antiAlias,
-                              child: InkWell(
-                                onTap: () => _showMenu(r),
-                                child: const Center(
-                                  child: AppIcon(AppIconType.more, size: 20),
-                                ),
-                              ),
-                            ),
+                        ElevatedButton(
+                          onPressed: _pending.contains(r.relationshipId)
+                              ? null
+                              : () => _reject(r),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(60, 36),
+                            padding: EdgeInsets.zero,
+                            textStyle: AppTypography.caption,
                           ),
+                          child: const Text('거절'),
                         ),
                       ],
                     ),
@@ -363,23 +276,6 @@ class _ReceivedRequestSectionState
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _showMenu(Relationship r) {
-    showAppBottomSheet(
-      context: context,
-      child: ListTile(
-        leading: const AppIcon(AppIconType.close, color: AppColors.danger),
-        title: Text(
-          '요청 거절',
-          style: AppTypography.subhead.copyWith(color: AppColors.danger),
-        ),
-        onTap: () {
-          Navigator.of(context).pop();
-          _reject(r);
-        },
       ),
     );
   }
