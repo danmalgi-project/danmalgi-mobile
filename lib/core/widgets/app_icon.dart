@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AppIconType { addFriend, search, more, close }
+enum AppIconType { addFriend, add, search, more, close }
 
 class AppIcon extends StatelessWidget {
   const AppIcon(this.type, {super.key, this.size, this.color});
@@ -15,6 +15,7 @@ class AppIcon extends StatelessWidget {
 
   static IconData _iconOf(AppIconType type) => switch (type) {
     AppIconType.addFriend => Icons.person_add_alt_1_outlined,
+    AppIconType.add => Icons.add_rounded,
     AppIconType.search => Icons.search_rounded,
     AppIconType.more => Icons.more_horiz_rounded,
     AppIconType.close => Icons.close_rounded,

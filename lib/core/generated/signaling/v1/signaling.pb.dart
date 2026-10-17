@@ -12,14 +12,139 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
+    as $1;
 
-import '../../user/v1/user.pb.dart' as $1;
+import '../../user/v1/user.pb.dart' as $2;
 import 'signaling.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'signaling.pbenum.dart';
+
+/// 채널 통화방 시작 시각 조회 요청
+class GetChannelCallStartedAtRequest extends $pb.GeneratedMessage {
+  factory GetChannelCallStartedAtRequest({
+    $fixnum.Int64? channelId,
+  }) {
+    final result = create();
+    if (channelId != null) result.channelId = channelId;
+    return result;
+  }
+
+  GetChannelCallStartedAtRequest._();
+
+  factory GetChannelCallStartedAtRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetChannelCallStartedAtRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetChannelCallStartedAtRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'signaling.v1'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'channelId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetChannelCallStartedAtRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetChannelCallStartedAtRequest copyWith(
+          void Function(GetChannelCallStartedAtRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as GetChannelCallStartedAtRequest))
+          as GetChannelCallStartedAtRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetChannelCallStartedAtRequest create() =>
+      GetChannelCallStartedAtRequest._();
+  @$core.override
+  GetChannelCallStartedAtRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetChannelCallStartedAtRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetChannelCallStartedAtRequest>(create);
+  static GetChannelCallStartedAtRequest? _defaultInstance;
+
+  /// 채널 ID
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get channelId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set channelId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasChannelId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearChannelId() => $_clearField(1);
+}
+
+/// 채널 통화방 시작 시각 조회 응답
+class GetChannelCallStartedAtResponse extends $pb.GeneratedMessage {
+  factory GetChannelCallStartedAtResponse({
+    $1.Timestamp? startedAt,
+  }) {
+    final result = create();
+    if (startedAt != null) result.startedAt = startedAt;
+    return result;
+  }
+
+  GetChannelCallStartedAtResponse._();
+
+  factory GetChannelCallStartedAtResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetChannelCallStartedAtResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetChannelCallStartedAtResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'signaling.v1'),
+      createEmptyInstance: create)
+    ..aOM<$1.Timestamp>(1, _omitFieldNames ? '' : 'startedAt',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetChannelCallStartedAtResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetChannelCallStartedAtResponse copyWith(
+          void Function(GetChannelCallStartedAtResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as GetChannelCallStartedAtResponse))
+          as GetChannelCallStartedAtResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetChannelCallStartedAtResponse create() =>
+      GetChannelCallStartedAtResponse._();
+  @$core.override
+  GetChannelCallStartedAtResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetChannelCallStartedAtResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetChannelCallStartedAtResponse>(
+          create);
+  static GetChannelCallStartedAtResponse? _defaultInstance;
+
+  /// 통화 시작 시각. 통화 중이 아니면(참가자 0명) 값이 없습니다.
+  @$pb.TagNumber(1)
+  $1.Timestamp get startedAt => $_getN(0);
+  @$pb.TagNumber(1)
+  set startedAt($1.Timestamp value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStartedAt() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStartedAt() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.Timestamp ensureStartedAt() => $_ensure(0);
+}
 
 /// 시그널링 요청
 /// Signaling
@@ -670,7 +795,7 @@ class UserTracks extends $pb.GeneratedMessage {
 /// 사용자 트랙 정보
 class UserTrack extends $pb.GeneratedMessage {
   factory UserTrack({
-    $1.User? user,
+    $2.User? user,
     $core.String? trackId,
     TrackType? trackType,
   }) {
@@ -694,7 +819,7 @@ class UserTrack extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UserTrack',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'signaling.v1'),
       createEmptyInstance: create)
-    ..aOM<$1.User>(1, _omitFieldNames ? '' : 'user', subBuilder: $1.User.create)
+    ..aOM<$2.User>(1, _omitFieldNames ? '' : 'user', subBuilder: $2.User.create)
     ..aOS(2, _omitFieldNames ? '' : 'trackId')
     ..aE<TrackType>(3, _omitFieldNames ? '' : 'trackType',
         enumValues: TrackType.values)
@@ -721,15 +846,15 @@ class UserTrack extends $pb.GeneratedMessage {
   /// int64     user_id    = 1;
   /// 사용자 정보
   @$pb.TagNumber(1)
-  $1.User get user => $_getN(0);
+  $2.User get user => $_getN(0);
   @$pb.TagNumber(1)
-  set user($1.User value) => $_setField(1, value);
+  set user($2.User value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
   void clearUser() => $_clearField(1);
   @$pb.TagNumber(1)
-  $1.User ensureUser() => $_ensure(0);
+  $2.User ensureUser() => $_ensure(0);
 
   /// 트랙 ID
   @$pb.TagNumber(2)

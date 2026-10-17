@@ -152,6 +152,129 @@ class DirectMessageChannelListItem extends $pb.GeneratedMessage {
   LastMessage ensureLastMessage() => $_ensure(1);
 }
 
+/// GetDirectMessageChannel
+/// 호출자가 참여 중인 방만 조회된다. 참여하지 않은 방·없는 방은 NOT_FOUND.
+/// last_message 는 주지 않는다 — 목록 응답에서만 제공한다.
+class GetDirectMessageChannelRequest extends $pb.GeneratedMessage {
+  factory GetDirectMessageChannelRequest({
+    $fixnum.Int64? dmId,
+  }) {
+    final result = create();
+    if (dmId != null) result.dmId = dmId;
+    return result;
+  }
+
+  GetDirectMessageChannelRequest._();
+
+  factory GetDirectMessageChannelRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetDirectMessageChannelRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetDirectMessageChannelRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'dm.v1'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'dmId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetDirectMessageChannelRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetDirectMessageChannelRequest copyWith(
+          void Function(GetDirectMessageChannelRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as GetDirectMessageChannelRequest))
+          as GetDirectMessageChannelRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetDirectMessageChannelRequest create() =>
+      GetDirectMessageChannelRequest._();
+  @$core.override
+  GetDirectMessageChannelRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetDirectMessageChannelRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetDirectMessageChannelRequest>(create);
+  static GetDirectMessageChannelRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get dmId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set dmId($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDmId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDmId() => $_clearField(1);
+}
+
+class GetDirectMessageChannelResponse extends $pb.GeneratedMessage {
+  factory GetDirectMessageChannelResponse({
+    DirectMessageChannel? directMessageChannel,
+  }) {
+    final result = create();
+    if (directMessageChannel != null)
+      result.directMessageChannel = directMessageChannel;
+    return result;
+  }
+
+  GetDirectMessageChannelResponse._();
+
+  factory GetDirectMessageChannelResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetDirectMessageChannelResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetDirectMessageChannelResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'dm.v1'),
+      createEmptyInstance: create)
+    ..aOM<DirectMessageChannel>(
+        1, _omitFieldNames ? '' : 'directMessageChannel',
+        subBuilder: DirectMessageChannel.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetDirectMessageChannelResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetDirectMessageChannelResponse copyWith(
+          void Function(GetDirectMessageChannelResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as GetDirectMessageChannelResponse))
+          as GetDirectMessageChannelResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetDirectMessageChannelResponse create() =>
+      GetDirectMessageChannelResponse._();
+  @$core.override
+  GetDirectMessageChannelResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static GetDirectMessageChannelResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetDirectMessageChannelResponse>(
+          create);
+  static GetDirectMessageChannelResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  DirectMessageChannel get directMessageChannel => $_getN(0);
+  @$pb.TagNumber(1)
+  set directMessageChannel(DirectMessageChannel value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDirectMessageChannel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDirectMessageChannel() => $_clearField(1);
+  @$pb.TagNumber(1)
+  DirectMessageChannel ensureDirectMessageChannel() => $_ensure(0);
+}
+
 /// CreateDirectMessage
 class CreateDirectMessageChannelRequest extends $pb.GeneratedMessage {
   factory CreateDirectMessageChannelRequest({

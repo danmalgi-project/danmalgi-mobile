@@ -6,46 +6,53 @@ import 'package:flutter/material.dart';
 class NameWithTag extends StatelessWidget {
   final String name;
   final String tag;
+  final bool stacked;
 
-  const NameWithTag({super.key, required this.name, required this.tag});
+  const NameWithTag({super.key, required this.name, required this.tag})
+    : stacked = false;
+
+  const NameWithTag.stacked({super.key, required this.name, required this.tag})
+    : stacked = true;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      spacing: AppSpacing.s8,
-      children: [
-        Flexible(
-          child: Text(
-            name,
-            style: AppTypography.titleSm,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        Text(
-          '#$tag',
-          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-        ),
-      ],
-    );
-  }
-
-  static Widget stacked({required String name, required String tag}) {
-    return Column(
-      spacing: AppSpacing.s4,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          name,
-          style: AppTypography.titleSm,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        Text(
-          '#$tag',
-          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
-        ),
-      ],
-    );
+    return (stacked)
+        ? Column(
+            spacing: AppSpacing.s4,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: AppTypography.titleSm,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                '#$tag',
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          )
+        : Row(
+            spacing: AppSpacing.s8,
+            children: [
+              Flexible(
+                child: Text(
+                  name,
+                  style: AppTypography.titleSm,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Text(
+                '#$tag',
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          );
   }
 }

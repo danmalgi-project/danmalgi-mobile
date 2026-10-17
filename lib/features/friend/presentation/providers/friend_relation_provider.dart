@@ -13,8 +13,7 @@ FriendRelation friendRelation(Ref ref, int userId) {
     return const FriendRelation.me();
   }
 
-  final friends =
-      ref.watch(friendViewModelProvider).value?.friendList ?? const [];
+  final friends = ref.watch(friendViewModelProvider).value ?? const [];
   if (friends.any((f) => f.user.id.toInt() == userId)) {
     return const FriendRelation.friend();
   }

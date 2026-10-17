@@ -11,7 +11,7 @@ part 'relationship_view_model.g.dart';
 @riverpod
 class RelationshipViewModel extends _$RelationshipViewModel {
   @override
-  FutureOr<RelationshipState> build() async {
+  Future<RelationshipState> build() async {
     ref.watch(currentUserProvider); // Bind lifecycle to auth state
 
     final List<Relationship> incoming = await ref

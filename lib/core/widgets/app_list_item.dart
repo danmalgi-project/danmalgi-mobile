@@ -7,6 +7,7 @@ class AppListItem extends StatelessWidget {
   final Widget? subtitle;
   final Widget? trailing;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final EdgeInsetsGeometry padding;
 
   const AppListItem({
@@ -16,6 +17,7 @@ class AppListItem extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.onTap,
+    this.onLongPress,
     this.padding = const EdgeInsets.all(AppSpacing.s12),
   });
 
@@ -23,6 +25,7 @@ class AppListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       borderRadius: AppRadius.brMd,
       child: Padding(
         padding: padding,

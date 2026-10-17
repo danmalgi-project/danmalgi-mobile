@@ -66,6 +66,41 @@ final $typed_data.Uint8List directMessageChannelListItemDescriptor =
         '5EaXJlY3RNZXNzYWdlQ2hhbm5lbFIHY2hhbm5lbBI1CgxsYXN0X21lc3NhZ2UYAiABKAsyEi5k'
         'bS52MS5MYXN0TWVzc2FnZVILbGFzdE1lc3NhZ2U=');
 
+@$core.Deprecated('Use getDirectMessageChannelRequestDescriptor instead')
+const GetDirectMessageChannelRequest$json = {
+  '1': 'GetDirectMessageChannelRequest',
+  '2': [
+    {'1': 'dm_id', '3': 1, '4': 1, '5': 3, '10': 'dmId'},
+  ],
+};
+
+/// Descriptor for `GetDirectMessageChannelRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getDirectMessageChannelRequestDescriptor =
+    $convert.base64Decode(
+        'Ch5HZXREaXJlY3RNZXNzYWdlQ2hhbm5lbFJlcXVlc3QSEwoFZG1faWQYASABKANSBGRtSWQ=');
+
+@$core.Deprecated('Use getDirectMessageChannelResponseDescriptor instead')
+const GetDirectMessageChannelResponse$json = {
+  '1': 'GetDirectMessageChannelResponse',
+  '2': [
+    {
+      '1': 'direct_message_channel',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.dm.v1.DirectMessageChannel',
+      '10': 'directMessageChannel'
+    },
+  ],
+};
+
+/// Descriptor for `GetDirectMessageChannelResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getDirectMessageChannelResponseDescriptor =
+    $convert.base64Decode(
+        'Ch9HZXREaXJlY3RNZXNzYWdlQ2hhbm5lbFJlc3BvbnNlElEKFmRpcmVjdF9tZXNzYWdlX2NoYW'
+        '5uZWwYASABKAsyGy5kbS52MS5EaXJlY3RNZXNzYWdlQ2hhbm5lbFIUZGlyZWN0TWVzc2FnZUNo'
+        'YW5uZWw=');
+
 @$core.Deprecated('Use createDirectMessageChannelRequestDescriptor instead')
 const CreateDirectMessageChannelRequest$json = {
   '1': 'CreateDirectMessageChannelRequest',
