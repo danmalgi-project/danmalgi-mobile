@@ -5,6 +5,10 @@ abstract final class _P {
   static const black = Color(0xFF000000);
   static const white = Color(0xFFFFFFFF);
 
+  // Overlay (검정 + 투명도)
+  static const black50 = Color(0x80000000); // 50%
+  static const black70 = Color(0xB3000000); // 70%
+
   // Surface 6단계 (밝을수록 앞)
   static const gray111112 = Color(0xFF111112);
   static const gray161618 = Color(0xFF161618);
@@ -34,6 +38,10 @@ abstract final class AppColors {
   static const surfaceSecondary = _P.gray272729; // 미팅 카드, 소스 필
   static const surfaceInput = _P.gray2C2C2E; // 입력 필드, 첨부 버튼
 
+  // ── Overlay ────────────────────────────────────
+  static const scrim = _P.black50; // 일반 딤
+  static const scrimStrong = _P.black70; // 액션 시트, 다이얼로그
+
   // ── Inverse (밝은 서피스) ────────
   static const surfaceInverse = _P.white;
   static const onSurfaceInverse = _P.black;
@@ -52,7 +60,6 @@ abstract final class AppColors {
   // ── Status ─────────────────────────────────────
   static const success = _P.green; // 연결 양호, 온라인
   static const danger = _P.red; // 녹화, 음소거, 나가기
-  static const scrim = Color(0x80000000); // rgba(0,0,0,0.5)
 
   // ── Border ─────────────────────────────────────
   static const divider = _P.gray2C2C2E;
