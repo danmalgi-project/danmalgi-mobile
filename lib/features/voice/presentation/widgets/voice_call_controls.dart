@@ -1,8 +1,9 @@
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
+import 'package:danmalgi_mobile/core/widgets/app_sheet.dart';
 import 'package:danmalgi_mobile/features/voice/data/providers/active_voice_session_provider.dart';
+import 'package:danmalgi_mobile/features/voice/data/providers/audio_route_service_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
-import 'package:danmalgi_mobile/features/voice/presentation/widgets/audio_output_sheet.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/audio_route_picker_button.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_control_button.dart';
 import 'package:flutter/foundation.dart';
@@ -49,7 +50,38 @@ class VoiceCallControls extends ConsumerWidget {
               VoiceControlButton(
                 icon: Icons.speaker_group_outlined,
                 onTap: isReady
-                    ? () => showAudioOutputSheet(context, ref, channelId)
+                    ? () async {
+                        final service = ref.read(audioRouteServiceProvider);
+                        final devices = await service.outputs();
+                        if (!context.mounted) return;
+                        return showAppSheet(
+                          context: context,
+                          builder: (sheetContext) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                for (final device in devices)
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.volume_up,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                    title: Text(
+                                      device.label,
+                                      style: const TextStyle(
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      service.select(device.id);
+                                      Navigator.pop(sheetContext);
+                                    },
+                                  ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     : null,
               ),
             VoiceControlButton(
