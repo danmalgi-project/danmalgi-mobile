@@ -45,6 +45,16 @@ class DirectMessageServiceClient extends $grpc.Client {
         options: options);
   }
 
+  /// GetDirectMessageChannel retrieves a single direct message channel the caller belongs to.
+  $grpc.ResponseFuture<$1.GetDirectMessageChannelResponse>
+      getDirectMessageChannel(
+    $1.GetDirectMessageChannelRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getDirectMessageChannel, request,
+        options: options);
+  }
+
   /// CreateDirectMessageChannel creates a new direct message channel with specified friends.
   $grpc.ResponseFuture<$1.CreateDirectMessageChannelResponse>
       createDirectMessageChannel(
@@ -89,6 +99,12 @@ class DirectMessageServiceClient extends $grpc.Client {
           '/dm.v1.DirectMessageService/GetDirectMessageChannelList',
           ($0.Empty value) => value.writeToBuffer(),
           $1.GetDirectMessageChannelListResponse.fromBuffer);
+  static final _$getDirectMessageChannel = $grpc.ClientMethod<
+          $1.GetDirectMessageChannelRequest,
+          $1.GetDirectMessageChannelResponse>(
+      '/dm.v1.DirectMessageService/GetDirectMessageChannel',
+      ($1.GetDirectMessageChannelRequest value) => value.writeToBuffer(),
+      $1.GetDirectMessageChannelResponse.fromBuffer);
   static final _$createDirectMessageChannel = $grpc.ClientMethod<
           $1.CreateDirectMessageChannelRequest,
           $1.CreateDirectMessageChannelResponse>(
@@ -127,6 +143,15 @@ abstract class DirectMessageServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
             ($1.GetDirectMessageChannelListResponse value) =>
                 value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.GetDirectMessageChannelRequest,
+            $1.GetDirectMessageChannelResponse>(
+        'GetDirectMessageChannel',
+        getDirectMessageChannel_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.GetDirectMessageChannelRequest.fromBuffer(value),
+        ($1.GetDirectMessageChannelResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.CreateDirectMessageChannelRequest,
             $1.CreateDirectMessageChannelResponse>(
         'CreateDirectMessageChannel',
@@ -175,6 +200,15 @@ abstract class DirectMessageServiceBase extends $grpc.Service {
 
   $async.Future<$1.GetDirectMessageChannelListResponse>
       getDirectMessageChannelList($grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$1.GetDirectMessageChannelResponse> getDirectMessageChannel_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$1.GetDirectMessageChannelRequest> $request) async {
+    return getDirectMessageChannel($call, await $request);
+  }
+
+  $async.Future<$1.GetDirectMessageChannelResponse> getDirectMessageChannel(
+      $grpc.ServiceCall call, $1.GetDirectMessageChannelRequest request);
 
   $async.Future<$1.CreateDirectMessageChannelResponse>
       createDirectMessageChannel_Pre($grpc.ServiceCall $call,

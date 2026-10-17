@@ -44,6 +44,17 @@ class SignalingServiceClient extends $grpc.Client {
     return $createStreamingCall(_$signaling, request, options: options);
   }
 
+  /// 채널 통화방의 통화 시작 시각을 반환합니다. (첫 참가자가 입장한 시각)
+  /// 클라이언트가 now - started_at 으로 통화 경과 시간을 계산하는 용도입니다.
+  $grpc.ResponseFuture<$0.GetChannelCallStartedAtResponse>
+      getChannelCallStartedAt(
+    $0.GetChannelCallStartedAtRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getChannelCallStartedAt, request,
+        options: options);
+  }
+
   // method descriptors
 
   static final _$signaling =
@@ -51,6 +62,12 @@ class SignalingServiceClient extends $grpc.Client {
           '/signaling.v1.SignalingService/Signaling',
           ($0.SignalingRequest value) => value.writeToBuffer(),
           $0.SignalingResponse.fromBuffer);
+  static final _$getChannelCallStartedAt = $grpc.ClientMethod<
+          $0.GetChannelCallStartedAtRequest,
+          $0.GetChannelCallStartedAtResponse>(
+      '/signaling.v1.SignalingService/GetChannelCallStartedAt',
+      ($0.GetChannelCallStartedAtRequest value) => value.writeToBuffer(),
+      $0.GetChannelCallStartedAtResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('signaling.v1.SignalingService')
@@ -65,8 +82,26 @@ abstract class SignalingServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.SignalingRequest.fromBuffer(value),
         ($0.SignalingResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetChannelCallStartedAtRequest,
+            $0.GetChannelCallStartedAtResponse>(
+        'GetChannelCallStartedAt',
+        getChannelCallStartedAt_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.GetChannelCallStartedAtRequest.fromBuffer(value),
+        ($0.GetChannelCallStartedAtResponse value) => value.writeToBuffer()));
   }
 
   $async.Stream<$0.SignalingResponse> signaling(
       $grpc.ServiceCall call, $async.Stream<$0.SignalingRequest> request);
+
+  $async.Future<$0.GetChannelCallStartedAtResponse> getChannelCallStartedAt_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.GetChannelCallStartedAtRequest> $request) async {
+    return getChannelCallStartedAt($call, await $request);
+  }
+
+  $async.Future<$0.GetChannelCallStartedAtResponse> getChannelCallStartedAt(
+      $grpc.ServiceCall call, $0.GetChannelCallStartedAtRequest request);
 }

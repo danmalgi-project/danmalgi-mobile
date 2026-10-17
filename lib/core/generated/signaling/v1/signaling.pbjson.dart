@@ -32,6 +32,47 @@ final $typed_data.Uint8List trackTypeDescriptor = $convert.base64Decode(
     'CglUcmFja1R5cGUSCQoFQVVESU8QABINCglDQU1fQVVESU8QARINCglDQU1fVklERU8QAhIQCg'
     'xTQ1JFRU5fQVVESU8QAxIQCgxTQ1JFRU5fVklERU8QBA==');
 
+@$core.Deprecated('Use getChannelCallStartedAtRequestDescriptor instead')
+const GetChannelCallStartedAtRequest$json = {
+  '1': 'GetChannelCallStartedAtRequest',
+  '2': [
+    {'1': 'channel_id', '3': 1, '4': 1, '5': 3, '10': 'channelId'},
+  ],
+};
+
+/// Descriptor for `GetChannelCallStartedAtRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getChannelCallStartedAtRequestDescriptor =
+    $convert.base64Decode(
+        'Ch5HZXRDaGFubmVsQ2FsbFN0YXJ0ZWRBdFJlcXVlc3QSHQoKY2hhbm5lbF9pZBgBIAEoA1IJY2'
+        'hhbm5lbElk');
+
+@$core.Deprecated('Use getChannelCallStartedAtResponseDescriptor instead')
+const GetChannelCallStartedAtResponse$json = {
+  '1': 'GetChannelCallStartedAtResponse',
+  '2': [
+    {
+      '1': 'started_at',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'startedAt',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_started_at'},
+  ],
+};
+
+/// Descriptor for `GetChannelCallStartedAtResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getChannelCallStartedAtResponseDescriptor =
+    $convert.base64Decode(
+        'Ch9HZXRDaGFubmVsQ2FsbFN0YXJ0ZWRBdFJlc3BvbnNlEj4KCnN0YXJ0ZWRfYXQYASABKAsyGi'
+        '5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABSCXN0YXJ0ZWRBdIgBAUINCgtfc3RhcnRlZF9h'
+        'dA==');
+
 @$core.Deprecated('Use signalingRequestDescriptor instead')
 const SignalingRequest$json = {
   '1': 'SignalingRequest',
