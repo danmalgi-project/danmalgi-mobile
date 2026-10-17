@@ -6,10 +6,10 @@ import 'package:danmalgi_mobile/core/providers/app_message_notifier.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
-import 'package:danmalgi_mobile/features/directmessage/domain/direct_message_channel_list_state.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'direct_message_channel_list_view_model.g.dart';
@@ -17,20 +17,14 @@ part 'direct_message_channel_list_view_model.g.dart';
 @Riverpod()
 class DirectMessageChannelListViewModel
     extends _$DirectMessageChannelListViewModel {
-  bool _showBackToTopButton = false;
-  final int _limit = 10;
+  static final _log = Logger('dm.DirectMessageChannelListViewModel');
+
+  Timer? debounce;
+  bool _creating = false;
 
   @override
-  Future<DirectMessageChannelListState> build() async {
+  Future<List<DirectMessageChannelListItem>> build() async {
     ref.watch(currentUserProvider); // Bind lifecycle to auth state
-
-    Timer? debounce;
-    void scheduleRefresh() {
-      debounce?.cancel();
-      debounce = Timer(const Duration(milliseconds: 800), () {
-        if (state.hasValue) refresh();
-      });
-    }
 
     ref.onDispose(() => debounce?.cancel());
 
@@ -52,32 +46,51 @@ class DirectMessageChannelListViewModel
     );
     ref.onDispose(lifecycle.dispose);
 
-    final initialData = await ref
+    return ref
         .read(directMessageChannelRepositoryProvider)
-        .getDirectMessageChannelList(offset: 0, limit: _limit);
-
-    return DirectMessageChannelListState(directMessageChannelList: initialData);
+        .getDirectMessageChannelList();
   }
 
   Future<DirectMessageChannel?> createDirectMessageChannel({
     required List<Int64> friendIds,
   }) async {
+    if (_creating) return null;
+    _creating = true;
     try {
       final newChannel = await ref
           .read(directMessageChannelRepositoryProvider)
           .createDirectMessageChannel(friendIds: friendIds);
 
-      final currentState = state.requireValue;
-      state = AsyncData(
-        currentState.copyWith(
-          directMessageChannelList: [
-            DirectMessageChannelListItem(channel: newChannel),
-            ...currentState.directMessageChannelList,
-          ],
-          currentOffset: currentState.currentOffset + 1,
-        ),
-      );
+      unawaited(refresh());
+      return newChannel;
+    } on AppException catch (e) {
+      ref.read(appMessageNotifierProvider.notifier).show(e.message);
+      return null;
+    } catch (e) {
+      ref.read(appMessageNotifierProvider.notifier).show("알 수 없는 오류가 발생했습니다.");
+      return null;
+    } finally {
+      _creating = false;
+    }
+  }
 
+  Future<DirectMessageChannel?> updateDirectMessageChannel({
+    required Int64 id,
+    String? channelName,
+    List<int>? imageBytes,
+    String? extension,
+  }) async {
+    try {
+      final newChannel = await ref
+          .read(directMessageChannelRepositoryProvider)
+          .updateDirectMessageChannel(
+            id: id,
+            channelName: channelName,
+            imageBytes: imageBytes,
+            extension: extension,
+          );
+
+      unawaited(refresh());
       return newChannel;
     } on AppException catch (e) {
       ref.read(appMessageNotifierProvider.notifier).show(e.message);
@@ -88,47 +101,36 @@ class DirectMessageChannelListViewModel
     }
   }
 
-  Future<DirectMessageChannel> fetchDirectMessageChannel({
-    required int id,
-  }) async {
-    final currentState = state.value;
-    if (currentState != null) {
-      final cachedChannel = currentState.directMessageChannelList
-          .where((item) => item.channel.dmId.toInt() == id)
-          .firstOrNull;
+  Future<void> leaveDirectMessageChannel({required Int64 id}) async {
+    try {
+      await ref
+          .read(directMessageChannelRepositoryProvider)
+          .leaveDirectMessageChannel(id: id);
 
-      if (cachedChannel != null) {
-        return cachedChannel.channel;
-      }
+      unawaited(refresh());
+    } on AppException catch (e) {
+      ref.read(appMessageNotifierProvider.notifier).show(e.message);
+    } catch (e) {
+      ref.read(appMessageNotifierProvider.notifier).show("알 수 없는 오류가 발생했습니다.");
     }
+  }
 
-    final channel = await ref
-        .read(directMessageChannelRepositoryProvider)
-        .getDirectMessageChannel(id: id);
-
-    return channel;
+  void scheduleRefresh() {
+    debounce?.cancel();
+    debounce = Timer(const Duration(milliseconds: 800), () {
+      if (state.hasValue) refresh();
+    });
   }
 
   Future<void> refresh() async {
     try {
-      final data = await ref
-          .read(directMessageChannelRepositoryProvider)
-          .getDirectMessageChannelList(offset: 0, limit: _limit);
-
-      final current = state.value;
       state = AsyncData(
-        (current ?? const DirectMessageChannelListState()).copyWith(
-          directMessageChannelList: data,
-        ),
+        await ref
+            .read(directMessageChannelRepositoryProvider)
+            .getDirectMessageChannelList(),
       );
-    } catch (e) {}
-  }
-
-  Future<void> showBackToTop({bool show = false}) async {
-    if (!(_showBackToTopButton == show)) {
-      _showBackToTopButton = show;
-    } else {
-      _showBackToTopButton = show;
+    } catch (e, st) {
+      _log.warning('Failed to refresh DM channel list', e, st);
     }
   }
 }

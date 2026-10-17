@@ -1,4 +1,4 @@
-import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
+import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_provider.dart';
 import 'package:danmalgi_mobile/features/voice/domain/voice_state.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/providers/voice_view_model.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/widgets/voice_connection_badge.dart';
@@ -13,7 +13,7 @@ class VoiceCallHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final channelName = ref.watch(
       directMessageChannelProvider(
-        channelId: channelId,
+        channelId,
       ).select((async) => async.value?.channelName ?? ''),
     );
     final status = ref.watch(

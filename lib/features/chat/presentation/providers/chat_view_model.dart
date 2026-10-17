@@ -4,6 +4,7 @@ import 'package:danmalgi_mobile/features/chat/data/providers/chat_provider.dart'
 import 'package:danmalgi_mobile/features/chat/domain/chat_state.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message.dart';
 import 'package:danmalgi_mobile/features/chat/domain/message_status.dart';
+import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_list_view_model.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -107,6 +108,9 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             messageId: messageId,
             content: content,
           );
+      ref
+          .read(directMessageChannelListViewModelProvider.notifier)
+          .scheduleRefresh();
     } catch (e, st) {
       _log.warning('Failed to modify message', e, st);
     }
@@ -117,6 +121,9 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
       await ref
           .read(chatRepositoryProvider)
           .deleteMessage(channelId: Int64(channelId), messageId: messageId);
+      ref
+          .read(directMessageChannelListViewModelProvider.notifier)
+          .scheduleRefresh();
     } catch (e, st) {
       _log.warning('Failed to delete message', e, st);
     }
@@ -135,6 +142,9 @@ class ChatViewModel extends AsyncNotifier<ChatState> {
             .read(chatRepositoryProvider)
             .sendMessage(channelId: channelId, content: content, file: null);
       }
+      ref
+          .read(directMessageChannelListViewModelProvider.notifier)
+          .scheduleRefresh();
     } catch (e, st) {
       _log.warning('Failed to send message', e, st);
     }

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:danmalgi_mobile/core/generated/dm/v1/dm.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
@@ -17,47 +16,42 @@ class DirectMessageChannelRepository {
     return response.directMessageChannel;
   }
 
+  Future<List<DirectMessageChannelListItem>>
+  getDirectMessageChannelList() async {
+    final response = await client.getDirectMessageChannelList(Empty());
+    return response.items;
+  }
+
   Future<DirectMessageChannel> getDirectMessageChannel({
     required int id,
   }) async {
-    throw UnimplementedError();
-    // final response =
-    //     await _directMessageDataSource.getDirectMessageChannel(id: id);
-    // return response.directMessageChannel;
-  }
-
-  Future<List<DirectMessageChannelListItem>> getDirectMessageChannelList({
-    int offset = 0,
-    int limit = 10,
-  }) async {
-    final response = await client.getDirectMessageChannelList(Empty());
-    return _sortedByLastMessage(response.items);
-  }
-
-  List<DirectMessageChannelListItem> _sortedByLastMessage(
-    List<DirectMessageChannelListItem> items,
-  ) {
-    return items.sortedByCompare(
-      (i) => i.hasLastMessage()
-          ? i.lastMessage.createdAt.toDateTime()
-          : DateTime.fromMillisecondsSinceEpoch(0),
-      (a, b) => b.compareTo(a),
+    final response = await client.getDirectMessageChannel(
+      GetDirectMessageChannelRequest(dmId: Int64(id)),
     );
+    return response.directMessageChannel;
   }
 
-  Future<DirectMessageChannel> uploadChannelImage({
-    required int id,
-    required List<int> imageBytes,
-    required String extension,
+  Future<DirectMessageChannel> updateDirectMessageChannel({
+    required Int64 id,
+    String? channelName,
+    List<int>? imageBytes,
+    String? extension,
   }) async {
-    final request = UploadChannelImageRequest(
-      dmId: Int64(id),
+    final request = UpdateDirectMessageChannelRequest(
+      dmId: id,
+      channelName: channelName,
       image: imageBytes,
-      extension_3: extension,
+      extension_4: extension,
     );
 
-    final response = await client.uploadChannelImage(request);
+    final response = await client.updateDirectMessageChannel(request);
 
     return response.directMessageChannel;
+  }
+
+  Future<void> leaveDirectMessageChannel({required Int64 id}) async {
+    await client.leaveDirectMessageChannel(
+      LeaveDirectMessageChannelRequest(dmId: id),
+    );
   }
 }

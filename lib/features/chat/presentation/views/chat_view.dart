@@ -6,7 +6,7 @@ import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/widgets/cached_circle_avatar.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/providers/chat_view_model.dart';
 import 'package:danmalgi_mobile/features/chat/presentation/widgets/message_tile.dart';
-import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_provider.dart';
+import 'package:danmalgi_mobile/features/directmessage/presentation/providers/direct_message_channel_provider.dart';
 import 'package:danmalgi_mobile/features/voice/presentation/routes/voice_call_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,7 +88,7 @@ class ChatViewState extends ConsumerState<ChatView> {
   @override
   Widget build(BuildContext context) {
     final channelAsync = ref.watch(
-      directMessageChannelProvider(channelId: widget.channelId),
+      directMessageChannelProvider(widget.channelId),
     );
     final currentUser = ref.watch(currentUserProvider);
 
