@@ -34,7 +34,7 @@ const _incomingAges = [
   Duration(days: 10), // 1주일 전
 ];
 
-final _friendUsers = [
+final fakeFriendUsers = [
   for (final (i, name) in [
     '강민서',
     '김하늘',
@@ -52,13 +52,13 @@ final _strangerUsers = [_user(300, '피그마'), _user(301, '단말기')];
 
 List<pb.User> get _directory => [
   ..._incomingUsers,
-  ..._friendUsers,
+  ...fakeFriendUsers,
   ..._outgoingUsers,
   ..._strangerUsers,
 ];
 
 final _fakeFriendStore = <Friend>[
-  for (final u in _friendUsers)
+  for (final u in fakeFriendUsers)
     Friend(
       id: Int64(u.id.toInt() - 1000),
       user: u,
