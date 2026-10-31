@@ -7,6 +7,13 @@ final class ProviderLogger extends ProviderObserver {
   static final _lifecycle = Logger('provider.lifecycle');
 
   @override
+  void didAddProvider(ProviderObserverContext context, Object? value) {
+    _lifecycle.fine(
+      () => '${context.provider.name ?? context.provider.runtimeType} created',
+    );
+  }
+
+  @override
   void didDisposeProvider(ProviderObserverContext context) {
     _lifecycle.fine(
       () => '${context.provider.name ?? context.provider.runtimeType} disposed',
