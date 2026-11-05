@@ -16,13 +16,11 @@ class RelationshipViewModel extends _$RelationshipViewModel {
     ref.watch(currentUserProvider); // Bind lifecycle to auth state
     ref.onAppRestart(ref.invalidateSelf);
 
-    final List<Relationship> incoming = await ref
-        .read(relationshipRepositoryProvider)
-        .getIncomingRelationshipList();
-
-    final List<Relationship> outgoing = await ref
-        .read(relationshipRepositoryProvider)
-        .getOutgoingRelationshipList();
+    final repo = ref.read(relationshipRepositoryProvider);
+    final [incoming, outgoing] = await Future.wait([
+      repo.getIncomingRelationshipList(),
+      repo.getOutgoingRelationshipList(),
+    ]);
 
     return RelationshipState(
       incomingRelationshipList: incoming,
