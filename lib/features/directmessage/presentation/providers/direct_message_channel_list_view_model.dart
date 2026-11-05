@@ -9,7 +9,6 @@ import 'package:danmalgi_mobile/core/providers/notification_provider.dart';
 import 'package:danmalgi_mobile/features/directmessage/data/providers/direct_message_channel_repository_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fixnum/fixnum.dart';
-import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'direct_message_channel_list_view_model.g.dart';
@@ -17,8 +16,6 @@ part 'direct_message_channel_list_view_model.g.dart';
 @Riverpod()
 class DirectMessageChannelListViewModel
     extends _$DirectMessageChannelListViewModel {
-  static final _log = Logger('dm.DirectMessageChannelListViewModel');
-
   Timer? debounce;
   bool _creating = false;
 
@@ -51,7 +48,7 @@ class DirectMessageChannelListViewModel
           .read(directMessageChannelRepositoryProvider)
           .createDirectMessageChannel(friendIds: friendIds);
 
-      unawaited(refresh());
+      ref.invalidateSelf();
       return newChannel;
     } on AppException catch (e) {
       ref.read(appMessageNotifierProvider.notifier).show(e.message);
@@ -80,7 +77,7 @@ class DirectMessageChannelListViewModel
             extension: extension,
           );
 
-      unawaited(refresh());
+      ref.invalidateSelf();
       return newChannel;
     } on AppException catch (e) {
       ref.read(appMessageNotifierProvider.notifier).show(e.message);
@@ -97,7 +94,7 @@ class DirectMessageChannelListViewModel
           .read(directMessageChannelRepositoryProvider)
           .leaveDirectMessageChannel(id: id);
 
-      unawaited(refresh());
+      ref.invalidateSelf();
     } on AppException catch (e) {
       ref.read(appMessageNotifierProvider.notifier).show(e.message);
     } catch (e) {
@@ -108,19 +105,7 @@ class DirectMessageChannelListViewModel
   void scheduleRefresh() {
     debounce?.cancel();
     debounce = Timer(const Duration(milliseconds: 800), () {
-      if (state.hasValue) refresh();
+      if (state.hasValue) ref.invalidateSelf();
     });
-  }
-
-  Future<void> refresh() async {
-    try {
-      state = AsyncData(
-        await ref
-            .read(directMessageChannelRepositoryProvider)
-            .getDirectMessageChannelList(),
-      );
-    } catch (e, st) {
-      _log.warning('Failed to refresh DM channel list', e, st);
-    }
   }
 }

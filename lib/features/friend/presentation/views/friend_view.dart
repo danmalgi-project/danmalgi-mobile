@@ -73,6 +73,7 @@ class _FriendSection extends ConsumerWidget {
         bottom: AppSpacing.s24,
       ),
       sliver: friends.when(
+        skipError: true,
         data: (state) => state.isEmpty
             ? SliverFillRemaining(
                 hasScrollBody: false,

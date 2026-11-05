@@ -71,6 +71,7 @@ class _DirectMessageSection extends ConsumerWidget {
     final directMessages = ref.watch(directMessageChannelListViewModelProvider);
 
     return directMessages.when(
+      skipError: true,
       data: (items) => items.isEmpty
           ? SliverFillRemaining(
               hasScrollBody: false,
@@ -338,6 +339,7 @@ class _CreateChannelSheetState extends ConsumerState<_CreateChannelSheet> {
     final friends = ref.watch(friendViewModelProvider);
 
     return friends.when(
+      skipError: true,
       data: (state) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
