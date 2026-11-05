@@ -1,7 +1,9 @@
 import 'package:danmalgi_mobile/core/theme/app_colors.dart';
 import 'package:danmalgi_mobile/core/theme/app_dimens.dart';
 import 'package:danmalgi_mobile/core/theme/app_typography.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 abstract final class AppTheme {
   static ThemeData get dark => ThemeData(
@@ -109,6 +111,16 @@ abstract final class AppTheme {
       selectedLabelStyle: AppTypography.tab,
       unselectedLabelStyle: AppTypography.tab,
       elevation: 0,
+    ),
+
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.iOS: SwipeablePageTransitionsBuilder(),
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+      },
     ),
   );
 }
