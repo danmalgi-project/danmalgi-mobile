@@ -24,14 +24,17 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   ];
 
   void _onTap(WidgetRef ref, int index) {
-    switch (index) {
-      case 0:
-        ref.invalidate(directMessageChannelListViewModelProvider);
-      case 1:
-        ref.invalidate(friendViewModelProvider);
-        ref.invalidate(relationshipViewModelProvider);
+    final isReselect = index == navigationShell.currentIndex;
+    if (isReselect) {
+      switch (index) {
+        case 0:
+          ref.invalidate(directMessageChannelListViewModelProvider);
+        case 1:
+          ref.invalidate(friendViewModelProvider);
+          ref.invalidate(relationshipViewModelProvider);
+      }
     }
-    navigationShell.goBranch(index);
+    navigationShell.goBranch(index, initialLocation: isReselect);
   }
 
   @override

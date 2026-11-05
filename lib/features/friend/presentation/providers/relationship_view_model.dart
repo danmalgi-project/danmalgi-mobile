@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:danmalgi_mobile/core/extensions/ref_extensions.dart';
 import 'package:danmalgi_mobile/core/generated/relationship/v1/relationship.pb.dart';
 import 'package:danmalgi_mobile/core/providers/app_user_provider.dart';
 import 'package:danmalgi_mobile/features/friend/data/providers/friend_providers.dart';
@@ -13,6 +14,7 @@ class RelationshipViewModel extends _$RelationshipViewModel {
   @override
   Future<RelationshipState> build() async {
     ref.watch(currentUserProvider); // Bind lifecycle to auth state
+    ref.onAppRestart(ref.invalidateSelf);
 
     final List<Relationship> incoming = await ref
         .read(relationshipRepositoryProvider)
