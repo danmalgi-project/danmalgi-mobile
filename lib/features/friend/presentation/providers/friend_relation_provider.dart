@@ -9,7 +9,7 @@ part 'friend_relation_provider.g.dart';
 
 @riverpod
 FriendRelation friendRelation(Ref ref, int userId) {
-  if (ref.watch(currentUserProvider)?.id == userId) {
+  if (ref.watch(currentUserIdProvider) == userId) {
     return const FriendRelation.me();
   }
 

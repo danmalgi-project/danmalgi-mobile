@@ -9,6 +9,10 @@ final currentUserProvider = Provider<User?>(
       .maybeWhen(authenticated: (user) => user, orElse: () => null),
 );
 
+final currentUserIdProvider = Provider<int?>(
+  (ref) => ref.watch(currentUserProvider.select((u) => u?.id)),
+);
+
 final requireCurrentUserProvider = Provider<User>((ref) {
   final user = ref.watch(currentUserProvider);
 

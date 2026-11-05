@@ -13,7 +13,7 @@ part 'relationship_view_model.g.dart';
 class RelationshipViewModel extends _$RelationshipViewModel {
   @override
   Future<RelationshipState> build() async {
-    ref.watch(currentUserProvider); // Bind lifecycle to auth state
+    ref.watch(currentUserIdProvider); // Bind lifecycle to auth state
     ref.onAppRestart(ref.invalidateSelf);
 
     final repo = ref.read(relationshipRepositoryProvider);

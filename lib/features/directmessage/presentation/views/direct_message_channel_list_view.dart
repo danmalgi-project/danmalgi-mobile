@@ -67,7 +67,7 @@ class _DirectMessageSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+    final myId = ref.watch(currentUserIdProvider);
     final directMessages = ref.watch(directMessageChannelListViewModelProvider);
 
     return directMessages.when(
@@ -141,7 +141,7 @@ class _DirectMessageSection extends ConsumerWidget {
                       ),
                       leading: DirectMessageChannelAvatar(
                         channel: channel,
-                        myId: currentUser?.id,
+                        myId: myId,
                         radius: AppAvatarSize.md,
                       ),
                       title: Text(

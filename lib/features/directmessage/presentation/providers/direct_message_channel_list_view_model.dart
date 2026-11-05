@@ -21,7 +21,7 @@ class DirectMessageChannelListViewModel
 
   @override
   Future<List<DirectMessageChannelListItem>> build() async {
-    ref.watch(currentUserProvider); // Bind lifecycle to auth state
+    ref.watch(currentUserIdProvider); // Bind lifecycle to auth state
 
     ref.onDispose(() => debounce?.cancel());
 

@@ -75,7 +75,7 @@ class _GroupChannelEditSheetState extends ConsumerState<GroupChannelEditSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final myId = ref.watch(currentUserProvider)?.id;
+    final myId = ref.watch(currentUserIdProvider);
     final imageBytes = _imageBytes;
 
     return Padding(

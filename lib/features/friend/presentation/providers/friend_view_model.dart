@@ -10,7 +10,7 @@ part 'friend_view_model.g.dart';
 class FriendViewModel extends _$FriendViewModel {
   @override
   Future<List<Friend>> build() async {
-    ref.watch(currentUserProvider); // Bind lifecycle to auth state
+    ref.watch(currentUserIdProvider); // Bind lifecycle to auth state
     ref.onAppRestart(ref.invalidateSelf);
 
     return await ref.read(friendRepositoryProvider).getFriendList();

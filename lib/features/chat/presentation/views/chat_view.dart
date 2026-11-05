@@ -90,7 +90,7 @@ class ChatViewState extends ConsumerState<ChatView> {
     final channelAsync = ref.watch(
       directMessageChannelProvider(widget.channelId),
     );
-    final currentUser = ref.watch(currentUserProvider);
+    final myId = ref.watch(currentUserIdProvider);
 
     final AsyncValue<List<String>> idsAsync = ref.watch(
       chatViewModelProvider(widget.channelId).select(
@@ -102,7 +102,7 @@ class ChatViewState extends ConsumerState<ChatView> {
     return channelAsync.when(
       data: (channelState) {
         final otherUser = channelState.users.firstWhereOrNull(
-          (u) => u.id != currentUser?.id,
+          (u) => u.id != myId,
         );
 
         return Scaffold(

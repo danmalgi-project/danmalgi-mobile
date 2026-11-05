@@ -16,7 +16,11 @@ class VoiceViewModel extends _$VoiceViewModel {
 
   @override
   FutureOr<VoiceState> build({required int channelId}) async {
-    final currentUser = ref.watch(currentUserProvider);
+    ref.watch(
+      currentUserIdProvider,
+    ); // Bind lifecycle to auth state and Rejoin only when account changes
+
+    final currentUser = ref.read(currentUserProvider);
     final repo = ref.watch(voiceManagerProvider(channelId: channelId));
 
     // 로그아웃 시 채널 자동 퇴장
